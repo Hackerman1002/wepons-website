@@ -1,137 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Realm of Relics</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Georgia, serif;
-      background: #17120d;
-      color: #f5e6c8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      width: 400px;
-      max-width: 92%;
-      background: #241a12;
-      border: 2px solid #8f6b32;
-      border-radius: 12px;
-      padding: 30px;
-      box-shadow: 0 10px 40px rgba(0,0,0,.5);
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 0;
-      color: #e5b94f;
-      font-size: 32px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #b9a98d;
-      margin-bottom: 25px;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px;
-      margin: 8px 0;
-      border: 1px solid #6d522d;
-      border-radius: 7px;
-      background: #120e0a;
-      color: white;
-      font-size: 15px;
-    }
-
-    button {
-      width: 100%;
-      padding: 13px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 7px;
-      background: #a87928;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #c49337;
-    }
-
-    .switch {
-      background: transparent;
-      color: #d6ad55;
-      margin-top: 5px;
-    }
-
-    #message {
-      text-align: center;
-      min-height: 22px;
-      margin-top: 15px;
-      color: #d9c39b;
-    }
-
-    #game {
-      display: none;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="container" id="auth">
-
-    <h1>⚔️ Realm of Relics</h1>
-
-    <div class="subtitle">
-      Collect. Battle. Trade. Become legendary.
-    </div>
-
-    <input id="username" type="text" placeholder="Username">
-    <input id="password" type="password" placeholder="Password">
-
-    <button id="mainButton" onclick="handleAuth()">
-      Create Account
-    </button>
-
-    <button class="switch" onclick="toggleMode()" id="switchButton">
-      Already have an account? Log in
-    </button>
-
-    <div id="message"></div>
-
-  </div>
-
-
-  <div class="container" id="game">
-
-    <h1>🏰 Welcome</h1>
-
-    <p id="welcome"></p>
-
-    <button onclick="logout()">Log Out</button>
-
-  </div>
-
-
-<script>
-
 const SUPABASE_URL =
   "https://mdtdtsrrvmlvxkblsdvo.supabase.co";
 
@@ -154,23 +20,32 @@ function toggleMode() {
 
   loginMode = !loginMode;
 
+  const mainButton =
+    document.getElementById("mainButton");
+
+  const switchButton =
+    document.getElementById("switchButton");
+
+  const message =
+    document.getElementById("message");
+
   if (loginMode) {
 
-    document.getElementById("mainButton").textContent = "Log In";
+    mainButton.textContent = "Log In";
 
-    document.getElementById("switchButton").textContent =
+    switchButton.textContent =
       "Need an account? Create one";
 
   } else {
 
-    document.getElementById("mainButton").textContent =
+    mainButton.textContent =
       "Create Account";
 
-    document.getElementById("switchButton").textContent =
+    switchButton.textContent =
       "Already have an account? Log in";
   }
 
-  document.getElementById("message").textContent = "";
+  message.textContent = "";
 }
 
 
@@ -180,14 +55,28 @@ function toggleMode() {
 
 async function handleAuth() {
 
-  const username =
-    document.getElementById("username").value.trim();
+  const usernameInput =
+    document.getElementById("username");
 
-  const password =
-    document.getElementById("password").value;
+  const passwordInput =
+    document.getElementById("password");
 
   const message =
     document.getElementById("message");
+
+
+  // Get username and password
+
+  const username =
+    usernameInput.value.trim();
+
+  const password =
+    passwordInput.value;
+
+
+  // -------------------------
+  // BASIC VALIDATION
+  // -------------------------
 
   if (!username || !password) {
 
@@ -197,6 +86,7 @@ async function handleAuth() {
     return;
   }
 
+
   if (username.length < 3) {
 
     message.textContent =
@@ -204,6 +94,16 @@ async function handleAuth() {
 
     return;
   }
+
+
+  if (username.length > 20) {
+
+    message.textContent =
+      "Username must be 20 characters or less.";
+
+    return;
+  }
+
 
   if (password.length < 6) {
 
@@ -213,19 +113,48 @@ async function handleAuth() {
     return;
   }
 
-  message.textContent = "Please wait...";
+
+  // -------------------------
+  // NORMALIZE USERNAME
+  // -------------------------
+
+  const normalizedUsername =
+    username.toLowerCase();
 
 
-  // Hidden internal email.
+  // -------------------------
+  // CHECK ALLOWED CHARACTERS
+  // -------------------------
+
+  const usernamePattern =
+    /^[a-z0-9_]+$/;
+
+  if (!usernamePattern.test(normalizedUsername)) {
+
+    message.textContent =
+      "Username can only contain letters, numbers, and underscores.";
+
+    return;
+  }
+
+
+  message.textContent =
+    "Please wait...";
+
+
+  // Supabase Auth needs an email.
+  // We create an internal email from the username.
+
   const internalEmail =
-    username.toLowerCase() + "@realmofrelics.local";
+    normalizedUsername +
+    "@realmofrelics.local";
 
+
+  // =====================================================
+  // CREATE ACCOUNT
+  // =====================================================
 
   if (!loginMode) {
-
-    // -------------------------
-    // CREATE ACCOUNT
-    // -------------------------
 
     const { data, error } =
       await client.auth.signUp({
@@ -233,8 +162,13 @@ async function handleAuth() {
         email: internalEmail,
 
         password: password
+
       });
 
+
+    // -------------------------
+    // AUTH ERROR
+    // -------------------------
 
     if (error) {
 
@@ -245,6 +179,10 @@ async function handleAuth() {
     }
 
 
+    // -------------------------
+    // MAKE SURE USER EXISTS
+    // -------------------------
+
     if (!data.user) {
 
       message.textContent =
@@ -254,69 +192,125 @@ async function handleAuth() {
     }
 
 
-    // Create player profile.
+    // =====================================================
+    // CREATE PLAYER PROFILE
+    // =====================================================
 
-    const { error: profileError } =
+    const { data: profile, error: profileError } =
       await client
         .from("profiles")
         .insert({
 
           id: data.user.id,
 
-          username: username,
+          username: normalizedUsername,
 
-          role:
-            username.toLowerCase() === "raider"
-              ? "admin"
-              : "player",
+          // Everyone starts as a normal player.
+          // Admins will be assigned separately.
 
-          coins:
-            username.toLowerCase() === "raider"
-              ? 999999999
-              : 100
-        });
+          role: "player",
 
+          coins: 100
+
+        })
+        .select()
+        .single();
+
+
+    // -------------------------
+    // PROFILE ERROR
+    // -------------------------
 
     if (profileError) {
 
-      message.textContent =
-        profileError.message;
+      // PostgreSQL error 23505 =
+      // unique constraint violation
+
+      if (profileError.code === "23505") {
+
+        message.textContent =
+          "That username is already taken. Please choose another.";
+
+      } else {
+
+        message.textContent =
+          profileError.message;
+      }
+
+
+      // If the profile could not be created,
+      // sign the newly created Auth user out.
+
+      await client.auth.signOut();
 
       return;
     }
 
+
+    // -------------------------
+    // SUCCESS
+    // -------------------------
 
     message.textContent =
-      "Account created! Logging you in...";
-
-    showGame(username);
-
-  } else {
-
-    // -------------------------
-    // LOGIN
-    // -------------------------
-
-    const { data, error } =
-      await client.auth.signInWithPassword({
-
-        email: internalEmail,
-
-        password: password
-      });
+      "Account created!";
 
 
-    if (error) {
-
-      message.textContent =
-        "Invalid username or password.";
-
-      return;
-    }
+    showGame(
+      normalizedUsername
+    );
 
 
-    showGame(username);
+    return;
   }
+
+
+  // =====================================================
+  // LOGIN
+  // =====================================================
+
+  const { data, error } =
+    await client.auth.signInWithPassword({
+
+      email: internalEmail,
+
+      password: password
+
+    });
+
+
+  // -------------------------
+  // LOGIN ERROR
+  // -------------------------
+
+  if (error) {
+
+    message.textContent =
+      "Invalid username or password.";
+
+    return;
+  }
+
+
+  // -------------------------
+  // MAKE SURE SESSION EXISTS
+  // -------------------------
+
+  if (!data.session) {
+
+    message.textContent =
+      "Login failed. Please try again.";
+
+    return;
+  }
+
+
+  // -------------------------
+  // SHOW GAME
+  // -------------------------
+
+  showGame(
+    normalizedUsername
+  );
 }
 
 
@@ -326,44 +320,94 @@ async function handleAuth() {
 
 async function showGame(username) {
 
-  document.getElementById("auth").style.display =
+  const authScreen =
+    document.getElementById("auth");
+
+  const gameScreen =
+    document.getElementById("game");
+
+  const welcome =
+    document.getElementById("welcome");
+
+
+  authScreen.style.display =
     "none";
 
-  document.getElementById("game").style.display =
+  gameScreen.style.display =
     "block";
 
 
-  const { data: profile } =
-    await client
-      .from("profiles")
-      .select("*")
-      .eq("username", username)
-      .single();
+  // -------------------------
+  // GET CURRENT USER
+  // -------------------------
+
+  const { data: authData } =
+    await client.auth.getUser();
 
 
-  if (!profile) {
+  if (!authData.user) {
 
-    document.getElementById("welcome").textContent =
+    welcome.textContent =
       "Welcome, " + username + "!";
 
     return;
   }
 
 
+  // -------------------------
+  // GET PLAYER PROFILE
+  // -------------------------
+
+  const { data: profile, error } =
+    await client
+      .from("profiles")
+      .select("*")
+      .eq("id", authData.user.id)
+      .single();
+
+
+  // -------------------------
+  // PROFILE ERROR
+  // -------------------------
+
+  if (error || !profile) {
+
+    welcome.textContent =
+      "Welcome, " + username + "!";
+
+    return;
+  }
+
+
+  // -------------------------
+  // ADMIN
+  // -------------------------
+
   if (profile.role === "admin") {
 
-    document.getElementById("welcome").innerHTML =
-      "Welcome, <b>👑 Raider</b>!<br><br>" +
-      "You are the administrator.";
+    welcome.innerHTML =
+      "Welcome, <b>👑 " +
+      escapeHTML(profile.username) +
+      "</b>!<br><br>" +
+      "You are the administrator.<br><br>" +
+      "🪙 Coins: " +
+      Number(profile.coins).toLocaleString();
 
-  } else {
+  }
 
-    document.getElementById("welcome").innerHTML =
+
+  // -------------------------
+  // NORMAL PLAYER
+  // -------------------------
+
+  else {
+
+    welcome.innerHTML =
       "Welcome, <b>" +
-      profile.username +
+      escapeHTML(profile.username) +
       "</b>!<br><br>" +
       "🪙 Coins: " +
-      profile.coins;
+      Number(profile.coins).toLocaleString();
   }
 }
 
@@ -374,13 +418,58 @@ async function showGame(username) {
 
 async function logout() {
 
-  await client.auth.signOut();
+  const { error } =
+    await client.auth.signOut();
 
-  document.getElementById("game").style.display =
-    "none";
 
-  document.getElementById("auth").style.display =
-    "block";
+  if (error) {
+
+    console.error(
+      "Logout error:",
+      error
+    );
+
+    return;
+  }
+
+
+  // Hide game
+
+  document.getElementById("game")
+    .style.display = "none";
+
+
+  // Show login
+
+  document.getElementById("auth")
+    .style.display = "block";
+
+
+  // Clear inputs
+
+  document.getElementById("username")
+    .value = "";
+
+  document.getElementById("password")
+    .value = "";
+
+
+  // Reset login mode
+
+  loginMode = false;
+
+
+  document.getElementById("mainButton")
+    .textContent = "Create Account";
+
+
+  document.getElementById("switchButton")
+    .textContent =
+      "Already have an account? Log in";
+
+
+  document.getElementById("message")
+    .textContent = "";
 }
 
 
@@ -390,13 +479,34 @@ async function logout() {
 
 async function checkSession() {
 
-  const { data } =
+  const { data, error } =
     await client.auth.getSession();
 
-  if (!data.session) return;
+
+  if (error) {
+
+    console.error(
+      "Session error:",
+      error
+    );
+
+    return;
+  }
 
 
-  const { data: profile } =
+  // No existing login
+
+  if (!data.session) {
+
+    return;
+  }
+
+
+  // -------------------------
+  // GET PROFILE
+  // -------------------------
+
+  const { data: profile, error: profileError } =
     await client
       .from("profiles")
       .select("*")
@@ -404,16 +514,46 @@ async function checkSession() {
       .single();
 
 
-  if (profile) {
+  if (profileError || !profile) {
 
-    showGame(profile.username);
+    await client.auth.signOut();
+
+    return;
   }
+
+
+  // -------------------------
+  // SHOW GAME
+  // -------------------------
+
+  showGame(
+    profile.username
+  );
 }
 
 
+// -------------------------
+// ESCAPE HTML
+// -------------------------
+
+function escapeHTML(value) {
+
+  return String(value)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
+}
+
+
+// -------------------------
+// START APPLICATION
+// -------------------------
+
 checkSession();
-
-</script>
-
-</body>
-</html>
