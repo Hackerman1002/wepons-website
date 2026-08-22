@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,60 +6,471 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Realm of Relics</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Georgia,serif;background:radial-gradient(circle at top,#261a11,#17110c 45%,#100c09);color:#f5e6c8}
-button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
-#authScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:25px}.auth-card,.panel,.card{background:#241a12;border:1px solid #765627;border-radius:12px;box-shadow:0 15px 40px #0006}
-.auth-card{width:430px;max-width:100%;padding:35px}.auth-title{text-align:center;color:#e8b943;font-size:34px;margin:0 0 8px}.auth-subtitle{text-align:center;color:#b9a98d;margin-bottom:28px;line-height:1.5}
-input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;background:#120e0a;color:#f5e6c8;outline:none}input{margin-bottom:10px}
-.btn{border:0;border-radius:7px;padding:11px 16px;background:#ae7d27;color:white;font-weight:bold}.btn:hover{background:#ca9635}.btn.secondary{background:transparent;border:1px solid #6d522d;color:#d7ae52}.btn.danger{background:#71322c}.btn.small{padding:8px 11px;font-size:13px}
-#authButton{width:100%;margin-top:5px}.switch{width:100%;margin-top:10px}.msg{text-align:center;min-height:24px;margin-top:12px;color:#d9c39b}
-#app{display:none;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:220px;background:#19110b;border-right:1px solid #6d522d;padding:24px 15px;z-index:20}.logo{text-align:center;color:#e7b742;font-size:25px;font-weight:bold;line-height:1.1;margin-bottom:28px}
-.nav-section{color:#806f55;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:18px 12px 7px}.nav{width:100%;padding:12px;border:1px solid transparent;border-radius:8px;background:transparent;color:#e2d0af;text-align:left;margin-bottom:4px}.nav:hover,.nav.active{background:#302113;border-color:#89642e;color:#e9b941}.logout{position:absolute;left:15px;right:15px;bottom:22px;width:calc(100% - 30px);padding:11px;border-radius:8px;border:1px solid #67342f;background:#512521;color:#fff}
-.topbar{position:fixed;left:220px;right:0;top:0;height:74px;background:#21160e;border-bottom:1px solid #604924;display:flex;align-items:center;justify-content:flex-end;gap:15px;padding:0 25px;z-index:10}.username{color:#d9c39b}.badge{background:#843b32;color:white;padding:5px 9px;border-radius:6px;font-size:11px;font-weight:bold}.coins{border:1px solid #876326;border-radius:25px;padding:9px 17px;color:#f1c442;background:#21170e}
-.main{margin-left:220px;padding:105px 35px 50px;max-width:1550px}.page{display:none}.page.active{display:block}.header{margin-bottom:22px}.header h1{margin:0;color:#e7b742;font-size:34px}.header p{color:#b9a98d;margin-top:8px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:17px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:22px}.stat{padding:20px}.stat label{color:#927f61;font-size:12px;text-transform:uppercase}.stat strong{display:block;color:#e8b943;font-size:28px;margin-top:8px}
-.panel{padding:24px;margin-bottom:22px}.panel h2{margin-top:0;color:#e7b742}.panel p{color:#d5c3a5;line-height:1.5}
-.mine{text-align:center;padding:30px}.mine-title{color:#e7b742;font-size:25px}.mine-count{font-size:27px;margin:10px}.coin-btn{width:145px;height:145px;border-radius:50%;border:7px solid #9b712d;background:radial-gradient(circle at 35% 30%,#ffeaa3,#e6b83f 45%,#9c6d21);color:#fff7cf;font-size:60px;box-shadow:0 10px 0 #634519,0 20px 35px #0008}.coin-btn:active{transform:translateY(7px);box-shadow:0 3px 0 #634519}
-.upgrade{max-width:600px;margin:20px auto 0}.upgrade-row{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap}.upgrade-info{color:#d9c39b}
-.card{padding:18px}.card h3{color:#e7b742;margin:0 0 8px}.rarity{display:inline-block;padding:5px 9px;border-radius:5px;background:#3a2918;color:#d9b457;font-size:12px;margin-bottom:10px}.muted{color:#927f61}.desc{color:#c7b79c;line-height:1.45;font-style:italic;margin-bottom:12px}.stats2{display:grid;grid-template-columns:1fr 1fr;gap:6px;color:#d9c39b;font-size:14px}.exist{margin-top:12px;color:#d7ae52}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.toolbar input,.toolbar select{max-width:280px;margin:0}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.formgrid .full{grid-column:1/-1}.row{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #46331f}.row:last-child{border-bottom:0}
-#toast{position:fixed;right:22px;bottom:22px;background:#2c2116;border:1px solid #9a702c;color:#f5e6c8;padding:14px 18px;border-radius:8px;box-shadow:0 10px 30px #0008;display:none;z-index:100}
-.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:90;padding:20px}.modal.open{display:flex}.modal-box{width:600px;max-width:100%;max-height:90vh;overflow:auto;padding:25px;background:#241a12;border:1px solid #9a702c;border-radius:12px}.modal-box h2{color:#e7b742}.case-card{position:relative;overflow:hidden}.case-card.admin{border-color:#b94a3d}.case-price{font-size:20px;color:#f1c442}.case-target{color:#d7ae52}.case-balance{margin-bottom:18px}.result-weapon{text-align:center;padding:18px;border:1px solid #9a702c;border-radius:10px;background:#17100b}.result-weapon .big-rarity{font-size:18px;color:#e7b742}.result-weapon .big-name{font-size:30px;color:#f1c442;margin:10px 0}.admin-case-box{border-color:#843b32}.admin-case-count{font-size:28px;color:#f1c442}.inventory-summary{display:flex;justify-content:space-between;align-items:center;font-size:20px;margin-bottom:18px}.inventory-summary span{color:#f1c442;font-size:28px}.case-open-row{display:flex;gap:8px;align-items:center;margin-top:10px}.case-open-row input{width:110px;margin:0}.case-results{display:grid;gap:10px;max-height:55vh;overflow:auto}.case-result-item{padding:12px;border:1px solid #765627;border-radius:8px;background:#17100c}
-@media(max-width:900px){.sidebar{width:180px}.topbar{left:180px}.main{margin-left:180px}.stats{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.sidebar{position:static;width:100%;padding-bottom:70px}.logout{position:absolute}.topbar{position:static;height:auto;padding:15px;justify-content:center}.main{margin-left:0;padding:25px 15px}.stats{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Georgia,serif;
+  background:radial-gradient(circle at top,#261a11,#17110c 45%,#100c09);
+  color:#f5e6c8
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+#authScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px
+}
+.auth-card,.panel,.card{
+  background:#241a12;
+  border:1px solid #765627;
+  border-radius:12px;
+  box-shadow:0 15px 40px #0006
+}
+.auth-card{width:430px;max-width:100%;padding:35px}
+.auth-title{text-align:center;color:#e8b943;font-size:34px;margin:0 0 8px}
+.auth-subtitle{text-align:center;color:#b9a98d;margin-bottom:28px;line-height:1.5}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:7px;
+  border:1px solid #6d522d;
+  background:#120e0a;
+  color:#f5e6c8;
+  outline:none
+}
+input{margin-bottom:10px}
+
+.btn{
+  border:0;
+  border-radius:7px;
+  padding:11px 16px;
+  background:#ae7d27;
+  color:white;
+  font-weight:bold
+}
+.btn:hover{background:#ca9635}
+.btn.secondary{
+  background:transparent;
+  border:1px solid #6d522d;
+  color:#d7ae52
+}
+.btn.danger{background:#71322c}
+.btn.small{padding:8px 11px;font-size:13px}
+.btn.success{background:#39734b}
+
+#authButton{width:100%;margin-top:5px}
+.switch{width:100%;margin-top:10px}
+.msg{text-align:center;min-height:24px;margin-top:12px;color:#d9c39b}
+
+#app{display:none;min-height:100vh}
+
+.sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:220px;
+  background:#19110b;
+  border-right:1px solid #6d522d;
+  padding:24px 15px;
+  z-index:20
+}
+.logo{
+  text-align:center;
+  color:#e7b742;
+  font-size:25px;
+  font-weight:bold;
+  line-height:1.1;
+  margin-bottom:28px
+}
+.nav-section{
+  color:#806f55;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin:18px 12px 7px
+}
+.nav{
+  width:100%;
+  padding:12px;
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  color:#e2d0af;
+  text-align:left;
+  margin-bottom:4px
+}
+.nav:hover,.nav.active{
+  background:#302113;
+  border-color:#89642e;
+  color:#e9b941
+}
+.logout{
+  position:absolute;
+  left:15px;
+  right:15px;
+  bottom:22px;
+  width:calc(100% - 30px);
+  padding:11px;
+  border-radius:8px;
+  border:1px solid #67342f;
+  background:#512521;
+  color:#fff
+}
+
+.topbar{
+  position:fixed;
+  left:220px;
+  right:0;
+  top:0;
+  height:74px;
+  background:#21160e;
+  border-bottom:1px solid #604924;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:15px;
+  padding:0 25px;
+  z-index:10
+}
+.username{color:#d9c39b}
+.badge{
+  background:#843b32;
+  color:white;
+  padding:5px 9px;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:bold
+}
+.coins{
+  border:1px solid #876326;
+  border-radius:25px;
+  padding:9px 17px;
+  color:#f1c442;
+  background:#21170e
+}
+
+.main{
+  margin-left:220px;
+  padding:105px 35px 50px;
+  max-width:1550px
+}
+.page{display:none}
+.page.active{display:block}
+.header{margin-bottom:22px}
+.header h1{margin:0;color:#e7b742;font-size:34px}
+.header p{color:#b9a98d;margin-top:8px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:17px
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:17px;
+  margin-bottom:22px
+}
+.stat{padding:20px}
+.stat label{
+  color:#927f61;
+  font-size:12px;
+  text-transform:uppercase
+}
+.stat strong{
+  display:block;
+  color:#e8b943;
+  font-size:28px;
+  margin-top:8px
+}
+
+.panel{padding:24px;margin-bottom:22px}
+.panel h2{margin-top:0;color:#e7b742}
+.panel p{color:#d5c3a5;line-height:1.5}
+
+.mine{text-align:center;padding:30px}
+.mine-title{color:#e7b742;font-size:25px}
+.mine-count{font-size:27px;margin:10px}
+.coin-btn{
+  width:145px;
+  height:145px;
+  border-radius:50%;
+  border:7px solid #9b712d;
+  background:radial-gradient(circle at 35% 30%,#ffeaa3,#e6b83f 45%,#9c6d21);
+  color:#fff7cf;
+  font-size:60px;
+  box-shadow:0 10px 0 #634519,0 20px 35px #0008
+}
+.coin-btn:active{
+  transform:translateY(7px);
+  box-shadow:0 3px 0 #634519
+}
+
+.upgrade{max-width:600px;margin:20px auto 0}
+.upgrade-row{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap
+}
+.upgrade-info{color:#d9c39b}
+
+.card{padding:18px}
+.card h3{color:#e7b742;margin:0 0 8px}
+.rarity{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:5px;
+  background:#3a2918;
+  color:#d9b457;
+  font-size:12px;
+  margin-bottom:10px
+}
+.muted{color:#927f61}
+.desc{
+  color:#c7b79c;
+  line-height:1.45;
+  font-style:italic;
+  margin-bottom:12px
+}
+.stats2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  color:#d9c39b;
+  font-size:14px
+}
+.exist{margin-top:12px;color:#d7ae52}
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:14px
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+  flex-wrap:wrap
+}
+.toolbar input,.toolbar select{max-width:280px;margin:0}
+.formgrid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px
+}
+.formgrid .full{grid-column:1/-1}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:12px 0;
+  border-bottom:1px solid #46331f
+}
+.row:last-child{border-bottom:0}
+
+#toast{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  background:#2c2116;
+  border:1px solid #9a702c;
+  color:#f5e6c8;
+  padding:14px 18px;
+  border-radius:8px;
+  box-shadow:0 10px 30px #0008;
+  display:none;
+  z-index:100
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#0009;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:90;
+  padding:20px
+}
+.modal.open{display:flex}
+.modal-box{
+  width:700px;
+  max-width:100%;
+  max-height:90vh;
+  overflow:auto;
+  padding:25px;
+  background:#241a12;
+  border:1px solid #9a702c;
+  border-radius:12px
+}
+.modal-box h2{color:#e7b742}
+
+.battle-selection{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:15px
+}
+.battle-weapon{
+  border:1px solid #5d4528;
+  border-radius:10px;
+  padding:14px;
+  background:#1b130d;
+  cursor:pointer
+}
+.battle-weapon.selected{
+  border-color:#e7b742;
+  box-shadow:0 0 0 2px #e7b74255
+}
+.battle-weapon h4{margin:0 0 8px;color:#e7b742}
+.battle-weapon .mini-stats{
+  font-size:12px;
+  color:#cbb99c;
+  line-height:1.6
+}
+.battle-secret{
+  text-align:center;
+  padding:30px;
+  border:1px dashed #765627;
+  border-radius:10px;
+  color:#b9a98d
+}
+.battle-result{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:15px;
+  align-items:center
+}
+.battle-side{
+  padding:18px;
+  border:1px solid #5d4528;
+  border-radius:10px;
+  text-align:center
+}
+.battle-score{
+  font-size:30px;
+  color:#e7b742;
+  font-weight:bold
+}
+.vs{
+  color:#d7ae52;
+  font-size:24px;
+  font-weight:bold
+}
+
+@media(max-width:900px){
+  .sidebar{width:180px}
+  .topbar{left:180px}
+  .main{margin-left:180px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  .sidebar{
+    position:static;
+    width:100%;
+    padding-bottom:70px
+  }
+  .logout{position:absolute}
+  .topbar{
+    position:static;
+    height:auto;
+    padding:15px;
+    justify-content:center
+  }
+  .main{
+    margin-left:0;
+    padding:25px 15px
+  }
+  .stats{grid-template-columns:1fr}
+  .formgrid{grid-template-columns:1fr}
+  .formgrid .full{grid-column:auto}
+  .battle-selection{grid-template-columns:1fr}
+  .battle-result{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
 
 <div id="authScreen">
   <div class="auth-card">
     <h1 class="auth-title">⚔️ Realm of Relics</h1>
-    <div class="auth-subtitle">Collect. Trade. Become legendary.</div>
+    <div class="auth-subtitle">Collect. Trade. Battle. Become legendary.</div>
+
     <input id="username" maxlength="20" placeholder="Username" autocomplete="username">
     <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+
     <button id="authButton" class="btn" onclick="handleAuth()">Create Account</button>
     <button class="btn secondary switch" onclick="toggleAuthMode()">Already have an account? Log in</button>
+
     <div id="authMessage" class="msg"></div>
   </div>
 </div>
 
+
 <div id="app">
+
 <aside class="sidebar">
+
   <div class="logo">⚔️ Realm of<br>Relics</div>
+
   <div class="nav-section">Realm</div>
-  <button class="nav active" data-page="dashboard" onclick="showPage('dashboard')">🏰 Dashboard</button>
-  <button class="nav" data-page="cases" onclick="showPage('cases')">🎁 Cases</button>
-  <button class="nav" data-page="index" onclick="showPage('index')">📖 Index</button>
-  <button class="nav" data-page="inventory" onclick="showPage('inventory')">🎒 Inventory</button>
-  <button class="nav" data-page="trading" onclick="showPage('trading')">🔄 Trading</button>
-  <button class="nav" data-page="marketplace" onclick="showPage('marketplace')">🏪 Marketplace</button>
-  <button class="nav" data-page="profile" onclick="showPage('profile')">👤 Profile</button>
+
+  <button class="nav active" data-page="dashboard" onclick="showPage('dashboard')">
+    🏰 Dashboard
+  </button>
+
+  <button class="nav" data-page="cases" onclick="showPage('cases')">
+    🎁 Cases
+  </button>
+
+  <button class="nav" data-page="index" onclick="showPage('index')">
+    📖 Index
+  </button>
+
+  <button class="nav" data-page="inventory" onclick="showPage('inventory')">
+    🎒 Inventory
+  </button>
+
+  <button class="nav" data-page="trading" onclick="showPage('trading')">
+    🔄 Trading
+  </button>
+
+  <button class="nav" data-page="marketplace" onclick="showPage('marketplace')">
+    🏪 Marketplace
+  </button>
+
+  <button class="nav" data-page="battle" onclick="showPage('battle')">
+    ⚔️ Battle
+  </button>
+
+  <button class="nav" data-page="profile" onclick="showPage('profile')">
+    👤 Profile
+  </button>
+
   <div id="adminNav" class="hidden">
     <div class="nav-section">Administration</div>
-    <button class="nav" data-page="admin" onclick="showPage('admin')">👑 Admin Panel</button>
+
+    <button class="nav" data-page="admin" onclick="showPage('admin')">
+      👑 Admin Panel
+    </button>
   </div>
+
   <button class="logout" onclick="logout()">🚪 Log Out</button>
+
 </aside>
+
 
 <header class="topbar">
   <span id="topUsername" class="username">Player</span>
@@ -66,239 +478,810 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
   <span class="coins">🪙 <span id="topCoins">0</span></span>
 </header>
 
+
 <main class="main">
 
 <section id="page-dashboard" class="page active">
-  <div class="header"><h1>Welcome to the Realm</h1><p id="dashboardWelcome">Your adventure awaits.</p></div>
+
+  <div class="header">
+    <h1>Welcome to the Realm</h1>
+    <p id="dashboardWelcome">Your adventure awaits.</p>
+  </div>
+
   <div class="stats">
-    <div class="stat card"><label>Coins</label><strong id="statCoins">0</strong></div>
-    <div class="stat card"><label>Rank</label><strong id="statRank">Novice</strong></div>
-  </div>
-  <div class="panel mine">
-    <div class="mine-title">Mine Coins</div>
-    <div class="mine-count">🪙 <span id="mineCoins">0</span></div>
-    <button class="coin-btn" onclick="mineCoin()">🪙</button>
-    <p>+<span id="clickPower">1</span> coins per click</p>
-    <div class="upgrade">
-      <div class="upgrade-row">
-        <span class="upgrade-info">Level <b id="clickLevel">1</b> · Next upgrade: <b id="upgradeCost">100</b> coins</span>
-        <button class="btn" onclick="upgradeClick()">⬆️ Upgrade Click</button>
-      </div>
+
+    <div class="stat card">
+      <label>Coins</label>
+      <strong id="statCoins">0</strong>
     </div>
+
+    <div class="stat card">
+      <label>Weapons Owned</label>
+      <strong id="statWeapons">0</strong>
+    </div>
+
+    <div class="stat card">
+      <label>Unique Weapons</label>
+      <strong id="statUnique">0</strong>
+    </div>
+
+    <div class="stat card">
+      <label>Rank</label>
+      <strong id="statRank">Novice</strong>
+    </div>
+
   </div>
-  <div class="panel"><h2>⚔️ Your Realm</h2><p>Collect weapons, unlock rarities in your Index, trade with other players, and use the marketplace to build your collection.</p></div>
+
+  <div class="panel mine">
+
+    <div class="mine-title">Mine Coins</div>
+
+    <div class="mine-count">
+      🪙 <span id="mineCoins">0</span>
+    </div>
+
+    <button class="coin-btn" onclick="mineCoin()">🪙</button>
+
+    <p>
+      +<span id="clickPower">1</span> coins per click
+    </p>
+
+    <div class="upgrade">
+
+      <div class="upgrade-row">
+
+        <span class="upgrade-info">
+          Level <b id="clickLevel">1</b>
+          · Next upgrade:
+          <b id="upgradeCost">100</b> coins
+        </span>
+
+        <button class="btn" onclick="upgradeClick()">
+          ⬆️ Upgrade Click
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
 
+
 <section id="page-cases" class="page">
+
   <div class="header">
     <h1>🎁 Cases</h1>
-    <p>Open cases to discover weapons. Your Admin Cases are separate and can only be granted by an administrator.</p>
+    <p>Open cases to discover weapons.</p>
   </div>
 
-  <div class="panel case-balance">
+  <div class="panel">
+
     <div class="row">
+
       <div>
         <b>🎟️ Admin Cases</b>
-        <div class="muted">Special cases granted by an administrator.</div>
+        <div class="muted">
+          Special cases granted by an administrator.
+        </div>
       </div>
-      <div class="admin-case-count" id="adminCaseCount">0</div>
+
+      <strong id="adminCaseCount">0</strong>
+
     </div>
-    <div class="case-open-row">
-      <input id="adminCaseQty" type="number" min="1" max="100" value="1" aria-label="Number of Admin Cases to open">
-      <button id="openAdminCaseBtn" class="btn" onclick="openAdminCase()" disabled>Open Admin Case(s)</button>
+
+    <div class="actions">
+
+      <input
+        id="adminCaseQty"
+        type="number"
+        min="1"
+        max="100"
+        value="1"
+        style="max-width:150px;margin:0"
+      >
+
+      <button
+        id="openAdminCaseBtn"
+        class="btn"
+        onclick="openAdminCase()"
+        disabled
+      >
+        Open Admin Case
+      </button>
+
     </div>
+
   </div>
 
   <div id="casesGrid" class="grid">
     <div class="card">Loading cases...</div>
   </div>
+
 </section>
+
 
 <section id="page-index" class="page">
-  <div class="header"><h1>📖 Weapon Index</h1><p>Weapons you have unlocked. The existence number counts every copy in the database, including admin-created copies.</p></div>
-  <div class="toolbar"><input id="indexSearch" placeholder="Search unlocked weapons..." oninput="filterCards('indexGrid','indexSearch')"></div>
-  <div id="indexGrid" class="grid"><div class="card">Loading index...</div></div>
+
+  <div class="header">
+    <h1>📖 Weapon Index</h1>
+    <p>Weapons you have unlocked.</p>
+  </div>
+
+  <div class="toolbar">
+    <input
+      id="indexSearch"
+      placeholder="Search unlocked weapons..."
+      oninput="filterCards('indexGrid','indexSearch')"
+    >
+  </div>
+
+  <div id="indexGrid" class="grid">
+    <div class="card">Loading index...</div>
+  </div>
+
 </section>
+
 
 <section id="page-inventory" class="page">
-  <div class="header"><h1>🎒 Inventory</h1><p>Everything you currently own.</p></div>
-  <div class="panel inventory-summary"><b>Weapons Owned</b><span id="inventoryOwnedCount">0</span></div>
-  <div class="toolbar"><input id="inventorySearch" placeholder="Search inventory..." oninput="filterCards('inventoryGrid','inventorySearch')"></div>
-  <div id="inventoryGrid" class="grid"><div class="card">Loading inventory...</div></div>
+
+  <div class="header">
+    <h1>🎒 Inventory</h1>
+    <p>Everything you currently own.</p>
+  </div>
+
+  <div class="toolbar">
+
+    <input
+      id="inventorySearch"
+      placeholder="Search inventory..."
+      oninput="filterCards('inventoryGrid','inventorySearch')"
+    >
+
+  </div>
+
+  <div id="inventoryGrid" class="grid">
+    <div class="card">Loading inventory...</div>
+  </div>
+
 </section>
+
 
 <section id="page-trading" class="page">
-  <div class="header"><h1>🔄 Trading</h1><p>Send weapon and coin offers to other players.</p></div>
-  <div class="panel">
-    <h2>Create Trade</h2>
-    <div class="formgrid">
-      <input id="tradeUsername" placeholder="Recipient username">
-      <input id="tradeCoins" type="number" min="0" value="0" placeholder="Coins to offer">
-      <input id="tradeRequestedCoins" type="number" min="0" value="0" placeholder="Coins you request">
-      <select id="tradeWeapon"><option value="">No weapon offered</option></select>
-    </div>
-    <div class="actions"><button class="btn" onclick="createTrade()">Send Trade</button></div>
-    <div id="tradeMessage" class="msg"></div>
+
+  <div class="header">
+    <h1>🔄 Trading</h1>
+    <p>Send weapon and coin offers to other players.</p>
   </div>
-  <div class="panel"><h2>Incoming & Outgoing Trades</h2><div id="tradesList">Loading trades...</div></div>
+
+  <div class="panel">
+
+    <h2>Create Trade</h2>
+
+    <div class="formgrid">
+
+      <input
+        id="tradeUsername"
+        placeholder="Recipient username"
+      >
+
+      <input
+        id="tradeCoins"
+        type="number"
+        min="0"
+        value="0"
+        placeholder="Coins to offer"
+      >
+
+      <input
+        id="tradeRequestedCoins"
+        type="number"
+        min="0"
+        value="0"
+        placeholder="Coins you request"
+      >
+
+      <select id="tradeWeapon">
+        <option value="">No weapon offered</option>
+      </select>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="createTrade()">
+        Send Trade
+      </button>
+    </div>
+
+    <div id="tradeMessage" class="msg"></div>
+
+  </div>
+
+  <div class="panel">
+
+    <h2>Incoming & Outgoing Trades</h2>
+
+    <div id="tradesList">
+      Loading trades...
+    </div>
+
+  </div>
+
 </section>
+
 
 <section id="page-marketplace" class="page">
-  <div class="header"><h1>🏪 Marketplace</h1><p>List weapons for coins, weapons, or both.</p></div>
-  <div class="panel">
-    <h2>List a Weapon</h2>
-    <div class="formgrid">
-      <select id="marketInventory"><option value="">Select a weapon you own</option></select>
-      <input id="marketPrice" type="number" min="0" value="0" placeholder="Coin price">
-      <select id="marketRequestedWeapon"><option value="">No requested weapon</option></select>
-      <input id="marketRequestedCoins" type="number" min="0" value="0" placeholder="Requested coins">
-    </div>
-    <div class="actions"><button class="btn" onclick="createListing()">List Weapon</button></div>
-    <div id="marketMessage" class="msg"></div>
+
+  <div class="header">
+    <h1>🏪 Marketplace</h1>
+    <p>List weapons for coins or other weapons.</p>
   </div>
-  <div class="panel"><h2>Active Listings</h2><div id="marketGrid" class="grid">Loading listings...</div></div>
+
+  <div class="panel">
+
+    <h2>List a Weapon</h2>
+
+    <div class="formgrid">
+
+      <select id="marketInventory">
+        <option value="">Select a weapon you own</option>
+      </select>
+
+      <input
+        id="marketPrice"
+        type="number"
+        min="0"
+        value="0"
+        placeholder="Coin price"
+      >
+
+      <select id="marketRequestedWeapon">
+        <option value="">No requested weapon</option>
+      </select>
+
+      <input
+        id="marketRequestedCoins"
+        type="number"
+        min="0"
+        value="0"
+        placeholder="Requested coins"
+      >
+
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="createListing()">
+        List Weapon
+      </button>
+    </div>
+
+    <div id="marketMessage" class="msg"></div>
+
+  </div>
+
+  <div class="panel">
+
+    <h2>Active Listings</h2>
+
+    <div id="marketGrid" class="grid">
+      Loading listings...
+    </div>
+
+  </div>
+
 </section>
+
+
+<!-- ============================================================
+     BATTLE PAGE
+     ============================================================ -->
+
+<section id="page-battle" class="page">
+
+  <div class="header">
+    <h1>⚔️ Battle</h1>
+    <p>
+      Challenge another player to a hidden 3-weapon battle.
+      The winner chooses one weapon from the opponent's lineup.
+    </p>
+  </div>
+
+
+  <div class="panel">
+
+    <h2>⚔️ Challenge a Player</h2>
+
+    <div class="formgrid">
+
+      <input
+        id="battleUsername"
+        placeholder="Opponent username"
+      >
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="btn"
+        onclick="sendBattleRequest()"
+      >
+        Send Battle Request
+      </button>
+
+    </div>
+
+    <div id="battleMessage" class="msg"></div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2>📨 Battle Requests & Battles</h2>
+
+    <div id="battleList">
+      Loading battles...
+    </div>
+
+  </div>
+
+</section>
+
 
 <section id="page-profile" class="page">
-  <div class="header"><h1>👤 Profile</h1><p>Your Realm of Relics profile.</p></div>
-  <div class="panel">
-    <div class="row"><span class="muted">Username</span><b id="profileUsername">-</b></div>
-    <div class="row"><span class="muted">Role</span><b id="profileRole">-</b></div>
-    <div class="row"><span class="muted">Coins</span><b id="profileCoins">0</b></div>
-    <div class="row"><span class="muted">Rank</span><b id="profileRank">Novice</b></div>
-    <div class="row"><span class="muted">Click Level</span><b id="profileClickLevel">1</b></div>
+
+  <div class="header">
+    <h1>👤 Profile</h1>
+    <p>Your Realm of Relics profile.</p>
   </div>
+
+  <div class="panel">
+
+    <div class="row">
+      <span class="muted">Username</span>
+      <b id="profileUsername">-</b>
+    </div>
+
+    <div class="row">
+      <span class="muted">Role</span>
+      <b id="profileRole">-</b>
+    </div>
+
+    <div class="row">
+      <span class="muted">Coins</span>
+      <b id="profileCoins">0</b>
+    </div>
+
+    <div class="row">
+      <span class="muted">Rank</span>
+      <b id="profileRank">Novice</b>
+    </div>
+
+    <div class="row">
+      <span class="muted">Click Level</span>
+      <b id="profileClickLevel">1</b>
+    </div>
+
+  </div>
+
 </section>
 
+
 <section id="page-admin" class="page">
-  <div class="header"><h1>👑 Admin Panel</h1><p>Manage players, weapons, coins, and special Admin Cases.</p></div>
+
+  <div class="header">
+    <h1>👑 Admin Panel</h1>
+    <p>Manage players, cases, and weapons.</p>
+  </div>
+
 
   <div class="panel">
+
     <h2>🪙 Give Coins</h2>
-    <div class="formgrid">
-      <input id="coinUsername" placeholder="Player username">
-      <input id="coinAmount" type="number" min="1" placeholder="Amount">
-    </div>
-    <div class="actions"><button class="btn" onclick="adminGiveCoins()">Give Coins</button></div>
-    <div id="coinMessage" class="msg"></div>
-  </div>
 
-  <div class="panel">
-    <h2>⚔️ Give Weapon</h2>
     <div class="formgrid">
-      <input id="weaponUsername" placeholder="Player username">
-      <select id="weaponSelect"><option value="">Select weapon</option></select>
-    </div>
-    <div class="actions"><button class="btn" onclick="adminGiveWeapon()">Give Weapon</button></div>
-    <div id="weaponMessage" class="msg"></div>
-  </div>
 
-  <div class="panel admin-case-box">
-    <h2>🎟️ Give Admin Case</h2>
-    <p>Admin Cases are not sold. Give them directly to a player. When the player logs in, the site will notify them if they have one. Players can open multiple at once.</p>
-    <div class="formgrid">
-      <input id="caseUsername" placeholder="Player username">
-      <input id="caseAmount" type="number" min="1" value="1" placeholder="Number of cases">
+      <input
+        id="coinUsername"
+        placeholder="Player username"
+      >
+
+      <input
+        id="coinAmount"
+        type="number"
+        min="1"
+        placeholder="Amount"
+      >
+
     </div>
+
     <div class="actions">
-      <button class="btn" onclick="adminGiveCases()">Give Admin Case</button>
+
+      <button class="btn" onclick="adminGiveCoins()">
+        Give Coins
+      </button>
+
     </div>
-    <div id="caseMessage" class="msg"></div>
+
+    <div id="coinMessage" class="msg"></div>
+
   </div>
 
+
   <div class="panel">
-    <h2>📜 Weapons</h2>
-    <div id="adminWeaponList">Loading...</div>
+
+    <h2>🎟️ Give Admin Cases</h2>
+
+    <div class="formgrid">
+
+      <input
+        id="caseUsername"
+        placeholder="Player username"
+      >
+
+      <input
+        id="caseAmount"
+        type="number"
+        min="1"
+        value="1"
+        placeholder="Number of cases"
+      >
+
+    </div>
+
+    <div class="actions">
+
+      <button class="btn" onclick="adminGiveCases()">
+        Give Admin Cases
+      </button>
+
+    </div>
+
+    <div id="caseMessage" class="msg"></div>
+
   </div>
+
+
+  <div class="panel">
+
+    <h2>⚔️ Give Weapon</h2>
+
+    <div class="formgrid">
+
+      <input
+        id="weaponUsername"
+        placeholder="Player username"
+      >
+
+      <select id="weaponSelect">
+        <option value="">Select weapon</option>
+      </select>
+
+    </div>
+
+    <div class="actions">
+
+      <button class="btn" onclick="adminGiveWeapon()">
+        Give Weapon
+      </button>
+
+    </div>
+
+    <div id="weaponMessage" class="msg"></div>
+
+  </div>
+
+
+  <div class="panel">
+
+    <h2>📜 Weapons</h2>
+
+    <div id="adminWeaponList">
+      Loading...
+    </div>
+
+  </div>
+
 </section>
 
 </main>
 </div>
 
-<div id="tradeModal" class="modal"><div class="modal-box"><h2>Trade</h2><div id="tradeModalContent"></div><div class="actions"><button class="btn secondary" onclick="closeModal('tradeModal')">Close</button></div></div></div>
-<div id="caseResultModal" class="modal">
+
+<!-- ============================================================
+     BATTLE MODAL
+     ============================================================ -->
+
+<div id="battleModal" class="modal">
+
   <div class="modal-box">
-    <h2 id="caseResultTitle">🎉 Case Opened!</h2>
-    <div id="caseResultContent"></div>
+
+    <h2 id="battleModalTitle">⚔️ Battle</h2>
+
+    <div id="battleModalContent"></div>
+
     <div class="actions">
-      <button class="btn" onclick="closeModal('caseResultModal')">Awesome</button>
+
+      <button
+        class="btn secondary"
+        onclick="closeModal('battleModal')"
+      >
+        Close
+      </button>
+
     </div>
+
   </div>
+
 </div>
+
+
 <div id="toast"></div>
 
+
 <script>
-const SUPABASE_URL="https://mdtdtsrrvmlvxkblsdvo.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kdGR0c3Jydm1sdnhrYmxzZHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczOTczODEsImV4cCI6MjEwMjk3MzM4MX0.BcdN35iFzMaRSMtG_MhF9Ri87QaerPUlebOTtahJ2Fs";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let loginMode=false,currentUser=null,currentProfile=null,clicker={level:1,coins_per_click:1,upgrade_cost:100};
-let inventoryCache=[]; let adminCaseCount=0; let openingCase=false;
+/* ============================================================
+   SUPABASE
+   ============================================================ */
 
-function $(id){return document.getElementById(id)}
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function money(n){return Number(n||0).toLocaleString()}
-function toast(t){const x=$("toast");x.textContent=t;x.style.display="block";clearTimeout(window.__toast);window.__toast=setTimeout(()=>x.style.display="none",3000)}
-function msg(id,t){$(id).textContent=t}
-function closeModal(id){$(id).classList.remove("open")}
+const SUPABASE_URL =
+  "https://mdtdtsrrvmlvxkblsdvo.supabase.co";
 
-function toggleAuthMode(){
-  loginMode=!loginMode;
-  $("authButton").textContent=loginMode?"Log In":"Create Account";
-  document.querySelector(".switch").textContent=loginMode?"Need an account? Create one":"Already have an account? Log in";
-  $("authMessage").textContent="";
+const SUPABASE_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kdGR0c3Jydm1sdnhrYmxzZHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczOTczODEsImV4cCI6MjEwMjk3MzM4MX0.BcdN35iFzMaRSMtG_MhF9Ri87QaerPUlebOTtahJ2Fs";
+
+const client =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* ============================================================
+   STATE
+   ============================================================ */
+
+let loginMode = false;
+let currentUser = null;
+let currentProfile = null;
+
+let inventoryCache = [];
+
+let clicker = {
+  level:1,
+  coins_per_click:1,
+  upgrade_cost:100
+};
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
+function $(id){
+  return document.getElementById(id);
 }
 
-async function handleAuth(){
-  const username=$("username").value.trim(),password=$("password").value;
-  if(!/^[a-zA-Z0-9_]{3,20}$/.test(username))return msg("authMessage","Username must be 3–20 letters, numbers, or underscores.");
-  if(password.length<6)return msg("authMessage","Password must be at least 6 characters.");
-  msg("authMessage","Please wait...");
-  const email=username.toLowerCase()+"@realmofrelics.local";
-  if(!loginMode){
-    const {data,error}=await client.auth.signUp({email,password});
-    if(error)return msg("authMessage",error.message);
-    if(!data.user)return msg("authMessage","Account creation failed.");
-    const {error:pe}=await client.from("profiles").insert({id:data.user.id,username:username.toLowerCase(),role:"player",coins:100});
-    if(pe){await client.auth.signOut();return msg("authMessage",pe.code==="23505"?"That username is already taken.":pe.message)}
-    await showGame(data.user.id);
-  }else{
-    const {data,error}=await client.auth.signInWithPassword({email,password});
-    if(error)return msg("authMessage",error.message||"Login failed.");
-    if(data.user)await showGame(data.user.id);
+function esc(v){
+  return String(v ?? "").replace(
+    /[&<>"']/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[c])
+  );
+}
+
+function money(n){
+  return Number(n || 0).toLocaleString();
+}
+
+function toast(t){
+
+  const x = $("toast");
+
+  x.textContent = t;
+  x.style.display = "block";
+
+  clearTimeout(window.__toast);
+
+  window.__toast =
+    setTimeout(
+      () => x.style.display = "none",
+      3500
+    );
+}
+
+function msg(id,t){
+
+  const el = $(id);
+
+  if(el){
+    el.textContent = t;
   }
 }
 
-async function showGame(uid){
-  currentUser=uid;
-  const {data,error}=await client.from("profiles").select("*").eq("id",uid).single();
-  if(error||!data){$("authMessage").textContent="Could not load your profile.";return}
-  currentProfile=data;
-  $("authScreen").style.display="none";$("app").style.display="block";
-  $("adminNav").classList.toggle("hidden",data.role!=="admin");
-  $("adminBadge").classList.toggle("hidden",data.role!=="admin");
-  await refreshAll();
+function closeModal(id){
 
-  if(currentUser){
-    const {data:ac}=await client
-      .from("admin_cases")
-      .select("quantity")
-      .eq("user_id",currentUser)
-      .maybeSingle();
+  const el = $(id);
 
-    const qty=Number(ac?.quantity||0);
+  if(el){
+    el.classList.remove("open");
+  }
+}
 
-    if(qty>0){
-      setTimeout(()=>{
-        if(confirm(`🎟️ You have ${qty} Admin Case${qty===1?"":"s"}!\n\nOpen the Cases page now?`)){
-          showPage("cases");
-        }
-      },350);
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+
+function toggleAuthMode(){
+
+  loginMode = !loginMode;
+
+  $("authButton").textContent =
+    loginMode ? "Log In" : "Create Account";
+
+  document.querySelector(".switch").textContent =
+    loginMode
+      ? "Need an account? Create one"
+      : "Already have an account? Log in";
+
+  $("authMessage").textContent = "";
+}
+
+
+async function handleAuth(){
+
+  const username =
+    $("username").value.trim();
+
+  const password =
+    $("password").value;
+
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){
+    return msg(
+      "authMessage",
+      "Username must be 3–20 letters, numbers, or underscores."
+    );
+  }
+
+  if(password.length < 6){
+    return msg(
+      "authMessage",
+      "Password must be at least 6 characters."
+    );
+  }
+
+  msg("authMessage","Please wait...");
+
+  const email =
+    username.toLowerCase() +
+    "@realmofrelics.local";
+
+
+  if(!loginMode){
+
+    const {data,error} =
+      await client.auth.signUp({
+        email,
+        password
+      });
+
+    if(error){
+      return msg(
+        "authMessage",
+        error.message
+      );
+    }
+
+    if(!data.user){
+      return msg(
+        "authMessage",
+        "Account creation failed."
+      );
+    }
+
+    const {error:pe} =
+      await client
+        .from("profiles")
+        .insert({
+          id:data.user.id,
+          username:username.toLowerCase(),
+          role:"player",
+          coins:100
+        });
+
+    if(pe){
+
+      await client.auth.signOut();
+
+      return msg(
+        "authMessage",
+        pe.code === "23505"
+          ? "That username is already taken."
+          : pe.message
+      );
+    }
+
+    await showGame(data.user.id);
+
+  }else{
+
+    const {data,error} =
+      await client.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if(error){
+      return msg(
+        "authMessage",
+        error.message || "Login failed."
+      );
+    }
+
+    if(data.user){
+      await showGame(data.user.id);
     }
   }
 }
 
+
+async function showGame(uid){
+
+  currentUser = uid;
+
+  const {data,error} =
+    await client
+      .from("profiles")
+      .select("*")
+      .eq("id",uid)
+      .single();
+
+  if(error || !data){
+
+    $("authMessage").textContent =
+      "Could not load your profile.";
+
+    return;
+  }
+
+  currentProfile = data;
+
+  $("authScreen").style.display = "none";
+  $("app").style.display = "block";
+
+  $("adminNav")
+    .classList
+    .toggle(
+      "hidden",
+      data.role !== "admin"
+    );
+
+  $("adminBadge")
+    .classList
+    .toggle(
+      "hidden",
+      data.role !== "admin"
+    );
+
+  await refreshAll();
+}
+
+
+/* ============================================================
+   REFRESH
+   ============================================================ */
+
 async function refreshAll(){
+
   await refreshProfile();
   await loadClicker();
   await loadInventory();
@@ -306,530 +1289,2654 @@ async function refreshAll(){
   await loadTrades();
   await loadMarketplace();
   await loadCasePage();
-  await loadAdminCaseBalance();
+  await loadAdminCaseCount();
+  await loadBattles();
+
   populateWeaponSelectors();
+
   updateUI();
 }
+
 
 async function refreshProfile(){
+
   if(!currentUser)return;
-  const {data,error}=await client.from("profiles").select("*").eq("id",currentUser).single();
-  if(!error&&data)currentProfile=data;
+
+  const {data,error} =
+    await client
+      .from("profiles")
+      .select("*")
+      .eq("id",currentUser)
+      .single();
+
+  if(!error && data){
+    currentProfile = data;
+  }
+
   updateUI();
 }
 
+
 function updateUI(){
-  const p=currentProfile||{},coins=Number(p.coins||0);
-  $("topUsername").textContent=p.username||"Player";$("topCoins").textContent=money(coins);
-  $("statCoins").textContent=money(coins);$("mineCoins").textContent=money(coins);
-  $("profileUsername").textContent=p.username||"-";$("profileRole").textContent=p.role==="admin"?"Administrator":"Player";
-  $("profileCoins").textContent=money(coins);$("statRank").textContent=getRank(coins);$("profileRank").textContent=getRank(coins);
+
+  const p =
+    currentProfile || {};
+
+  const coins =
+    Number(p.coins || 0);
+
+  $("topUsername").textContent =
+    p.username || "Player";
+
+  $("topCoins").textContent =
+    money(coins);
+
+  $("statCoins").textContent =
+    money(coins);
+
+  $("mineCoins").textContent =
+    money(coins);
+
+  $("profileUsername").textContent =
+    p.username || "-";
+
+  $("profileRole").textContent =
+    p.role === "admin"
+      ? "Administrator"
+      : "Player";
+
+  $("profileCoins").textContent =
+    money(coins);
+
+  $("statRank").textContent =
+    getRank(coins);
+
+  $("profileRank").textContent =
+    getRank(coins);
+
+  $("statWeapons").textContent =
+    inventoryCache.length;
+
+  $("statUnique").textContent =
+    new Set(
+      inventoryCache.map(
+        x => x.weapon_id
+      )
+    ).size;
 }
-function getRank(c){if(c>=1000000)return"Legend";if(c>=100000)return"Master";if(c>=10000)return"Elite";if(c>=1000)return"Adventurer";return"Novice"}
+
+
+function getRank(c){
+
+  if(c >= 1000000)return "Legend";
+  if(c >= 100000)return "Master";
+  if(c >= 10000)return "Elite";
+  if(c >= 1000)return "Adventurer";
+
+  return "Novice";
+}
+
+
+/* ============================================================
+   CLICKER
+   ============================================================ */
 
 async function loadClicker(){
-  const {data,error}=await client.rpc("get_click_upgrade");
-  if(!error&&data&&data[0])clicker=data[0];
-  $("clickLevel").textContent=clicker.level||1;$("clickPower").textContent=money(clicker.coins_per_click||1);$("upgradeCost").textContent=money(clicker.upgrade_cost||100);$("profileClickLevel").textContent=clicker.level||1;
+
+  const {data,error} =
+    await client.rpc(
+      "get_click_upgrade"
+    );
+
+  if(!error && data && data[0]){
+    clicker = data[0];
+  }
+
+  $("clickLevel").textContent =
+    clicker.level || 1;
+
+  $("clickPower").textContent =
+    money(clicker.coins_per_click || 1);
+
+  $("upgradeCost").textContent =
+    money(clicker.upgrade_cost || 100);
+
+  $("profileClickLevel").textContent =
+    clicker.level || 1;
 }
 
+
 async function mineCoin(){
-  const {data,error}=await client.rpc("mine_coin");
-  if(error)return toast(error.message);
-  currentProfile.coins=Number(data);updateUI();
+
+  const {data,error} =
+    await client.rpc("mine_coin");
+
+  if(error){
+    return toast(error.message);
+  }
+
+  currentProfile.coins =
+    Number(data);
+
+  updateUI();
 }
+
+
 async function upgradeClick(){
-  const {data,error}=await client.rpc("upgrade_coin_click");
-  if(error)return toast(error.message);
-  if(data&&data[0]){
-    clicker=data[0];currentProfile.coins=Number(data[0].remaining_coins||0);
-    $("clickLevel").textContent=clicker.level;$("clickPower").textContent=money(clicker.coins_per_click);$("upgradeCost").textContent=money(clicker.upgrade_cost);$("profileClickLevel").textContent=clicker.level;
-    updateUI();toast("Click power upgraded!");
+
+  const {data,error} =
+    await client.rpc(
+      "upgrade_coin_click"
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  if(data && data[0]){
+
+    clicker = data[0];
+
+    currentProfile.coins =
+      Number(
+        data[0].remaining_coins || 0
+      );
+
+    $("clickLevel").textContent =
+      clicker.level;
+
+    $("clickPower").textContent =
+      money(
+        clicker.coins_per_click
+      );
+
+    $("upgradeCost").textContent =
+      money(
+        clicker.upgrade_cost
+      );
+
+    $("profileClickLevel").textContent =
+      clicker.level;
+
+    updateUI();
+
+    toast("Click power upgraded!");
   }
 }
 
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
 async function showPage(page){
-  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
-  const el=$("page-"+page);if(!el)return;
-  if(page==="admin"&&currentProfile?.role!=="admin"){toast("Admin access denied.");return showPage("dashboard")}
+
+  document
+    .querySelectorAll(".page")
+    .forEach(
+      x => x.classList.remove("active")
+    );
+
+  document
+    .querySelectorAll(".nav")
+    .forEach(
+      x =>
+        x.classList.toggle(
+          "active",
+          x.dataset.page === page
+        )
+    );
+
+  const el =
+    $("page-" + page);
+
+  if(!el)return;
+
+  if(
+    page === "admin" &&
+    currentProfile?.role !== "admin"
+  ){
+
+    toast("Admin access denied.");
+
+    return showPage("dashboard");
+  }
+
   el.classList.add("active");
-  if(page==="index")await loadIndex();
-  if(page==="inventory")await loadInventory();
-  if(page==="trading"){await loadInventory();await loadTrades()}
-  if(page==="marketplace"){await loadInventory();await loadMarketplace()}
-  if(page==="cases"){await loadCasePage();await loadAdminCaseBalance()}
-  if(page==="admin")await loadAdmin();
-  if(page==="dashboard"){await refreshProfile();updateUI()}
+
+  if(page === "index")
+    await loadIndex();
+
+  if(page === "inventory")
+    await loadInventory();
+
+  if(page === "trading"){
+    await loadInventory();
+    await loadTrades();
+  }
+
+  if(page === "marketplace"){
+    await loadInventory();
+    await loadMarketplace();
+  }
+
+  if(page === "cases"){
+    await loadCasePage();
+    await loadAdminCaseCount();
+  }
+
+  if(page === "battle"){
+    await loadInventory();
+    await loadBattles();
+  }
+
+  if(page === "admin"){
+    await loadAdmin();
+    await loadAdminCaseCount();
+  }
+
+  if(page === "dashboard"){
+    await refreshProfile();
+    updateUI();
+  }
 }
+
+
+/* ============================================================
+   INVENTORY
+   ============================================================ */
 
 async function loadInventory(){
-  const grid=$("inventoryGrid");grid.innerHTML='<div class="card">Loading inventory...</div>';
-  const {data,error}=await client.from("inventory").select("id,created_at,weapon_id,weapons(id,name,damage,defense,speed,accuracy,luck,description,image_url,rarity_id,rarities(name,sort_order))").eq("user_id",currentUser).order("created_at",{ascending:false});
-  if(error){grid.innerHTML='<div class="card">Could not load inventory: '+esc(error.message)+'</div>';return}
-  inventoryCache=data||[];updateUI();renderInventory(grid,inventoryCache);
-}
-function weaponCard(w,opts={}){
-  const r=w.rarities?.name||"Unknown";
-  const copy=opts.exists??null;
-  const owned=opts.owned??null;
 
-  return `<div class="card weapon" data-search="${esc((w.name+" "+r).toLowerCase())}">
-    <h3>${esc(w.name)}</h3><span class="rarity">${esc(r)}</span>
-    <div class="desc">${esc(w.description||"A relic whose history has faded into legend.")}</div>
-    <div class="stats2"><span>⚔️ ${Number(w.damage||0)}</span><span>🛡️ ${Number(w.defense||0)}</span><span>⚡ ${Number(w.speed||0)}</span><span>🎯 ${Number(w.accuracy||0)}</span><span>🍀 ${Number(w.luck||0)}</span></div>
-    ${owned!==null?`<div class="owned">🎒 ${money(owned)} owned</div>`:""}
-    ${copy!==null?`<div class="exist">🌎 ${money(copy)} exist</div>`:""}
-    ${opts.actions||""}</div>`
-}
-function renderInventory(container,items){
-  if(!items.length){
-    container.innerHTML='<div class="card">Your inventory is empty.</div>';
-    if($("inventoryOwnedCount"))$("inventoryOwnedCount").textContent="0";
+  const grid =
+    $("inventoryGrid");
+
+  grid.innerHTML =
+    '<div class="card">Loading inventory...</div>';
+
+  const {data,error} =
+    await client
+      .from("inventory")
+      .select(
+        "id,created_at,weapon_id,weapons(id,name,damage,defense,speed,accuracy,luck,description,image_url,rarity_id,rarities(name,sort_order))"
+      )
+      .eq("user_id",currentUser)
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+  if(error){
+
+    grid.innerHTML =
+      '<div class="card">Could not load inventory: ' +
+      esc(error.message) +
+      '</div>';
+
     return;
   }
 
-  if($("inventoryOwnedCount"))
-    $("inventoryOwnedCount").textContent=money(items.length);
+  inventoryCache =
+    data || [];
 
-  const grouped=new Map();
+  updateUI();
 
-  items.forEach(i=>{
-    const id=i.weapon_id;
-    if(!grouped.has(id))grouped.set(id,{item:i,owned:0});
-    grouped.get(id).owned++;
-  });
-
-  container.innerHTML=[...grouped.values()].map(({item,owned})=>
-    weaponCard(item.weapons,{
-      owned,
-      actions:`<div class="actions"><button class="btn small" onclick="quickList('${item.id}')">🏪 List</button><button class="btn small secondary" onclick="quickTrade('${item.id}')">🔄 Trade</button></div>`
-    })
-  ).join("");
+  renderInventory(
+    grid,
+    inventoryCache
+  );
 }
+
+
+function weaponCard(w,opts={}){
+
+  const r =
+    w.rarities?.name ||
+    "Unknown";
+
+  const copy =
+    opts.exists ?? null;
+
+  return `
+    <div
+      class="card weapon"
+      data-search="${esc(
+        (w.name + " " + r).toLowerCase()
+      )}"
+    >
+
+      <h3>${esc(w.name)}</h3>
+
+      <span class="rarity">
+        ${esc(r)}
+      </span>
+
+      <div class="desc">
+        ${esc(
+          w.description ||
+          "A relic whose history has faded into legend."
+        )}
+      </div>
+
+      <div class="stats2">
+
+        <span>⚔️ ${Number(w.damage || 0)}</span>
+        <span>🛡️ ${Number(w.defense || 0)}</span>
+        <span>⚡ ${Number(w.speed || 0)}</span>
+        <span>🎯 ${Number(w.accuracy || 0)}</span>
+        <span>🍀 ${Number(w.luck || 0)}</span>
+
+      </div>
+
+      ${
+        copy !== null
+          ? `<div class="exist">🌎 ${money(copy)} exist</div>`
+          : ""
+      }
+
+      ${
+        opts.actions || ""
+      }
+
+    </div>
+  `;
+}
+
+
+function renderInventory(container,items){
+
+  if(!items.length){
+
+    container.innerHTML =
+      '<div class="card">Your inventory is empty.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    items
+      .map(
+        i =>
+          weaponCard(
+            i.weapons,
+            {
+              actions:`
+                <div class="actions">
+
+                  <button
+                    class="btn small"
+                    onclick="quickList('${i.id}')"
+                  >
+                    🏪 List
+                  </button>
+
+                  <button
+                    class="btn small secondary"
+                    onclick="quickTrade('${i.id}')"
+                  >
+                    🔄 Trade
+                  </button>
+
+                </div>
+              `
+            }
+          )
+      )
+      .join("");
+}
+
+
+/* ============================================================
+   INDEX
+   ============================================================ */
+
 async function loadIndex(){
-  const grid=$("indexGrid");grid.innerHTML='<div class="card">Loading unlocked weapons...</div>';
+
+  const grid =
+    $("indexGrid");
+
+  grid.innerHTML =
+    '<div class="card">Loading unlocked weapons...</div>';
+
   if(!currentUser)return;
-  const {data:mine,error}=await client.from("inventory").select("weapon_id").eq("user_id",currentUser);
-  if(error){grid.innerHTML='<div class="card">'+esc(error.message)+'</div>';return}
-  const ids=[...new Set((mine||[]).map(x=>x.weapon_id))];
-  if(!ids.length){grid.innerHTML='<div class="card">Open a case or receive a weapon to unlock your first Index entry.</div>';return}
-  const {data:weapons,error:we}=await client.from("weapons").select("id,name,damage,defense,speed,accuracy,luck,description,image_url,rarity_id,rarities(name,sort_order)").in("id",ids).order("name");
-  if(we){grid.innerHTML='<div class="card">'+esc(we.message)+'</div>';return}
-  const counts={};const {data:all}=await client.from("inventory").select("weapon_id");
-  (all||[]).forEach(x=>counts[x.weapon_id]=(counts[x.weapon_id]||0)+1);
-  grid.innerHTML=(weapons||[]).map(w=>weaponCard(w,{exists:counts[w.id]||0})).join("")||'<div class="card">No unlocked weapons.</div>';
-}
-function filterCards(gridId,inputId){
-  const q=$(inputId).value.toLowerCase();
-  document.querySelectorAll("#"+gridId+" .weapon").forEach(x=>x.style.display=x.dataset.search.includes(q)?"":"none");
-}
 
-async function populateWeaponSelectors(){
-  const {data:weapons}=await client.from("weapons").select("id,name,rarities(name)").order("name");
-  const options=(weapons||[]).map(w=>`<option value="${w.id}">${esc(w.name)} — ${esc(w.rarities?.name||"Unknown")}</option>`).join("");
-  ["tradeWeapon","marketRequestedWeapon","weaponSelect"].forEach(id=>{const el=$(id);if(el)el.innerHTML='<option value="">No weapon selected</option>'+options});
-  const invOptions=inventoryCache.map(i=>`<option value="${i.id}">${esc(i.weapons?.name||"Weapon")}</option>`).join("");
-  $("marketInventory").innerHTML='<option value="">Select a weapon you own</option>'+invOptions;
-}
-
-async function createTrade(){
-  const username=$("tradeUsername").value.trim().toLowerCase(),offered=Number($("tradeCoins").value||0),requested=Number($("tradeRequestedCoins").value||0),weapon=$("tradeWeapon").value;
-  if(!username)return msg("tradeMessage","Enter a recipient username.");
-  const {data:profile,error:pe}=await client.from("profiles").select("id,username").eq("username",username).single();
-  if(pe||!profile)return msg("tradeMessage","Player not found.");
-  const ids=weapon?[weapon]:[];
-  const {data,error}=await client.rpc("create_trade",{p_receiver_id:profile.id,p_offered_coins:offered,p_requested_coins:requested,p_weapon_ids:ids});
-  if(error)return msg("tradeMessage",error.message);
-  msg("tradeMessage","Trade sent successfully.");$("tradeUsername").value="";$("tradeWeapon").value="";await loadTrades();
-}
-
-async function loadTrades(){
-  const box=$("tradesList");if(!box)return;
-  const {data,error}=await client.from("trades").select("id,sender_id,receiver_id,offered_coins,requested_coins,status,created_at,sender:sender_id(username),receiver:receiver_id(username),trade_items(id,owner_id,weapon_id,weapons(name,rarities(name)))").or(`sender_id.eq.${currentUser},receiver_id.eq.${currentUser}`).order("created_at",{ascending:false});
-  if(error){box.innerHTML=esc(error.message);return}
-  if(!data?.length){box.innerHTML='<div class="muted">No trades yet.</div>';return}
-  box.innerHTML=data.map(t=>{
-    const incoming=t.receiver_id===currentUser;
-    const who=incoming?(t.sender?.username||"Player"):(t.receiver?.username||"Player");
-    const items=(t.trade_items||[]).map(i=>esc(i.weapons?.name||"Weapon")).join(", ")||"No weapons";
-    const buttons=t.status==="pending"?(incoming?`<button class="btn small" onclick="acceptTrade('${t.id}')">Accept</button><button class="btn small danger" onclick="declineTrade('${t.id}')">Decline</button>`:`<button class="btn small danger" onclick="cancelTrade('${t.id}')">Cancel</button>`):"";
-    return `<div class="row"><div><b>${incoming?"From":"To"} ${esc(who)}</b><div class="muted">${esc(t.status)} · Weapons: ${items} · Offered: ${money(t.offered_coins)} coins · Requested: ${money(t.requested_coins)} coins</div></div><div class="actions">${buttons}</div></div>`;
-  }).join("");
-}
-async function acceptTrade(id){const {error}=await client.rpc("accept_trade",{p_trade_id:id});if(error)return toast(error.message);toast("Trade accepted.");await refreshAll()}
-async function declineTrade(id){const {error}=await client.rpc("decline_trade",{p_trade_id:id});if(error)return toast(error.message);await loadTrades()}
-async function cancelTrade(id){const {error}=await client.rpc("cancel_trade",{p_trade_id:id});if(error)return toast(error.message);await loadTrades()}
-function quickTrade(id){showPage("trading");setTimeout(()=>{$("tradeWeapon").value=inventoryCache.find(x=>x.id===id)?.weapon_id||""},100)}
-function quickList(id){showPage("marketplace");setTimeout(()=>{$("marketInventory").value=id},100)}
-
-async function createListing(){
-  const inventoryId=$("marketInventory").value,price=Number($("marketPrice").value||0),requestedWeapon=$("marketRequestedWeapon").value||null,requestedCoins=Number($("marketRequestedCoins").value||0);
-  if(!inventoryId)return msg("marketMessage","Select a weapon.");
-  const {data,error}=await client.rpc("create_market_listing",{p_inventory_id:inventoryId,p_price_coins:price,p_requested_weapon_id:requestedWeapon,p_requested_coins:requestedCoins});
-  if(error)return msg("marketMessage",error.message);
-  msg("marketMessage","Listing created.");await loadMarketplace();await loadInventory();populateWeaponSelectors();
-}
-async function loadMarketplace(){
-  const box=$("marketGrid");if(!box)return;box.innerHTML="Loading listings...";
-  const {data,error}=await client.from("marketplace_listings").select("id,seller_id,weapon_id,price_coins,requested_weapon_id,requested_coins,status,created_at,weapons:weapon_id(name,damage,defense,speed,accuracy,luck,rarities(name)),requested_weapon:requested_weapon_id(name,rarities(name)),seller:seller_id(username)").eq("status","active").order("created_at",{ascending:false});
-  if(error){box.innerHTML='<div class="card">'+esc(error.message)+'</div>';return}
-  if(!data?.length){box.innerHTML='<div class="card">No active listings.</div>';return}
-  box.innerHTML=data.map(l=>{
-    const mine=l.seller_id===currentUser;
-    let request=l.price_coins>0?`🪙 ${money(l.price_coins)} coins`:"";
-    if(l.requested_weapon)request+=(request?" or ":"")+"⚔️ "+esc(l.requested_weapon.name);
-    if(l.requested_coins)request+=(request?" + ":"")+"🪙 "+money(l.requested_coins);
-    const action=mine?`<button class="btn small danger" onclick="cancelListing('${l.id}')">Cancel</button>`:
-      l.price_coins>0?`<button class="btn small" onclick="buyListing('${l.id}')">Buy</button>`:
-      `<button class="btn small" onclick="offerOnListing('${l.id}')">Offer Weapon</button>`;
-    return `<div class="card"><h3>${esc(l.weapons?.name||"Weapon")}</h3><span class="rarity">${esc(l.weapons?.rarities?.name||"Unknown")}</span><p class="muted">Seller: ${esc(l.seller?.username||"Player")}</p><p>Wants: ${request}</p><div class="actions">${action}</div></div>`;
-  }).join("");
-}
-async function cancelListing(id){const {error}=await client.rpc("cancel_market_listing",{p_listing_id:id});if(error)return toast(error.message);await loadMarketplace();await loadInventory();populateWeaponSelectors()}
-async function buyListing(id){if(!confirm("Buy this listing for coins?"))return;const {error}=await client.rpc("buy_market_listing",{p_listing_id:id});if(error)return toast(error.message);toast("Purchase complete!");await refreshAll()}
-async function offerOnListing(id){
-  const {data:list,error}=await client.from("marketplace_listings").select("requested_weapon_id").eq("id",id).single();
-  if(error||!list?.requested_weapon_id)return toast("This listing does not request a weapon.");
-  const choice=prompt("Enter the inventory ID of the weapon you want to offer:\n\n"+inventoryCache.map(x=>`${x.id} — ${x.weapons?.name||"Weapon"}`).join("\n"));
-  if(!choice)return;
-  const {error:oe}=await client.rpc("accept_market_offer",{p_listing_id:id,p_inventory_id:choice.trim()});
-  if(oe)return toast(oe.message);toast("Offer accepted!");await refreshAll();
-}
-
-async function loadCasePage(){
-  const box=$("casesGrid");
-  if(!box)return;
-
-  box.innerHTML='<div class="card">Loading cases...</div>';
-
-  const {data,error}=await client
-    .from("cases")
-    .select("id,name,description,price,is_admin_case,target_rarity_id,rarities:target_rarity_id(name,sort_order)")
-    .eq("is_admin_case",false)
-    .order("price",{ascending:true});
+  const {data:mine,error} =
+    await client
+      .from("inventory")
+      .select("weapon_id")
+      .eq("user_id",currentUser);
 
   if(error){
-    box.innerHTML='<div class="card"><h3>Could not load cases</h3><p>'+esc(error.message)+'</p></div>';
+
+    grid.innerHTML =
+      '<div class="card">' +
+      esc(error.message) +
+      '</div>';
+
+    return;
+  }
+
+  const ids =
+    [
+      ...new Set(
+        (mine || []).map(
+          x => x.weapon_id
+        )
+      )
+    ];
+
+  if(!ids.length){
+
+    grid.innerHTML =
+      '<div class="card">Open a case or receive a weapon to unlock your first Index entry.</div>';
+
+    return;
+  }
+
+  const {data:weapons,error:we} =
+    await client
+      .from("weapons")
+      .select(
+        "id,name,damage,defense,speed,accuracy,luck,description,image_url,rarity_id,rarities(name,sort_order)"
+      )
+      .in("id",ids)
+      .order("name");
+
+  if(we){
+
+    grid.innerHTML =
+      '<div class="card">' +
+      esc(we.message) +
+      '</div>';
+
+    return;
+  }
+
+  const counts = {};
+
+  const {data:all} =
+    await client
+      .from("inventory")
+      .select("weapon_id");
+
+  (all || []).forEach(
+    x =>
+      counts[x.weapon_id] =
+        (counts[x.weapon_id] || 0) + 1
+  );
+
+  grid.innerHTML =
+    (weapons || [])
+      .map(
+        w =>
+          weaponCard(
+            w,
+            {
+              exists:
+                counts[w.id] || 0
+            }
+          )
+      )
+      .join("") ||
+    '<div class="card">No unlocked weapons.</div>';
+}
+
+
+function filterCards(gridId,inputId){
+
+  const q =
+    $(inputId)
+      .value
+      .toLowerCase();
+
+  document
+    .querySelectorAll(
+      "#" + gridId + " .weapon"
+    )
+    .forEach(
+      x =>
+        x.style.display =
+          x.dataset.search.includes(q)
+            ? ""
+            : "none"
+    );
+}
+
+
+/* ============================================================
+   SELECTORS
+   ============================================================ */
+
+async function populateWeaponSelectors(){
+
+  const {data:weapons} =
+    await client
+      .from("weapons")
+      .select(
+        "id,name,rarities(name)"
+      )
+      .order("name");
+
+  const options =
+    (weapons || [])
+      .map(
+        w =>
+          `<option value="${w.id}">
+            ${esc(w.name)} —
+            ${esc(w.rarities?.name || "Unknown")}
+          </option>`
+      )
+      .join("");
+
+  [
+    "tradeWeapon",
+    "marketRequestedWeapon",
+    "weaponSelect"
+  ].forEach(id => {
+
+    const el = $(id);
+
+    if(el){
+
+      el.innerHTML =
+        '<option value="">No weapon selected</option>' +
+        options;
+    }
+
+  });
+
+
+  const invOptions =
+    inventoryCache
+      .map(
+        i =>
+          `<option value="${i.id}">
+            ${esc(
+              i.weapons?.name ||
+              "Weapon"
+            )}
+          </option>`
+      )
+      .join("");
+
+  $("marketInventory").innerHTML =
+    '<option value="">Select a weapon you own</option>' +
+    invOptions;
+}
+
+
+/* ============================================================
+   TRADING
+   ============================================================ */
+
+async function createTrade(){
+
+  const username =
+    $("tradeUsername")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const offered =
+    Number(
+      $("tradeCoins").value || 0
+    );
+
+  const requested =
+    Number(
+      $("tradeRequestedCoins").value || 0
+    );
+
+  const weapon =
+    $("tradeWeapon").value;
+
+  if(!username){
+
+    return msg(
+      "tradeMessage",
+      "Enter a recipient username."
+    );
+  }
+
+  const {data:profile,error:pe} =
+    await client
+      .from("profiles")
+      .select("id,username")
+      .eq("username",username)
+      .single();
+
+  if(pe || !profile){
+
+    return msg(
+      "tradeMessage",
+      "Player not found."
+    );
+  }
+
+  const ids =
+    weapon ? [weapon] : [];
+
+  const {data,error} =
+    await client.rpc(
+      "create_trade",
+      {
+        p_receiver_id:profile.id,
+        p_offered_coins:offered,
+        p_requested_coins:requested,
+        p_weapon_ids:ids
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "tradeMessage",
+      error.message
+    );
+  }
+
+  msg(
+    "tradeMessage",
+    "Trade sent successfully."
+  );
+
+  $("tradeUsername").value = "";
+  $("tradeWeapon").value = "";
+
+  await loadTrades();
+}
+
+
+async function loadTrades(){
+
+  const box =
+    $("tradesList");
+
+  if(!box)return;
+
+  const {data,error} =
+    await client
+      .from("trades")
+      .select(
+        "id,sender_id,receiver_id,offered_coins,requested_coins,status,created_at,sender:sender_id(username),receiver:receiver_id(username),trade_items(id,owner_id,weapon_id,weapons(name,rarities(name)))"
+      )
+      .or(
+        `sender_id.eq.${currentUser},receiver_id.eq.${currentUser}`
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+  if(error){
+
+    box.innerHTML =
+      esc(error.message);
+
     return;
   }
 
   if(!data?.length){
-    box.innerHTML='<div class="card"><h3>No cases found</h3><p>Run Migration 4 successfully, then refresh the page.</p></div>';
+
+    box.innerHTML =
+      '<div class="muted">No trades yet.</div>';
+
     return;
   }
 
-  box.innerHTML=data.map(c=>{
-    const target=c.rarities?.name||"Unknown";
-    const price=Number(c.price||0);
+  box.innerHTML =
+    data
+      .map(t => {
 
-    return `
-      <div class="card case-card">
-        <h3>🎁 ${esc(c.name||"Case")}</h3>
-        <span class="rarity">Target: ${esc(target)}</span>
-        <p>${esc(c.description||"Open this case to discover weapons.")}</p>
-        <p class="case-target">🎯 50% target-rarity chance</p>
-        <p class="case-price">🪙 ${money(price)}</p>
-        <div class="case-open-row">
-          <input id="caseQty-${c.id}" type="number" min="1" max="100" value="1" aria-label="Number of cases to open">
-          <button class="btn" onclick="openCase('${c.id}')">Open Case(s)</button>
-        </div>
-      </div>`;
-  }).join("");
+        const incoming =
+          t.receiver_id === currentUser;
+
+        const who =
+          incoming
+            ? (
+                t.sender?.username ||
+                "Player"
+              )
+            : (
+                t.receiver?.username ||
+                "Player"
+              );
+
+        const items =
+          (t.trade_items || [])
+            .map(
+              i =>
+                esc(
+                  i.weapons?.name ||
+                  "Weapon"
+                )
+            )
+            .join(", ") ||
+          "No weapons";
+
+        const buttons =
+          t.status === "pending"
+            ? (
+                incoming
+                  ? `
+                    <button
+                      class="btn small"
+                      onclick="acceptTrade('${t.id}')"
+                    >
+                      Accept
+                    </button>
+
+                    <button
+                      class="btn small danger"
+                      onclick="declineTrade('${t.id}')"
+                    >
+                      Decline
+                    </button>
+                  `
+                  : `
+                    <button
+                      class="btn small danger"
+                      onclick="cancelTrade('${t.id}')"
+                    >
+                      Cancel
+                    </button>
+                  `
+              )
+            : "";
+
+        return `
+          <div class="row">
+
+            <div>
+
+              <b>
+                ${incoming ? "From" : "To"}
+                ${esc(who)}
+              </b>
+
+              <div class="muted">
+                ${esc(t.status)}
+                · Weapons: ${items}
+                · Offered:
+                ${money(t.offered_coins)}
+                coins
+                · Requested:
+                ${money(t.requested_coins)}
+                coins
+              </div>
+
+            </div>
+
+            <div class="actions">
+              ${buttons}
+            </div>
+
+          </div>
+        `;
+      })
+      .join("");
 }
 
-async function loadAdminCaseBalance(){
-  if(!currentUser)return;
 
-  const {data,error}=await client
-    .from("admin_cases")
-    .select("quantity")
-    .eq("user_id",currentUser)
-    .maybeSingle();
+async function acceptTrade(id){
+
+  const {error} =
+    await client.rpc(
+      "accept_trade",
+      {p_trade_id:id}
+    );
 
   if(error){
-    adminCaseCount=0;
-    if($("adminCaseCount"))$("adminCaseCount").textContent="0";
-    if($("openAdminCaseBtn")){
-      $("openAdminCaseBtn").disabled=true;
-      $("openAdminCaseBtn").textContent="Open Admin Case(s)";
-    }
-    return;
+    return toast(error.message);
   }
 
-  adminCaseCount=Number(data?.quantity||0);
+  toast("Trade accepted.");
 
-  if($("adminCaseCount"))
-    $("adminCaseCount").textContent=money(adminCaseCount);
+  await refreshAll();
+}
 
-  if($("openAdminCaseBtn")){
-    $("openAdminCaseBtn").disabled=adminCaseCount<=0||openingCase;
-    $("openAdminCaseBtn").textContent=adminCaseCount>0
-      ? `Open Admin Case(s) (${money(adminCaseCount)} available)`
-      : "No Admin Cases";
+
+async function declineTrade(id){
+
+  const {error} =
+    await client.rpc(
+      "decline_trade",
+      {p_trade_id:id}
+    );
+
+  if(error){
+    return toast(error.message);
   }
+
+  await loadTrades();
 }
 
-function showCaseResults(results,isAdmin=false){
-  const list=Array.isArray(results)?results:[results];
-  const title=list.length>1
-    ? `${isAdmin?"👑 ":""}${list.length} Case${list.length===1?"":"s"} Opened!`
-    : (isAdmin?"👑 Admin Case Opened!":"🎉 Case Opened!");
 
-  $("caseResultTitle").textContent=title;
+async function cancelTrade(id){
 
-  $("caseResultContent").innerHTML=`
-    <div class="case-results">
-      ${list.map((result,i)=>`
-        <div class="case-result-item">
-          <b>#${i+1} — ${esc(result?.weapon_name||"Unknown Weapon")}</b>
-          <div class="rarity">${esc(result?.rarity_name||"Unknown")}</div>
-          <div class="stats2">
-            <span>⚔️ ${Number(result?.damage||0)}</span>
-            <span>🛡️ ${Number(result?.defense||0)}</span>
-            <span>⚡ ${Number(result?.speed||0)}</span>
-            <span>🎯 ${Number(result?.accuracy||0)}</span>
-            <span>🍀 ${Number(result?.luck||0)}</span>
-          </div>
-          <div class="exist">🌎 ${money(result?.existence_count||0)} exist</div>
-        </div>
-      `).join("")}
-    </div>
-    <p class="muted">All weapons were added to your Inventory and unlocked in your Index.</p>`;
+  const {error} =
+    await client.rpc(
+      "cancel_trade",
+      {p_trade_id:id}
+    );
 
-  $("caseResultModal").classList.add("open");
+  if(error){
+    return toast(error.message);
+  }
+
+  await loadTrades();
 }
 
-function showCaseResult(result,isAdmin=false){
-  showCaseResults([result],isAdmin);
-}
 
-async function openCase(id){
-  if(openingCase)return;
+function quickTrade(id){
 
-  const input=$(`caseQty-${id}`);
-  const requested=Math.max(1,Math.min(100,Number.parseInt(input?.value||"1",10)));
+  showPage("trading");
 
-  openingCase=true;
+  setTimeout(
+    () => {
 
-  const buttons=[...document.querySelectorAll('#casesGrid button')];
-  buttons.forEach(b=>b.disabled=true);
+      const item =
+        inventoryCache.find(
+          x => x.id === id
+        );
 
-  const results=[];
-  let failed=false;
-
-  try{
-    for(let i=0;i<requested;i++){
-      toast(`Opening case ${i+1} of ${requested}...`);
-
-      const {data,error}=await client.rpc("open_case",{p_case_id:id});
-
-      if(error){
-        console.error("open_case RPC error:",error);
-        toast(error.message||"The case could not be opened.");
-        failed=true;
-        break;
+      if(item){
+        $("tradeWeapon").value =
+          item.weapon_id;
       }
 
-      const result=Array.isArray(data)?data[0]:data;
-
-      if(!result){
-        toast("The case opened, but the database returned no weapon.");
-        failed=true;
-        break;
-      }
-
-      results.push(result);
-    }
-
-    if(results.length){
-      showCaseResults(results,false);
-      await refreshProfile();
-      await loadInventory();
-      await loadIndex();
-      await loadCasePage();
-      await loadAdminCaseBalance();
-      updateUI();
-    }
-
-    if(failed && results.length){
-      toast(`Opened ${results.length} of ${requested} cases.`);
-    }
-
-  }finally{
-    openingCase=false;
-    buttons.forEach(b=>b.disabled=false);
-  }
+    },
+    100
+  );
 }
 
-async function openAdminCase(){
-  if(openingCase)return;
 
-  const requested=Math.max(
-    1,
-    Math.min(
-      100,
-      Number.parseInt($("adminCaseQty")?.value||"1",10)
-    )
+/* ============================================================
+   MARKETPLACE
+   ============================================================ */
+
+function quickList(id){
+
+  showPage("marketplace");
+
+  setTimeout(
+    () => {
+      $("marketInventory").value = id;
+    },
+    100
+  );
+}
+
+
+async function createListing(){
+
+  const inventoryId =
+    $("marketInventory").value;
+
+  const price =
+    Number(
+      $("marketPrice").value || 0
+    );
+
+  const requestedWeapon =
+    $("marketRequestedWeapon").value ||
+    null;
+
+  const requestedCoins =
+    Number(
+      $("marketRequestedCoins").value || 0
+    );
+
+  if(!inventoryId){
+
+    return msg(
+      "marketMessage",
+      "Select a weapon."
+    );
+  }
+
+  const {data,error} =
+    await client.rpc(
+      "create_market_listing",
+      {
+        p_inventory_id:inventoryId,
+        p_price_coins:price,
+        p_requested_weapon_id:requestedWeapon,
+        p_requested_coins:requestedCoins
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "marketMessage",
+      error.message
+    );
+  }
+
+  msg(
+    "marketMessage",
+    "Listing created."
   );
 
-  const quantity=Math.min(requested,adminCaseCount);
+  await loadMarketplace();
+  await loadInventory();
+  populateWeaponSelectors();
+}
 
-  if(quantity<=0){
-    toast("You do not have an Admin Case.");
+
+async function loadMarketplace(){
+
+  const box =
+    $("marketGrid");
+
+  if(!box)return;
+
+  box.innerHTML =
+    "Loading listings...";
+
+  const {data,error} =
+    await client
+      .from("marketplace_listings")
+      .select(
+        "id,seller_id,weapon_id,price_coins,requested_weapon_id,requested_coins,status,created_at,weapons:weapon_id(name,damage,defense,speed,accuracy,luck,rarities(name)),requested_weapon:requested_weapon_id(name,rarities(name)),seller:seller_id(username)"
+      )
+      .eq("status","active")
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="card">' +
+      esc(error.message) +
+      '</div>';
+
     return;
   }
 
-  if(quantity<requested){
-    toast(`You only have ${quantity} Admin Case${quantity===1?"":"s"} available.`);
-  }
+  if(!data?.length){
 
-  if(!confirm(`Open ${quantity} Admin Case${quantity===1?"":"s"}? Each case will be consumed and award a weapon from the highest rarity.`))
+    box.innerHTML =
+      '<div class="card">No active listings.</div>';
+
     return;
-
-  openingCase=true;
-
-  if($("openAdminCaseBtn")){
-    $("openAdminCaseBtn").disabled=true;
-    $("openAdminCaseBtn").textContent="Opening...";
   }
 
-  const results=[];
-  let failed=false;
+  box.innerHTML =
+    data
+      .map(l => {
+
+        const mine =
+          l.seller_id === currentUser;
+
+        let request =
+          l.price_coins > 0
+            ? `🪙 ${money(l.price_coins)} coins`
+            : "";
+
+        if(l.requested_weapon){
+
+          request +=
+            (request ? " or " : "") +
+            "⚔️ " +
+            esc(
+              l.requested_weapon.name
+            );
+        }
+
+        if(l.requested_coins){
+
+          request +=
+            (request ? " + " : "") +
+            "🪙 " +
+            money(
+              l.requested_coins
+            );
+        }
+
+        const action =
+          mine
+            ? `
+              <button
+                class="btn small danger"
+                onclick="cancelListing('${l.id}')"
+              >
+                Cancel
+              </button>
+            `
+            : l.price_coins > 0
+              ? `
+                <button
+                  class="btn small"
+                  onclick="buyListing('${l.id}')"
+                >
+                  Buy
+                </button>
+              `
+              : `
+                <button
+                  class="btn small"
+                  onclick="offerOnListing('${l.id}')"
+                >
+                  Offer Weapon
+                </button>
+              `;
+
+        return `
+          <div class="card">
+
+            <h3>
+              ${esc(
+                l.weapons?.name ||
+                "Weapon"
+              )}
+            </h3>
+
+            <span class="rarity">
+              ${esc(
+                l.weapons?.rarities?.name ||
+                "Unknown"
+              )}
+            </span>
+
+            <p class="muted">
+              Seller:
+              ${esc(
+                l.seller?.username ||
+                "Player"
+              )}
+            </p>
+
+            <p>
+              Wants: ${request}
+            </p>
+
+            <div class="actions">
+              ${action}
+            </div>
+
+          </div>
+        `;
+      })
+      .join("");
+}
+
+
+async function cancelListing(id){
+
+  const {error} =
+    await client.rpc(
+      "cancel_market_listing",
+      {p_listing_id:id}
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  await loadMarketplace();
+  await loadInventory();
+  populateWeaponSelectors();
+}
+
+
+async function buyListing(id){
+
+  if(
+    !confirm(
+      "Buy this listing for coins?"
+    )
+  ){
+    return;
+  }
+
+  const {error} =
+    await client.rpc(
+      "buy_market_listing",
+      {p_listing_id:id}
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  toast("Purchase complete!");
+
+  await refreshAll();
+}
+
+
+async function offerOnListing(id){
+
+  const {data:list,error} =
+    await client
+      .from("marketplace_listings")
+      .select("requested_weapon_id")
+      .eq("id",id)
+      .single();
+
+  if(
+    error ||
+    !list?.requested_weapon_id
+  ){
+    return toast(
+      "This listing does not request a weapon."
+    );
+  }
+
+  const choice =
+    prompt(
+      "Enter the inventory ID of the weapon you want to offer:\n\n" +
+      inventoryCache
+        .map(
+          x =>
+            `${x.id} — ${
+              x.weapons?.name ||
+              "Weapon"
+            }`
+        )
+        .join("\n")
+    );
+
+  if(!choice)return;
+
+  const {error:oe} =
+    await client.rpc(
+      "accept_market_offer",
+      {
+        p_listing_id:id,
+        p_inventory_id:choice.trim()
+      }
+    );
+
+  if(oe){
+    return toast(oe.message);
+  }
+
+  toast("Offer accepted!");
+
+  await refreshAll();
+}
+
+
+/* ============================================================
+   CASES
+   ============================================================ */
+
+async function loadCasePage(){
+
+  const box =
+    $("casesGrid");
+
+  if(!box)return;
+
+  const {data,error} =
+    await client
+      .from("cases")
+      .select("*")
+      .order(
+        "price",
+        {ascending:true}
+      );
+
+  if(error){
+
+    box.innerHTML =
+      '<div class="card">' +
+      '<h3>Cases</h3>' +
+      '<p>' +
+      esc(error.message) +
+      '</p>' +
+      '</div>';
+
+    return;
+  }
+
+  if(!data?.length){
+
+    box.innerHTML =
+      '<div class="card">No cases have been configured yet.</div>';
+
+    return;
+  }
+
+  box.innerHTML =
+    data
+      .map(
+        c =>
+          `
+          <div class="card">
+
+            <h3>
+              🎁 ${esc(c.name || "Case")}
+            </h3>
+
+            <p>
+              ${esc(
+                c.description ||
+                "Open this case to discover weapons."
+              )}
+            </p>
+
+            <p>
+              Price:
+              🪙 ${money(c.price || 0)}
+            </p>
+
+            <div class="actions">
+
+              <button
+                class="btn"
+                onclick="openCase('${c.id}')"
+              >
+                Open Case
+              </button>
+
+            </div>
+
+          </div>
+          `
+      )
+      .join("");
+}
+
+
+async function openCase(id){
+
+  /*
+   * Keep normal case opening on the installed case RPC.
+   * If your normal-case RPC has a different name, this is the
+   * only function that needs to be changed.
+   */
+
+  const {data,error} =
+    await client.rpc(
+      "open_case",
+      {p_case_id:id}
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  showCaseResult(data);
+
+  await refreshAll();
+}
+
+
+function showCaseResult(result){
+
+  const weapon =
+    result?.weapon ||
+    result;
+
+  const name =
+    weapon?.weapon_name ||
+    weapon?.name ||
+    "Unknown Weapon";
+
+  const rarity =
+    weapon?.rarity_name ||
+    weapon?.rarity ||
+    "Unknown";
+
+  const damage =
+    weapon?.damage ?? 0;
+
+  const defense =
+    weapon?.defense ?? 0;
+
+  const speed =
+    weapon?.speed ?? 0;
+
+  const accuracy =
+    weapon?.accuracy ?? 0;
+
+  const luck =
+    weapon?.luck ?? 0;
+
+  $("battleModalTitle").textContent =
+    "🎉 Case Opened!";
+
+  $("battleModalContent").innerHTML = `
+    <div class="card">
+
+      <h2>${esc(name)}</h2>
+
+      <span class="rarity">
+        ${esc(rarity)}
+      </span>
+
+      <div class="stats2">
+
+        <span>⚔️ ${damage}</span>
+        <span>🛡️ ${defense}</span>
+        <span>⚡ ${speed}</span>
+        <span>🎯 ${accuracy}</span>
+        <span>🍀 ${luck}</span>
+
+      </div>
+
+    </div>
+  `;
+
+  $("battleModal").classList.add("open");
+}
+
+
+/* ============================================================
+   ADMIN CASES
+   ============================================================ */
+
+async function loadAdminCaseCount(){
+
+  if(!currentUser)return;
+
+  const {data,error} =
+    await client
+      .from("admin_cases")
+      .select("quantity")
+      .eq("user_id",currentUser)
+      .maybeSingle();
+
+  if(error){
+
+    $("adminCaseCount").textContent =
+      "?";
+
+    $("openAdminCaseBtn").disabled =
+      true;
+
+    return;
+  }
+
+  const quantity =
+    Number(
+      data?.quantity || 0
+    );
+
+  $("adminCaseCount").textContent =
+    money(quantity);
+
+  $("openAdminCaseBtn").disabled =
+    quantity <= 0;
+}
+
+
+async function openAdminCase(){
+
+  const quantity =
+    Math.max(
+      1,
+      Math.min(
+        100,
+        Number(
+          $("adminCaseQty").value || 1
+        )
+      )
+    );
+
+  const {data:balance} =
+    await client
+      .from("admin_cases")
+      .select("quantity")
+      .eq("user_id",currentUser)
+      .maybeSingle();
+
+  const available =
+    Number(
+      balance?.quantity || 0
+    );
+
+  if(available < quantity){
+
+    return toast(
+      `You only have ${available} Admin Case${
+        available === 1 ? "" : "s"
+      }.`
+    );
+  }
+
+  /*
+   * Open one at a time so every opening is its own
+   * server-side transaction.
+   */
+
+  $("openAdminCaseBtn").disabled =
+    true;
+
+  let results = [];
 
   try{
-    for(let i=0;i<quantity;i++){
-      toast(`Opening Admin Case ${i+1} of ${quantity}...`);
 
-      const {data,error}=await client.rpc("open_admin_case");
+    for(let i=0;i<quantity;i++){
+
+      const {data,error} =
+        await client.rpc(
+          "open_admin_case"
+        );
 
       if(error){
-        console.error("open_admin_case RPC error:",error);
-        toast(error.message||"The Admin Case could not be opened.");
-        failed=true;
-        break;
+        throw error;
       }
 
-      const result=Array.isArray(data)?data[0]:data;
-
-      if(!result){
-        toast("The Admin Case opened, but no weapon result was returned.");
-        failed=true;
-        break;
-      }
-
-      results.push(result);
+      results.push(data);
     }
 
-    if(results.length){
-      showCaseResults(results,true);
-      await loadAdminCaseBalance();
-      await refreshProfile();
-      await loadInventory();
-      await loadIndex();
-      updateUI();
-    }
+    showAdminCaseResults(results);
 
-    if(failed && results.length){
-      toast(`Opened ${results.length} of ${quantity} Admin Cases.`);
-    }
+  }catch(error){
+
+    toast(error.message);
 
   }finally{
-    openingCase=false;
-    await loadAdminCaseBalance();
+
+    await loadAdminCaseCount();
+
   }
 }
+
+
+function showAdminCaseResults(results){
+
+  if(!results?.length)return;
+
+  const html =
+    results
+      .map(
+        r =>
+          `
+          <div
+            class="card"
+            style="margin-bottom:10px"
+          >
+
+            <h3>
+              ${esc(
+                r.weapon_name ||
+                "Weapon"
+              )}
+            </h3>
+
+            <span class="rarity">
+              ${esc(
+                r.rarity_name ||
+                "Unknown"
+              )}
+            </span>
+
+            <div class="stats2">
+
+              <span>
+                ⚔️ ${Number(r.damage || 0)}
+              </span>
+
+              <span>
+                🛡️ ${Number(r.defense || 0)}
+              </span>
+
+              <span>
+                ⚡ ${Number(r.speed || 0)}
+              </span>
+
+              <span>
+                🎯 ${Number(r.accuracy || 0)}
+              </span>
+
+              <span>
+                🍀 ${Number(r.luck || 0)}
+              </span>
+
+            </div>
+
+          </div>
+          `
+      )
+      .join("");
+
+  $("battleModalTitle").textContent =
+    quantityLabel(
+      results.length
+    ) + " 🎟️ Admin Case Result";
+
+  $("battleModalContent").innerHTML =
+    html;
+
+  $("battleModal").classList.add("open");
+
+  refreshAll();
+}
+
+
+function quantityLabel(n){
+
+  return n === 1
+    ? ""
+    : `${n}×`;
+}
+
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
 
 async function loadAdmin(){
-  if(currentProfile?.role!=="admin")return;
-  const {data:weapons,error}=await client.from("weapons").select("id,name,damage,defense,speed,accuracy,luck,description,rarities(name)").order("name");
-  if(error){$("adminWeaponList").textContent=error.message;return}
-  $("weaponSelect").innerHTML='<option value="">Select weapon</option>'+(weapons||[]).map(w=>`<option value="${w.id}">${esc(w.name)} — ${esc(w.rarities?.name||"Unknown")}</option>`).join("");
-  $("adminWeaponList").innerHTML=(weapons||[]).map(w=>`<div class="row"><div><b>${esc(w.name)}</b><div class="muted">${esc(w.rarities?.name||"Unknown")} · ⚔️${w.damage||0} 🛡️${w.defense||0} ⚡${w.speed||0}</div></div></div>`).join("")||"No weapons.";
-}
-async function adminGiveCoins(){
-  if(currentProfile?.role!=="admin")return toast("Admin access denied.");
-  const username=$("coinUsername").value.trim(),amount=Number($("coinAmount").value);
-  if(!username||!Number.isInteger(amount)||amount<=0)return msg("coinMessage","Enter a username and positive whole-number amount.");
-  let {data,error}=await client.rpc("admin_give_coins",{
-    p_username:username,
-    p_amount:amount
-  });
 
-  // Some versions of the RPC were created with the argument names
-  // reversed. Retry using the names visible in the database error.
-  if(error){
-    console.warn("Retrying admin_give_coins with reversed argument names.",error);
-
-    const retry=await client.rpc("admin_give_coins",{
-      p_amount:amount,
-      p_username:username
-    });
-
-    data=retry.data;
-    error=retry.error;
-  }
-
-  if(error){
-    console.error("admin_give_coins RPC error:",error);
-    return msg("coinMessage",error.message||"Could not give coins.");
-  }
-
-  const result=Array.isArray(data)?data[0]:data;
-  msg("coinMessage",`Gave ${money(amount)} coins to ${result?.username||username}.`);
-  $("coinUsername").value="";
-  $("coinAmount").value="";
-}
-async function adminGiveCases(){
-  if(currentProfile?.role!=="admin")return toast("Admin access denied.");
-
-  const username=$("caseUsername").value.trim();
-  const quantity=Number($("caseAmount").value||0);
-
-  if(!username||!Number.isInteger(quantity)||quantity<=0){
-    return msg("caseMessage","Enter a username and a positive whole-number quantity.");
-  }
-
-  msg("caseMessage","Giving Admin Case...");
-
-  const {data,error}=await client.rpc("admin_give_cases",{
-    p_username:username,
-    p_quantity:quantity
-  });
-
-  if(error){
-    msg("caseMessage",error.message);
+  if(
+    currentProfile?.role !== "admin"
+  ){
     return;
   }
 
-  const row=Array.isArray(data)?data[0]:data;
+  const {
+    data:weapons,
+    error
+  } =
+    await client
+      .from("weapons")
+      .select(
+        "id,name,damage,defense,speed,accuracy,luck,description,rarities(name)"
+      )
+      .order("name");
+
+  if(error){
+
+    $("adminWeaponList").textContent =
+      error.message;
+
+    return;
+  }
+
+  $("weaponSelect").innerHTML =
+    '<option value="">Select weapon</option>' +
+
+    (weapons || [])
+      .map(
+        w =>
+          `
+          <option value="${w.id}">
+            ${esc(w.name)}
+            —
+            ${esc(
+              w.rarities?.name ||
+              "Unknown"
+            )}
+          </option>
+          `
+      )
+      .join("");
+
+  $("adminWeaponList").innerHTML =
+    (weapons || [])
+      .map(
+        w =>
+          `
+          <div class="row">
+
+            <div>
+
+              <b>${esc(w.name)}</b>
+
+              <div class="muted">
+
+                ${esc(
+                  w.rarities?.name ||
+                  "Unknown"
+                )}
+
+                · ⚔️${w.damage || 0}
+                · 🛡️${w.defense || 0}
+                · ⚡${w.speed || 0}
+                · 🎯${w.accuracy || 0}
+                · 🍀${w.luck || 0}
+
+              </div>
+
+            </div>
+
+          </div>
+          `
+      )
+      .join("") ||
+    "No weapons.";
+}
+
+
+async function adminGiveCoins(){
+
+  if(
+    currentProfile?.role !== "admin"
+  ){
+    return toast(
+      "Admin access denied."
+    );
+  }
+
+  const username =
+    $("coinUsername")
+      .value
+      .trim();
+
+  const amount =
+    Number(
+      $("coinAmount").value
+    );
+
+  if(
+    !username ||
+    !Number.isInteger(amount) ||
+    amount <= 0
+  ){
+
+    return msg(
+      "coinMessage",
+      "Enter a username and positive whole-number amount."
+    );
+  }
+
+  const {data,error} =
+    await client.rpc(
+      "admin_give_coins",
+      {
+        p_username:username,
+        p_amount:amount
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "coinMessage",
+      error.message
+    );
+  }
+
+  msg(
+    "coinMessage",
+    `Gave ${money(amount)} coins to ${data.username}.`
+  );
+
+  $("coinUsername").value = "";
+  $("coinAmount").value = "";
+}
+
+
+async function adminGiveCases(){
+
+  if(
+    currentProfile?.role !== "admin"
+  ){
+    return toast(
+      "Admin access denied."
+    );
+  }
+
+  const username =
+    $("caseUsername")
+      .value
+      .trim();
+
+  const amount =
+    Number(
+      $("caseAmount").value
+    );
+
+  if(
+    !username ||
+    !Number.isInteger(amount) ||
+    amount <= 0
+  ){
+
+    return msg(
+      "caseMessage",
+      "Enter a username and positive whole-number amount."
+    );
+  }
+
+  const {data,error} =
+    await client.rpc(
+      "admin_give_cases",
+      {
+        p_username:username,
+        p_quantity:amount
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "caseMessage",
+      error.message
+    );
+  }
 
   msg(
     "caseMessage",
-    `Gave ${money(row?.quantity_given||quantity)} Admin Case${quantity===1?"":"s"} to ${row?.username||username}. Total: ${money(row?.total_quantity||0)}.`
+    `Gave ${money(amount)} Admin Case${
+      amount === 1 ? "" : "s"
+    } to ${data.username}. Total: ${money(data.total_quantity)}.`
   );
 
-  $("caseUsername").value="";
-  $("caseAmount").value="1";
+  $("caseUsername").value = "";
+  $("caseAmount").value = "";
+
 }
+
 
 async function adminGiveWeapon(){
-  if(currentProfile?.role!=="admin")return toast("Admin access denied.");
-  const username=$("weaponUsername").value.trim(),weaponId=$("weaponSelect").value;
-  if(!username||!weaponId)return msg("weaponMessage","Enter a username and select a weapon.");
-  const {data,error}=await client.rpc("admin_give_weapon",{p_username:username,p_weapon_id:weaponId});
-  if(error)return msg("weaponMessage",error.message);
-  msg("weaponMessage",`Gave ${data.weapon} to ${data.username}.`);$("weaponUsername").value="";$("weaponSelect").value="";
+
+  if(
+    currentProfile?.role !== "admin"
+  ){
+    return toast(
+      "Admin access denied."
+    );
+  }
+
+  const username =
+    $("weaponUsername")
+      .value
+      .trim();
+
+  const weaponId =
+    $("weaponSelect").value;
+
+  if(
+    !username ||
+    !weaponId
+  ){
+
+    return msg(
+      "weaponMessage",
+      "Enter a username and select a weapon."
+    );
+  }
+
+  const {data,error} =
+    await client.rpc(
+      "admin_give_weapon",
+      {
+        p_username:username,
+        p_weapon_id:weaponId
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "weaponMessage",
+      error.message
+    );
+  }
+
+  msg(
+    "weaponMessage",
+    `Gave ${data.weapon} to ${data.username}.`
+  );
+
+  $("weaponUsername").value = "";
+  $("weaponSelect").value = "";
 }
 
+
+/* ============================================================
+   BATTLE SYSTEM
+   ============================================================ */
+
+async function sendBattleRequest(){
+
+  const username =
+    $("battleUsername")
+      .value
+      .trim();
+
+  if(!username){
+
+    return msg(
+      "battleMessage",
+      "Enter an opponent username."
+    );
+  }
+
+  const {data,error} =
+    await client.rpc(
+      "send_battle_request",
+      {
+        p_username:username
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "battleMessage",
+      error.message
+    );
+  }
+
+  msg(
+    "battleMessage",
+    "Battle request sent!"
+  );
+
+  $("battleUsername").value = "";
+
+  await loadBattles();
+}
+
+
+async function loadBattles(){
+
+  const box =
+    $("battleList");
+
+  if(!box)return;
+
+  box.innerHTML =
+    "Loading battles...";
+
+  const {data,error} =
+    await client.rpc(
+      "get_my_battles"
+    );
+
+  if(error){
+
+    box.innerHTML =
+      `<div class="card">
+        ${esc(error.message)}
+      </div>`;
+
+    return;
+  }
+
+  const battles =
+    Array.isArray(data)
+      ? data
+      : [];
+
+  if(!battles.length){
+
+    box.innerHTML =
+      '<div class="muted">No battles yet.</div>';
+
+    return;
+  }
+
+  box.innerHTML =
+    battles
+      .map(
+        b =>
+          renderBattleRow(b)
+      )
+      .join("");
+}
+
+
+function renderBattleRow(b){
+
+  const incoming =
+    b.opponent_id === currentUser;
+
+  const opponent =
+    incoming
+      ? b.challenger_username
+      : b.opponent_username;
+
+  let actions = "";
+
+  if(
+    b.status === "pending" &&
+    incoming
+  ){
+
+    actions = `
+      <button
+        class="btn small"
+        onclick="acceptBattle('${b.id}')"
+      >
+        Accept
+      </button>
+
+      <button
+        class="btn small danger"
+        onclick="denyBattle('${b.id}')"
+      >
+        Deny
+      </button>
+    `;
+
+  }else if(
+    b.status === "selecting"
+  ){
+
+    actions = `
+      <button
+        class="btn small"
+        onclick="openBattleSelection('${b.id}')"
+      >
+        Select 3 Weapons
+      </button>
+    `;
+
+  }else if(
+    b.status === "fighting"
+  ){
+
+    actions = `
+      <button
+        class="btn small"
+        onclick="resolveBattle('${b.id}')"
+      >
+        Resolve Battle
+      </button>
+    `;
+
+  }else if(
+    b.status === "choose_reward" &&
+    b.winner_id === currentUser
+  ){
+
+    actions = `
+      <button
+        class="btn small"
+        onclick="chooseBattleReward('${b.id}')"
+      >
+        Choose Weapon
+      </button>
+    `;
+
+  }else if(
+    b.status === "completed"
+  ){
+
+    actions = `
+      <button
+        class="btn small secondary"
+        onclick="viewBattle('${b.id}')"
+      >
+        View Result
+      </button>
+    `;
+  }
+
+  return `
+    <div class="row">
+
+      <div>
+
+        <b>
+          ⚔️ Battle with
+          ${esc(opponent || "Player")}
+        </b>
+
+        <div class="muted">
+          Status:
+          ${esc(b.status)}
+        </div>
+
+        ${
+          b.status === "completed"
+            ? `
+              <div class="muted">
+                Final score:
+                ${Number(
+                  b.challenger_score || 0
+                ).toFixed(1)}
+                —
+                ${Number(
+                  b.opponent_score || 0
+                ).toFixed(1)}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+      <div class="actions">
+        ${actions}
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* ------------------------------------------------------------
+   ACCEPT
+   ------------------------------------------------------------ */
+
+async function acceptBattle(id){
+
+  const {error} =
+    await client.rpc(
+      "accept_battle",
+      {
+        p_battle_id:id
+      }
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  toast(
+    "Battle accepted! Select your 3 weapons."
+  );
+
+  await loadBattles();
+
+  openBattleSelection(id);
+}
+
+
+/* ------------------------------------------------------------
+   DENY
+   ------------------------------------------------------------ */
+
+async function denyBattle(id){
+
+  const {error} =
+    await client.rpc(
+      "deny_battle",
+      {
+        p_battle_id:id
+      }
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  toast("Battle request denied.");
+
+  await loadBattles();
+}
+
+
+/* ------------------------------------------------------------
+   SELECT 3 WEAPONS
+   ------------------------------------------------------------ */
+
+async function openBattleSelection(id){
+
+  await loadInventory();
+
+  const selected =
+    new Set();
+
+  $("battleModalTitle").textContent =
+    "⚔️ Choose Your 3 Weapons";
+
+  $("battleModalContent").innerHTML = `
+
+    <p class="muted">
+      Choose exactly three weapons.
+      Your opponent will not see your selections
+      until both sides are locked in.
+    </p>
+
+    <div
+      id="battleWeaponSelection"
+      class="battle-selection"
+    ></div>
+
+    <div class="actions">
+
+      <button
+        class="btn"
+        onclick="submitBattleSelection('${id}')"
+      >
+        Lock In 3 Weapons
+      </button>
+
+    </div>
+
+    <div
+      id="battleSelectionMessage"
+      class="msg"
+    ></div>
+  `;
+
+  const grid =
+    $("battleWeaponSelection");
+
+  grid.innerHTML =
+    inventoryCache
+      .map(
+        item => {
+
+          const w =
+            item.weapons;
+
+          return `
+            <div
+              class="battle-weapon"
+              data-inventory-id="${item.id}"
+              onclick="toggleBattleWeapon(this)"
+            >
+
+              <h4>
+                ${esc(w.name)}
+              </h4>
+
+              <span class="rarity">
+                ${esc(
+                  w.rarities?.name ||
+                  "Unknown"
+                )}
+              </span>
+
+              <div class="mini-stats">
+
+                ⚔️ ${Number(w.damage || 0)}
+                <br>
+
+                🛡️ ${Number(w.defense || 0)}
+                <br>
+
+                ⚡ ${Number(w.speed || 0)}
+                <br>
+
+                🎯 ${Number(w.accuracy || 0)}
+                <br>
+
+                🍀 ${Number(w.luck || 0)}
+
+              </div>
+
+            </div>
+          `;
+        }
+      )
+      .join("");
+
+  window.__battleSelection =
+    selected;
+
+  window.__battleSelectionBattleId =
+    id;
+
+  $("battleModal").classList.add("open");
+}
+
+
+function toggleBattleWeapon(el){
+
+  const id =
+    el.dataset.inventoryId;
+
+  const selected =
+    window.__battleSelection;
+
+  if(selected.has(id)){
+
+    selected.delete(id);
+
+    el.classList.remove("selected");
+
+    return;
+  }
+
+  if(selected.size >= 3){
+
+    return toast(
+      "You can only select 3 weapons."
+    );
+  }
+
+  selected.add(id);
+
+  el.classList.add("selected");
+}
+
+
+async function submitBattleSelection(id){
+
+  const selected =
+    [
+      ...(
+        window.__battleSelection ||
+        []
+      )
+    ];
+
+  if(selected.length !== 3){
+
+    return msg(
+      "battleSelectionMessage",
+      "Select exactly 3 weapons."
+    );
+  }
+
+  const items =
+    selected
+      .map(
+        inventoryId =>
+          inventoryCache.find(
+            x => x.id === inventoryId
+          )
+      );
+
+  if(items.some(x => !x)){
+
+    return msg(
+      "battleSelectionMessage",
+      "One of those weapons is no longer in your inventory."
+    );
+  }
+
+  const weaponIds =
+    items.map(
+      x => x.weapon_id
+    );
+
+  const {error} =
+    await client.rpc(
+      "select_battle_weapons",
+      {
+        p_battle_id:id,
+        p_weapon_1:weaponIds[0],
+        p_weapon_2:weaponIds[1],
+        p_weapon_3:weaponIds[2]
+      }
+    );
+
+  if(error){
+
+    return msg(
+      "battleSelectionMessage",
+      error.message
+    );
+  }
+
+  closeModal("battleModal");
+
+  toast(
+    "Your 3 weapons are locked in."
+  );
+
+  await loadBattles();
+}
+
+
+/* ------------------------------------------------------------
+   RESOLVE
+   ------------------------------------------------------------ */
+
+async function resolveBattle(id){
+
+  const {data,error} =
+    await client.rpc(
+      "resolve_battle",
+      {
+        p_battle_id:id
+      }
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  showBattleResult(data);
+
+  await loadBattles();
+}
+
+
+function showBattleResult(result){
+
+  const challengerScore =
+    Number(
+      result?.challenger_score || 0
+    );
+
+  const opponentScore =
+    Number(
+      result?.opponent_score || 0
+    );
+
+  const winnerId =
+    result?.winner_id;
+
+  const winner =
+    winnerId === currentUser
+      ? "YOU WON!"
+      : "YOU LOST";
+
+  $("battleModalTitle").textContent =
+    "⚔️ Battle Result";
+
+  $("battleModalContent").innerHTML = `
+
+    <div class="battle-result">
+
+      <div class="battle-side">
+
+        <div class="muted">
+          Challenger
+        </div>
+
+        <div class="battle-score">
+          ${challengerScore.toFixed(1)}
+        </div>
+
+      </div>
+
+      <div class="vs">
+        VS
+      </div>
+
+      <div class="battle-side">
+
+        <div class="muted">
+          Opponent
+        </div>
+
+        <div class="battle-score">
+          ${opponentScore.toFixed(1)}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div
+      class="panel"
+      style="margin-top:20px;text-align:center"
+    >
+
+      <h2>
+        ${esc(winner)}
+      </h2>
+
+      ${
+        winnerId === currentUser
+          ? `
+            <p>
+              You can now choose one of your
+              opponent's three battle weapons.
+            </p>
+          `
+          : `
+            <p>
+              The winner will choose one weapon
+              from your opponent's lineup.
+            </p>
+          `
+      }
+
+    </div>
+  `;
+
+  $("battleModal").classList.add("open");
+}
+
+
+/* ------------------------------------------------------------
+   CHOOSE REWARD
+   ------------------------------------------------------------ */
+
+async function chooseBattleReward(id){
+
+  const {data,error} =
+    await client.rpc(
+      "get_battle_weapons",
+      {
+        p_battle_id:id
+      }
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  /*
+   * At choose_reward status the RPC reveals both sides.
+   * Only opponent weapons are displayed as reward choices.
+   */
+
+  const weapons =
+    (Array.isArray(data)
+      ? data
+      : [])
+      .filter(
+        w =>
+          w.user_id !== currentUser
+      );
+
+  if(!weapons.length){
+
+    return toast(
+      "No opponent weapons were found."
+    );
+  }
+
+  $("battleModalTitle").textContent =
+    "🏆 Choose Your Reward";
+
+  $("battleModalContent").innerHTML = `
+
+    <p class="muted">
+      Choose exactly ONE weapon from your opponent's
+      three battle weapons to keep.
+    </p>
+
+    <div class="battle-selection">
+
+      ${
+        weapons
+          .map(
+            w =>
+              `
+              <div
+                class="battle-weapon"
+                onclick="confirmBattleReward(
+                  '${id}',
+                  '${w.weapon_id}'
+                )"
+              >
+
+                <h4>
+                  ${esc(w.weapon_name)}
+                </h4>
+
+                <div class="mini-stats">
+
+                  ⚔️ ${Number(w.damage || 0)}
+                  <br>
+
+                  🛡️ ${Number(w.defense || 0)}
+                  <br>
+
+                  ⚡ ${Number(w.speed || 0)}
+                  <br>
+
+                  🎯 ${Number(w.accuracy || 0)}
+                  <br>
+
+                  🍀 ${Number(w.luck || 0)}
+
+                </div>
+
+              </div>
+              `
+          )
+          .join("")
+      }
+
+    </div>
+  `;
+
+  $("battleModal").classList.add("open");
+}
+
+
+async function confirmBattleReward(
+  battleId,
+  weaponId
+){
+
+  if(
+    !confirm(
+      "Keep this weapon as your battle reward?"
+    )
+  ){
+    return;
+  }
+
+  const {data,error} =
+    await client.rpc(
+      "choose_battle_reward",
+      {
+        p_battle_id:battleId,
+        p_weapon_id:weaponId
+      }
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  closeModal("battleModal");
+
+  toast(
+    "Battle reward claimed!"
+  );
+
+  await refreshAll();
+}
+
+
+/* ------------------------------------------------------------
+   VIEW BATTLE
+   ------------------------------------------------------------ */
+
+async function viewBattle(id){
+
+  const {data,error} =
+    await client.rpc(
+      "get_battle_weapons",
+      {
+        p_battle_id:id
+      }
+    );
+
+  if(error){
+    return toast(error.message);
+  }
+
+  const weapons =
+    Array.isArray(data)
+      ? data
+      : [];
+
+  $("battleModalTitle").textContent =
+    "⚔️ Battle Weapons";
+
+  if(!weapons.length){
+
+    $("battleModalContent").innerHTML =
+      '<div class="battle-secret">No battle weapon data available.</div>';
+
+  }else{
+
+    $("battleModalContent").innerHTML =
+      weapons
+        .map(
+          w =>
+            `
+            <div
+              class="row"
+            >
+
+              <div>
+
+                <b>
+                  ${esc(
+                    w.weapon_name ||
+                    "Weapon"
+                  )}
+                </b>
+
+                <div class="muted">
+
+                  ⚔️ ${Number(w.damage || 0)}
+                  · 🛡️ ${Number(w.defense || 0)}
+                  · ⚡ ${Number(w.speed || 0)}
+                  · 🎯 ${Number(w.accuracy || 0)}
+                  · 🍀 ${Number(w.luck || 0)}
+
+                </div>
+
+              </div>
+
+              <span class="rarity">
+                ${esc(
+                  w.rarity_name ||
+                  ""
+                )}
+              </span>
+
+            </div>
+            `
+        )
+        .join("");
+  }
+
+  $("battleModal").classList.add("open");
+}
+
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
 async function logout(){
-  await client.auth.signOut();currentUser=null;currentProfile=null;inventoryCache=[];
-  $("app").style.display="none";$("authScreen").style.display="flex";$("username").value="";$("password").value="";
+
+  await client.auth.signOut();
+
+  currentUser = null;
+  currentProfile = null;
+  inventoryCache = [];
+
+  $("app").style.display =
+    "none";
+
+  $("authScreen").style.display =
+    "flex";
+
+  $("username").value = "";
+  $("password").value = "";
 }
+
+
+/* ============================================================
+   SESSION
+   ============================================================ */
+
 async function checkSession(){
-  const {data}=await client.auth.getSession();if(data.session?.user)await showGame(data.session.user.id);
+
+  const {data} =
+    await client.auth.getSession();
+
+  if(data.session?.user){
+
+    await showGame(
+      data.session.user.id
+    );
+  }
 }
+
 checkSession();
+
 </script>
+
 </body>
 </html>
+```
