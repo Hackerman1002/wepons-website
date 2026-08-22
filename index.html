@@ -23,7 +23,7 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
 .card{padding:18px}.card h3{color:#e7b742;margin:0 0 8px}.rarity{display:inline-block;padding:5px 9px;border-radius:5px;background:#3a2918;color:#d9b457;font-size:12px;margin-bottom:10px}.muted{color:#927f61}.desc{color:#c7b79c;line-height:1.45;font-style:italic;margin-bottom:12px}.stats2{display:grid;grid-template-columns:1fr 1fr;gap:6px;color:#d9c39b;font-size:14px}.exist{margin-top:12px;color:#d7ae52}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.toolbar input,.toolbar select{max-width:280px;margin:0}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.formgrid .full{grid-column:1/-1}.row{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #46331f}.row:last-child{border-bottom:0}
 #toast{position:fixed;right:22px;bottom:22px;background:#2c2116;border:1px solid #9a702c;color:#f5e6c8;padding:14px 18px;border-radius:8px;box-shadow:0 10px 30px #0008;display:none;z-index:100}
-.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:90;padding:20px}.modal.open{display:flex}.modal-box{width:600px;max-width:100%;max-height:90vh;overflow:auto;padding:25px;background:#241a12;border:1px solid #9a702c;border-radius:12px}.modal-box h2{color:#e7b742}.case-card{position:relative;overflow:hidden}.case-card.admin{border-color:#b94a3d}.case-price{font-size:20px;color:#f1c442}.case-target{color:#d7ae52}.case-balance{margin-bottom:18px}.result-weapon{text-align:center;padding:18px;border:1px solid #9a702c;border-radius:10px;background:#17100b}.result-weapon .big-rarity{font-size:18px;color:#e7b742}.result-weapon .big-name{font-size:30px;color:#f1c442;margin:10px 0}.admin-case-box{border-color:#843b32}.admin-case-count{font-size:28px;color:#f1c442}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:90;padding:20px}.modal.open{display:flex}.modal-box{width:600px;max-width:100%;max-height:90vh;overflow:auto;padding:25px;background:#241a12;border:1px solid #9a702c;border-radius:12px}.modal-box h2{color:#e7b742}.case-card{position:relative;overflow:hidden}.case-card.admin{border-color:#b94a3d}.case-price{font-size:20px;color:#f1c442}.case-target{color:#d7ae52}.case-balance{margin-bottom:18px}.result-weapon{text-align:center;padding:18px;border:1px solid #9a702c;border-radius:10px;background:#17100b}.result-weapon .big-rarity{font-size:18px;color:#e7b742}.result-weapon .big-name{font-size:30px;color:#f1c442;margin:10px 0}.admin-case-box{border-color:#843b32}.admin-case-count{font-size:28px;color:#f1c442}.inventory-summary{display:flex;justify-content:space-between;align-items:center;font-size:20px;margin-bottom:18px}.inventory-summary span{color:#f1c442;font-size:28px}
 @media(max-width:900px){.sidebar{width:180px}.topbar{left:180px}.main{margin-left:180px}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.sidebar{position:static;width:100%;padding-bottom:70px}.logout{position:absolute}.topbar{position:static;height:auto;padding:15px;justify-content:center}.main{margin-left:0;padding:25px 15px}.stats{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
 </style>
@@ -72,8 +72,6 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
   <div class="header"><h1>Welcome to the Realm</h1><p id="dashboardWelcome">Your adventure awaits.</p></div>
   <div class="stats">
     <div class="stat card"><label>Coins</label><strong id="statCoins">0</strong></div>
-    <div class="stat card"><label>Weapons Owned</label><strong id="statWeapons">0</strong></div>
-    <div class="stat card"><label>Unique Weapons</label><strong id="statUnique">0</strong></div>
     <div class="stat card"><label>Rank</label><strong id="statRank">Novice</strong></div>
   </div>
   <div class="panel mine">
@@ -123,6 +121,7 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
 
 <section id="page-inventory" class="page">
   <div class="header"><h1>🎒 Inventory</h1><p>Everything you currently own.</p></div>
+  <div class="panel inventory-summary"><b>Weapons Owned</b><span id="inventoryOwnedCount">0</span></div>
   <div class="toolbar"><input id="inventorySearch" placeholder="Search inventory..." oninput="filterCards('inventoryGrid','inventorySearch')"></div>
   <div id="inventoryGrid" class="grid"><div class="card">Loading inventory...</div></div>
 </section>
@@ -324,8 +323,6 @@ function updateUI(){
   $("statCoins").textContent=money(coins);$("mineCoins").textContent=money(coins);
   $("profileUsername").textContent=p.username||"-";$("profileRole").textContent=p.role==="admin"?"Administrator":"Player";
   $("profileCoins").textContent=money(coins);$("statRank").textContent=getRank(coins);$("profileRank").textContent=getRank(coins);
-  $("statWeapons").textContent=inventoryCache.length;
-  $("statUnique").textContent=new Set(inventoryCache.map(x=>x.weapon_id)).size;
 }
 function getRank(c){if(c>=1000000)return"Legend";if(c>=100000)return"Master";if(c>=10000)return"Elite";if(c>=1000)return"Adventurer";return"Novice"}
 
@@ -372,17 +369,42 @@ async function loadInventory(){
   inventoryCache=data||[];updateUI();renderInventory(grid,inventoryCache);
 }
 function weaponCard(w,opts={}){
-  const r=w.rarities?.name||"Unknown",copy=opts.exists??null;
+  const r=w.rarities?.name||"Unknown";
+  const copy=opts.exists??null;
+  const owned=opts.owned??null;
+
   return `<div class="card weapon" data-search="${esc((w.name+" "+r).toLowerCase())}">
     <h3>${esc(w.name)}</h3><span class="rarity">${esc(r)}</span>
     <div class="desc">${esc(w.description||"A relic whose history has faded into legend.")}</div>
     <div class="stats2"><span>⚔️ ${Number(w.damage||0)}</span><span>🛡️ ${Number(w.defense||0)}</span><span>⚡ ${Number(w.speed||0)}</span><span>🎯 ${Number(w.accuracy||0)}</span><span>🍀 ${Number(w.luck||0)}</span></div>
+    ${owned!==null?`<div class="owned">🎒 ${money(owned)} owned</div>`:""}
     ${copy!==null?`<div class="exist">🌎 ${money(copy)} exist</div>`:""}
     ${opts.actions||""}</div>`
 }
 function renderInventory(container,items){
-  if(!items.length){container.innerHTML='<div class="card">Your inventory is empty.</div>';return}
-  container.innerHTML=items.map(i=>weaponCard(i.weapons,{actions:`<div class="actions"><button class="btn small" onclick="quickList('${i.id}')">🏪 List</button><button class="btn small secondary" onclick="quickTrade('${i.id}')">🔄 Trade</button></div>`})).join("");
+  if(!items.length){
+    container.innerHTML='<div class="card">Your inventory is empty.</div>';
+    if($("inventoryOwnedCount"))$("inventoryOwnedCount").textContent="0";
+    return;
+  }
+
+  if($("inventoryOwnedCount"))
+    $("inventoryOwnedCount").textContent=money(items.length);
+
+  const grouped=new Map();
+
+  items.forEach(i=>{
+    const id=i.weapon_id;
+    if(!grouped.has(id))grouped.set(id,{item:i,owned:0});
+    grouped.get(id).owned++;
+  });
+
+  container.innerHTML=[...grouped.values()].map(({item,owned})=>
+    weaponCard(item.weapons,{
+      owned,
+      actions:`<div class="actions"><button class="btn small" onclick="quickList('${item.id}')">🏪 List</button><button class="btn small secondary" onclick="quickTrade('${item.id}')">🔄 Trade</button></div>`
+    })
+  ).join("");
 }
 async function loadIndex(){
   const grid=$("indexGrid");grid.innerHTML='<div class="card">Loading unlocked weapons...</div>';
@@ -576,35 +598,52 @@ async function openCase(id){
   if(openingCase)return;
 
   openingCase=true;
+
   const buttons=[...document.querySelectorAll('#casesGrid button')];
   buttons.forEach(b=>b.disabled=true);
+
   toast("Opening case...");
 
-  const {data,error}=await client.rpc("open_case",{p_case_id:id});
+  try{
+    // Migration 4 installs this RPC:
+    // open_case(uuid) with parameter p_case_id.
+    const {data,error}=await client.rpc("open_case",{p_case_id:id});
 
-  openingCase=false;
-  buttons.forEach(b=>b.disabled=false);
+    if(error){
+      console.error("open_case RPC error:",error);
 
-  if(error){
-    toast(error.message);
+      const message=String(error.message||error.details||"");
+
+      if(/function.*open_case|could not find|does not exist|schema cache/i.test(message)){
+        toast("Supabase cannot see open_case yet. Refresh the Supabase schema/API cache, then try again.");
+      }else{
+        toast(message||"The case could not be opened.");
+      }
+
+      await refreshProfile();
+      return;
+    }
+
+    const result=Array.isArray(data)?data[0]:data;
+
+    if(!result){
+      toast("The case opened, but the database returned no weapon.");
+      return;
+    }
+
+    showCaseResult(result,false);
+
     await refreshProfile();
-    return;
+    await loadInventory();
+    await loadIndex();
+    await loadCasePage();
+    await loadAdminCaseBalance();
+    updateUI();
+
+  }finally{
+    openingCase=false;
+    buttons.forEach(b=>b.disabled=false);
   }
-
-  const result=Array.isArray(data)?data[0]:data;
-
-  if(!result){
-    toast("The case opened, but no weapon result was returned.");
-    return;
-  }
-
-  showCaseResult(result,false);
-
-  await refreshProfile();
-  await loadInventory();
-  await loadIndex();
-  await loadCasePage();
-  updateUI();
 }
 
 async function openAdminCase(){
@@ -625,13 +664,15 @@ async function openAdminCase(){
 
   const {data,error}=await client.rpc("open_admin_case");
 
-  openingCase=false;
-
   if(error){
-    toast(error.message);
+    console.error("open_admin_case RPC error:",error);
+    toast(error.message||"The Admin Case could not be opened.");
     await loadAdminCaseBalance();
+    openingCase=false;
     return;
   }
+
+  openingCase=false;
 
   const result=Array.isArray(data)?data[0]:data;
 
