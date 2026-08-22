@@ -1,3450 +1,1629 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>Realm of Relics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Realm of Relics — Admin Panel</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
   <style>
-
-    /* =========================================
-       GLOBAL
-    ========================================= */
-
     * {
       box-sizing: border-box;
     }
 
-    html,
     body {
       margin: 0;
-      padding: 0;
-      min-height: 100%;
+      background: #120d09;
+      color: #f4d06f;
+      font-family: Georgia, "Times New Roman", serif;
     }
-
-    body {
-
-      font-family: Georgia, serif;
-
-      background:
-        radial-gradient(
-          circle at top,
-          #261a11 0%,
-          #17110c 45%,
-          #100c09 100%
-        );
-
-      color: #f5e6c8;
-
-      min-height: 100vh;
-    }
-
 
     button,
     input,
     select {
-      font-family: inherit;
+      font: inherit;
     }
 
-
-    button {
-      cursor: pointer;
-    }
-
-
-    /* =========================================
-       AUTH SCREEN
-    ========================================= */
-
-    #authScreen {
-
+    .layout {
       min-height: 100vh;
-
       display: flex;
-
-      justify-content: center;
-
-      align-items: center;
-
-      padding: 25px;
     }
-
-
-    .auth-card {
-
-      width: 430px;
-
-      max-width: 100%;
-
-      background: #241a12;
-
-      border: 1px solid #9a702c;
-
-      border-radius: 14px;
-
-      padding: 35px;
-
-      box-shadow:
-        0 20px 60px rgba(0, 0, 0, .55);
-    }
-
-
-    .auth-title {
-
-      text-align: center;
-
-      color: #e8b943;
-
-      font-size: 34px;
-
-      margin: 0 0 8px;
-    }
-
-
-    .auth-subtitle {
-
-      text-align: center;
-
-      color: #b9a98d;
-
-      margin-bottom: 28px;
-
-      line-height: 1.5;
-    }
-
-
-    .auth-card input {
-
-      width: 100%;
-
-      padding: 14px;
-
-      margin-bottom: 12px;
-
-      border-radius: 8px;
-
-      border: 1px solid #6d522d;
-
-      background: #120e0a;
-
-      color: white;
-
-      outline: none;
-
-      font-size: 15px;
-    }
-
-
-    .auth-card input:focus {
-
-      border-color: #d2a63e;
-
-      box-shadow:
-        0 0 0 2px rgba(210,166,62,.12);
-    }
-
-
-    .primary-button {
-
-      width: 100%;
-
-      padding: 14px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: #ae7d27;
-
-      color: white;
-
-      font-size: 16px;
-
-      font-weight: bold;
-
-      transition: .2s;
-    }
-
-
-    .primary-button:hover {
-
-      background: #ca9635;
-
-      transform: translateY(-1px);
-    }
-
-
-    .secondary-button {
-
-      width: 100%;
-
-      margin-top: 10px;
-
-      padding: 12px;
-
-      border: 1px solid #6d522d;
-
-      border-radius: 8px;
-
-      background: transparent;
-
-      color: #d7ae52;
-
-      font-size: 15px;
-    }
-
-
-    .secondary-button:hover {
-
-      background: #302217;
-    }
-
-
-    #authMessage {
-
-      min-height: 25px;
-
-      margin-top: 15px;
-
-      text-align: center;
-
-      color: #d9c39b;
-    }
-
-
-    /* =========================================
-       APPLICATION
-    ========================================= */
-
-    #app {
-
-      display: none;
-
-      min-height: 100vh;
-    }
-
-
-    /* =========================================
-       SIDEBAR
-    ========================================= */
 
     .sidebar {
-
+      width: 220px;
+      min-height: 100vh;
+      background: #1b120c;
+      border-right: 1px solid #76531f;
+      padding: 24px 14px;
       position: fixed;
-
       left: 0;
       top: 0;
       bottom: 0;
-
-      width: 220px;
-
-      background: #19110b;
-
-      border-right: 1px solid #6d522d;
-
-      padding: 24px 15px;
-
-      z-index: 20;
     }
-
 
     .logo {
-
       text-align: center;
-
-      color: #e7b742;
-
       font-size: 25px;
-
       font-weight: bold;
-
-      line-height: 1.1;
-
-      margin-bottom: 40px;
+      line-height: 1.05;
+      margin-bottom: 45px;
     }
-
-
-    .nav-section {
-
-      color: #806f55;
-
-      font-size: 13px;
-
-      text-transform: uppercase;
-
-      letter-spacing: 1px;
-
-      margin: 20px 12px 8px;
-    }
-
 
     .nav-button {
-
+      display: block;
       width: 100%;
-
       padding: 13px 12px;
-
-      margin-bottom: 5px;
-
-      border: 1px solid transparent;
-
-      border-radius: 8px;
-
+      margin-bottom: 8px;
       background: transparent;
-
-      color: #e2d0af;
-
-      text-align: left;
-
-      font-size: 15px;
-    }
-
-
-    .nav-button:hover {
-
-      background: #2b1e14;
-    }
-
-
-    .nav-button.active {
-
-      background: #302113;
-
-      border-color: #89642e;
-
-      color: #e9b941;
-    }
-
-
-    .logout-button {
-
-      position: absolute;
-
-      left: 15px;
-      right: 15px;
-      bottom: 25px;
-
-      width: calc(100% - 30px);
-
-      padding: 12px;
-
+      color: #e7c777;
+      border: 1px solid transparent;
       border-radius: 8px;
-
-      border: 1px solid #67342f;
-
-      background: #512521;
-
-      color: #fff;
+      text-align: left;
+      cursor: pointer;
+      text-decoration: none;
     }
 
-
-    .logout-button:hover {
-
-      background: #71322c;
+    .nav-button:hover,
+    .nav-button.active {
+      background: #342314;
+      border-color: #76531f;
     }
 
-
-    /* =========================================
-       TOP BAR
-    ========================================= */
-
-    .topbar {
-
-      position: fixed;
-
-      left: 220px;
-      right: 0;
-      top: 0;
-
-      height: 74px;
-
-      background: #21160e;
-
-      border-bottom: 1px solid #604924;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: flex-end;
-
-      gap: 18px;
-
-      padding: 0 28px;
-
-      z-index: 10;
+    .logout {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 25px;
+      color: #f0b0a7;
     }
-
-
-    .username-display {
-
-      color: #d9c39b;
-
-      font-size: 15px;
-    }
-
-
-    .admin-badge {
-
-      background: #843b32;
-
-      color: white;
-
-      padding: 5px 9px;
-
-      border-radius: 6px;
-
-      font-size: 11px;
-
-      font-weight: bold;
-    }
-
-
-    .coin-display {
-
-      border: 1px solid #876326;
-
-      border-radius: 25px;
-
-      padding: 9px 18px;
-
-      color: #f1c442;
-
-      background: #21170e;
-    }
-
-
-    /* =========================================
-       MAIN
-    ========================================= */
 
     .main {
-
       margin-left: 220px;
-
-      padding: 110px 38px 50px;
-
-      max-width: 1500px;
+      width: calc(100% - 220px);
+      min-height: 100vh;
+      padding: 45px;
     }
 
-
-    .page {
-
-      display: none;
-    }
-
-
-    .page.active {
-
-      display: block;
-    }
-
-
-    .page-header {
-
-      margin-bottom: 25px;
-    }
-
-
-    .page-header h1 {
-
-      margin: 0;
-
-      color: #e7b742;
-
-      font-size: 34px;
-    }
-
-
-    .page-header p {
-
-      color: #b9a98d;
-
-      margin-top: 8px;
-    }
-
-
-    /* =========================================
-       DASHBOARD
-    ========================================= */
-
-    .stat-grid {
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
-      gap: 18px;
-
-      margin-bottom: 25px;
-    }
-
-
-    .stat-card {
-
-      background: #241a12;
-
-      border: 1px solid #765627;
-
-      border-radius: 10px;
-
-      padding: 22px;
-    }
-
-
-    .stat-label {
-
-      color: #927f61;
-
-      font-size: 13px;
-
-      text-transform: uppercase;
-    }
-
-
-    .stat-value {
-
-      color: #e8b943;
-
-      font-size: 29px;
-
-      font-weight: bold;
-
-      margin-top: 8px;
-    }
-
-
-    .panel {
-
-      background: #241a12;
-
-      border: 1px solid #765627;
-
-      border-radius: 12px;
-
-      padding: 25px;
-
-      margin-bottom: 25px;
-    }
-
-
-    .panel h2 {
-
-      color: #e7b742;
-
-      margin-top: 0;
-    }
-
-
-    .panel p {
-
-      color: #d5c3a5;
-
-      line-height: 1.5;
-    }
-
-
-    /* =========================================
-       COIN MINING
-    ========================================= */
-
-    .mine-panel {
-
-      text-align: center;
-
-      padding: 35px;
-    }
-
-
-    .mine-title {
-
-      color: #e7b742;
-
-      font-size: 25px;
-
-      margin-bottom: 5px;
-    }
-
-
-    .mine-count {
-
-      font-size: 28px;
-
-      margin-bottom: 15px;
-    }
-
-
-    .coin-button {
-
-      width: 145px;
-
-      height: 145px;
-
-      border-radius: 50%;
-
-      border: 7px solid #9b712d;
-
-      background:
-        radial-gradient(
-          circle at 35% 30%,
-          #ffeaa3,
-          #e6b83f 45%,
-          #9c6d21 100%
-        );
-
-      color: #fff7cf;
-
-      font-size: 62px;
-
-      box-shadow:
-        0 10px 0 #634519,
-        0 20px 35px rgba(0,0,0,.5);
-
-      transition: .1s;
-    }
-
-
-    .coin-button:hover {
-
-      transform: scale(1.04);
-    }
-
-
-    .coin-button:active {
-
-      transform:
-        translateY(8px)
-        scale(.97);
-
-      box-shadow:
-        0 3px 0 #634519,
-        0 10px 20px rgba(0,0,0,.4);
-    }
-
-
-    .mine-help {
-
-      color: #9d8b70;
-
-      margin-top: 25px;
-    }
-
-
-    /* =========================================
-       ADMIN
-    ========================================= */
-
-    .admin-card {
-
-      background: #241a12;
-
-      border: 1px solid #765627;
-
-      border-radius: 12px;
-
-      padding: 25px;
-
-      margin-bottom: 25px;
-    }
-
-
-    .admin-card h2 {
-
-      margin-top: 0;
-
-      color: #e7b742;
-    }
-
-
-    .admin-description {
-
-      color: #b9a98d;
-
-      margin-bottom: 20px;
-    }
-
-
-    .admin-form {
-
-      display: grid;
-
-      grid-template-columns:
-        1fr 1fr auto;
-
-      gap: 12px;
-
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
       align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid #76531f;
+      padding-bottom: 18px;
+      margin-bottom: 35px;
     }
 
-
-    .admin-form input,
-    .admin-form select {
-
-      width: 100%;
-
-      padding: 13px;
-
-      border-radius: 7px;
-
-      border: 1px solid #6d522d;
-
-      background: #120e0a;
-
-      color: #f5e6c8;
-
-      font-size: 15px;
-
-      outline: none;
-    }
-
-
-    .admin-form button {
-
-      padding: 13px 20px;
-
-      border: none;
-
-      border-radius: 7px;
-
-      background: #ae7d27;
-
+    .admin-badge {
+      background: #7f302a;
       color: white;
-
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
       font-weight: bold;
-
-      white-space: nowrap;
     }
 
-
-    .admin-form button:hover {
-
-      background: #c49337;
+    h1 {
+      font-size: 42px;
+      margin: 0 0 8px;
     }
 
-
-    .admin-message {
-
-      min-height: 24px;
-
-      margin-top: 15px;
-
-      color: #d9c39b;
-    }
-
-
-    .weapon-admin-item {
-
-      background: #17110c;
-
-      border: 1px solid #604924;
-
-      border-radius: 8px;
-
-      padding: 15px;
-
-      margin-top: 10px;
-    }
-
-
-    .weapon-admin-item strong {
-
-      color: #e7b742;
-
+    .subtitle {
+      color: #bda77b;
+      margin-bottom: 30px;
       font-size: 17px;
     }
 
-
-    .weapon-admin-rarity {
-
-      color: #b9a98d;
-
-      margin: 5px 0;
-    }
-
-
-    /* =========================================
-       WEAPON CARDS
-    ========================================= */
-
-    .weapon-grid {
-
+    .grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(auto-fill, minmax(270px, 1fr));
-
-      gap: 18px;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1100px;
     }
 
-
-    .weapon-card {
-
-      background: #241a12;
-
-      border: 1px solid #765627;
-
+    .card {
+      background: #24180f;
+      border: 1px solid #76531f;
       border-radius: 12px;
-
-      padding: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.25);
     }
 
+    .card.wide {
+      grid-column: 1 / -1;
+    }
 
-    .weapon-card h3 {
-
-      color: #e7b742;
-
+    .card h2 {
       margin-top: 0;
-
-      font-size: 21px;
+      font-size: 25px;
     }
 
-
-    .weapon-rarity {
-
-      display: inline-block;
-
-      padding: 5px 9px;
-
-      border-radius: 5px;
-
-      background: #3a2918;
-
-      color: #d9b457;
-
-      font-size: 12px;
-
-      margin-bottom: 12px;
-    }
-
-
-    .weapon-description {
-
-      color: #c7b79c;
-
+    .card p {
+      color: #cdbb91;
       line-height: 1.5;
-
-      font-style: italic;
-
-      margin-bottom: 15px;
     }
 
-
-    .weapon-stats {
-
-      display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap: 7px;
-
-      color: #d9c39b;
-
-      font-size: 14px;
+    label {
+      display: block;
+      margin: 14px 0 7px;
+      color: #e5ca81;
     }
 
-
-    /* =========================================
-       INVENTORY
-    ========================================= */
-
-    .empty-state {
-
-      text-align: center;
-
-      color: #927f61;
-
-      padding: 40px;
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      background: #120d09;
+      border: 1px solid #76531f;
+      border-radius: 7px;
+      color: #f4d06f;
+      outline: none;
     }
 
+    input:focus,
+    select:focus {
+      border-color: #c79535;
+    }
 
-    /* =========================================
-       PROFILE
-    ========================================= */
-
-    .profile-row {
-
+    .button-row {
       display: flex;
-
-      justify-content: space-between;
-
-      padding: 14px 0;
-
-      border-bottom: 1px solid #46331f;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
     }
 
-
-    .profile-row:last-child {
-
-      border-bottom: none;
-    }
-
-
-    .profile-label {
-
-      color: #927f61;
-    }
-
-
-    .profile-value {
-
-      color: #f0d79e;
-
+    .primary,
+    .danger,
+    .secondary {
+      border: 1px solid #9a7028;
+      border-radius: 7px;
+      padding: 11px 17px;
+      cursor: pointer;
       font-weight: bold;
     }
 
+    .primary {
+      background: #b88628;
+      color: #160f08;
+    }
 
-    /* =========================================
-       TOAST
-    ========================================= */
+    .primary:hover {
+      background: #d5a63f;
+    }
 
-    #toast {
+    .secondary {
+      background: #342314;
+      color: #f4d06f;
+    }
 
-      position: fixed;
+    .secondary:hover {
+      background: #49321a;
+    }
 
-      right: 25px;
+    .danger {
+      background: #702d28;
+      color: white;
+      border-color: #a74a41;
+    }
 
-      bottom: 25px;
-
-      background: #2c2116;
-
-      border: 1px solid #9a702c;
-
-      color: #f5e6c8;
-
-      padding: 15px 20px;
-
-      border-radius: 8px;
-
-      box-shadow: 0 10px 30px rgba(0,0,0,.5);
-
+    .status {
       display: none;
-
-      z-index: 100;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 7px;
+      line-height: 1.4;
     }
 
+    .status.success {
+      display: block;
+      background: #17351f;
+      border: 1px solid #39764a;
+      color: #9fe3ae;
+    }
 
-    /* =========================================
-       MOBILE
-    ========================================= */
+    .status.error {
+      display: block;
+      background: #3b1715;
+      border: 1px solid #8c3e36;
+      color: #ffb1a8;
+    }
 
-    @media (max-width: 900px) {
+    .player-result {
+      display: none;
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid #76531f;
+      border-radius: 8px;
+      background: #1b120c;
+    }
 
+    .player-result.visible {
+      display: block;
+    }
+
+    .stat {
+      display: inline-block;
+      margin-right: 25px;
+      margin-top: 8px;
+    }
+
+    .stat-label {
+      color: #a99570;
+      font-size: 13px;
+    }
+
+    .stat-value {
+      color: #f4d06f;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .case-box {
+      border: 1px solid #a47729;
+      border-radius: 10px;
+      padding: 22px;
+      background: linear-gradient(145deg, #2b1b0e, #17100b);
+    }
+
+    .case-icon {
+      font-size: 50px;
+      text-align: center;
+    }
+
+    .case-title {
+      text-align: center;
+      font-size: 28px;
+      margin: 8px 0;
+    }
+
+    .case-description {
+      text-align: center;
+      color: #cbb88b;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #9f8d6c;
+    }
+
+    .loading {
+      opacity: .6;
+      pointer-events: none;
+    }
+
+    @media (max-width: 800px) {
       .sidebar {
-
-        width: 180px;
-      }
-
-      .topbar {
-
-        left: 180px;
+        width: 170px;
       }
 
       .main {
-
-        margin-left: 180px;
+        margin-left: 170px;
+        width: calc(100% - 170px);
+        padding: 25px;
       }
 
-      .stat-grid {
-
-        grid-template-columns:
-          repeat(2, 1fr);
-      }
-
-    }
-
-
-    @media (max-width: 650px) {
-
-      .sidebar {
-
-        position: static;
-
-        width: 100%;
-
-        min-height: auto;
-
-        padding-bottom: 15px;
-      }
-
-
-      .logo {
-
-        margin-bottom: 15px;
-      }
-
-
-      .logout-button {
-
-        position: static;
-
-        width: 100%;
-
-        margin-top: 15px;
-      }
-
-
-      .topbar {
-
-        position: static;
-
-        height: auto;
-
-        padding: 15px;
-
-        justify-content: center;
-      }
-
-
-      .main {
-
-        margin-left: 0;
-
-        padding: 25px 15px;
-      }
-
-
-      .stat-grid {
-
+      .grid {
         grid-template-columns: 1fr;
       }
 
-
-      .admin-form {
-
-        grid-template-columns: 1fr;
+      .card.wide {
+        grid-column: auto;
       }
-
     }
-
   </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =========================================
-     AUTH
-========================================= -->
-
-<div id="authScreen">
-
-  <div class="auth-card">
-
-    <h1 class="auth-title">
-      ⚔️ Realm of Relics
-    </h1>
-
-    <div class="auth-subtitle">
-      Collect. Battle. Trade.<br>
-      Become legendary.
-    </div>
-
-
-    <input
-      id="username"
-      type="text"
-      maxlength="20"
-      placeholder="Username"
-      autocomplete="username"
-    >
-
-
-    <input
-      id="password"
-      type="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    >
-
-
-    <button
-      id="authButton"
-      class="primary-button"
-      onclick="handleAuth()"
-    >
-      Create Account
-    </button>
-
-
-    <button
-      id="switchAuthButton"
-      class="secondary-button"
-      onclick="toggleAuthMode()"
-    >
-      Already have an account? Log in
-    </button>
-
-
-    <div id="authMessage"></div>
-
-  </div>
-
-</div>
-
-
-
-<!-- =========================================
-     APPLICATION
-========================================= -->
-
-<div id="app">
-
-
-  <!-- SIDEBAR -->
+<div class="layout">
 
   <aside class="sidebar">
-
     <div class="logo">
-      ⚔️ Realm of<br>
-      Relics
+      ⚔️ Realm of<br>Relics
     </div>
 
+    <a class="nav-button" href="index.html">🏰 Dashboard</a>
+    <a class="nav-button" href="index.html#armory">⚔️ Index</a>
+    <a class="nav-button" href="index.html#inventory">🎒 Inventory</a>
+    <a class="nav-button" href="index.html#profile">👤 Profile</a>
 
-    <div class="nav-section">
-      Realm
-    </div>
+    <a class="nav-button active" href="admin.html">
+      👑 Admin Panel
+    </a>
 
-
-    <button
-      class="nav-button active"
-      data-page="dashboard"
-      onclick="showPage('dashboard')"
-    >
-      🏰 Dashboard
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="cases"
-      onclick="showPage('cases')"
-    >
-      📦 Cases
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="index"
-      onclick="showPage('index')"
-    >
-      📖 Index
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="inventory"
-      onclick="showPage('inventory')"
-    >
-      🎒 Inventory
-    </button>
-
-
-    <button
-      class="nav-button"
-      data-page="profile"
-      onclick="showPage('profile')"
-    >
-      👤 Profile
-    </button>
-
-
-    <div
-      id="adminNavSection"
-      style="display:none;"
-    >
-
-      <div class="nav-section">
-        Administration
-      </div>
-
-
-      <button
-        class="nav-button"
-        data-page="admin"
-        onclick="showPage('admin')"
-      >
-        👑 Admin Panel
-      </button>
-
-    </div>
-
-
-    <button
-      class="logout-button"
-      onclick="logout()"
-    >
+    <button class="nav-button logout" onclick="logout()">
       🚪 Log Out
     </button>
-
   </aside>
 
 
-
-  <!-- TOP BAR -->
-
-  <header class="topbar">
-
-    <span
-      id="topUsername"
-      class="username-display"
-    >
-      Player
-    </span>
-
-
-    <span
-      id="adminBadge"
-      class="admin-badge"
-      style="display:none;"
-    >
-      ADMIN
-    </span>
-
-
-    <span
-      class="coin-display"
-    >
-      🪙
-      <span id="topCoins">0</span>
-    </span>
-
-  </header>
-
-
-
-  <!-- MAIN -->
-
   <main class="main">
 
+    <div class="topbar">
+      <span id="usernameDisplay">Loading...</span>
+      <span class="admin-badge">ADMIN</span>
+    </div>
 
-    <!-- =====================================
-         DASHBOARD
-    ====================================== -->
 
-    <section
-      id="page-dashboard"
-      class="page active"
-    >
+    <h1>👑 Admin Panel</h1>
 
-      <div class="page-header">
+    <div class="subtitle">
+      Manage the Realm of Relics.
+    </div>
 
-        <h1>
-          Welcome to the Realm
-        </h1>
 
-        <p id="dashboardWelcome">
-          Your adventure awaits.
+    <div class="grid">
+
+      <!-- ================================================= -->
+      <!-- PLAYER SEARCH -->
+      <!-- ================================================= -->
+
+      <section class="card wide">
+
+        <h2>🔎 Find Player</h2>
+
+        <p>
+          Search for a player by their Realm of Relics username.
         </p>
 
-      </div>
+        <label for="username">
+          Username
+        </label>
 
-
-      <div class="stat-grid">
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            Coins
-          </div>
-
-          <div
-            class="stat-value"
-            id="statCoins"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            Weapons
-          </div>
-
-          <div
-            class="stat-value"
-            id="statWeapons"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            Inventory
-          </div>
-
-          <div
-            class="stat-value"
-            id="statInventory"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-label">
-            Rank
-          </div>
-
-          <div
-            class="stat-value"
-            id="statRank"
-          >
-            Novice
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- COIN MINING -->
-
-      <div class="panel mine-panel">
-
-        <div class="mine-title">
-          Mine Coins
-        </div>
-
-
-        <div class="mine-count">
-
-          🪙
-          <span id="mineCoins">
-            0
-          </span>
-          Coins
-
-        </div>
-
-
-        <button
-          class="coin-button"
-          onclick="mineCoin()"
-          aria-label="Mine one coin"
+        <input
+          id="username"
+          type="text"
+          placeholder="Enter username..."
+          autocomplete="off"
         >
-          🪙
-        </button>
 
-
-        <div class="mine-help">
-          Click the coin to earn +1 coin
-        </div>
-
-      </div>
-
-
-
-      <div class="panel">
-
-        <h2>
-          ⚔️ The Realm Awaits
-        </h2>
-
-        <p>
-          Explore your Index, collect relics,
-          upgrade your collection and become
-          legendary.
-        </p>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- =====================================
-         CASES
-    ====================================== -->
-
-    <section
-      id="page-cases"
-      class="page"
-    >
-
-      <div class="page-header">
-        <h1>📦 Case Shop</h1>
-        <p>Buy a case, open it, and discover a new relic.</p>
-      </div>
-
-      <div id="casesGrid" class="weapon-grid">
-        <div class="empty-state">Loading cases...</div>
-      </div>
-
-      <div id="caseResult" class="panel" style="display:none; text-align:center;"></div>
-
-    </section>
-
-
-    <!-- =====================================
-         INDEX
-    ====================================== -->
-
-    <section
-      id="page-index"
-      class="page"
-    >
-
-      <div class="page-header">
-
-        <h1>
-          📖 Index
-        </h1>
-
-        <p>
-          Weapons you have unlocked before.
-        </p>
-
-      </div>
-
-
-      <div
-        id="indexGrid"
-        class="weapon-grid"
-      >
-
-        <div class="empty-state">
-          Loading weapons...
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- =====================================
-         INVENTORY
-    ====================================== -->
-
-    <section
-      id="page-inventory"
-      class="page"
-    >
-
-      <div class="page-header">
-
-        <h1>
-          🎒 Inventory
-        </h1>
-
-        <p>
-          Weapons you've collected.
-        </p>
-
-      </div>
-
-
-      <div
-        id="inventoryGrid"
-        class="weapon-grid"
-      >
-
-        <div class="empty-state">
-          Loading inventory...
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- =====================================
-         PROFILE
-    ====================================== -->
-
-    <section
-      id="page-profile"
-      class="page"
-    >
-
-      <div class="page-header">
-
-        <h1>
-          👤 Profile
-        </h1>
-
-        <p>
-          Your Realm of Relics profile.
-        </p>
-
-      </div>
-
-
-      <div class="panel">
-
-        <div class="profile-row">
-
-          <span class="profile-label">
-            Username
-          </span>
-
-          <span
-            class="profile-value"
-            id="profileUsername"
+        <div class="button-row">
+          <button
+            class="primary"
+            id="findPlayerButton"
+            onclick="findPlayer()"
           >
-            -
-          </span>
+            Search Player
+          </button>
+        </div>
+
+        <div id="playerResult" class="player-result">
+
+          <strong id="foundUsername"></strong>
+
+          <div>
+            <span class="stat">
+              <span class="stat-label">Coins</span><br>
+              <span class="stat-value" id="foundCoins">0</span>
+            </span>
+
+            <span class="stat">
+              <span class="stat-label">Admin Cases</span><br>
+              <span class="stat-value" id="foundCases">0</span>
+            </span>
+          </div>
 
         </div>
 
+        <div id="searchStatus"></div>
 
-        <div class="profile-row">
-
-          <span class="profile-label">
-            Role
-          </span>
-
-          <span
-            class="profile-value"
-            id="profileRole"
-          >
-            -
-          </span>
-
-        </div>
+      </section>
 
 
-        <div class="profile-row">
-
-          <span class="profile-label">
-            Coins
-          </span>
-
-          <span
-            class="profile-value"
-            id="profileCoins"
-          >
-            0
-          </span>
-
-        </div>
-
-
-        <div class="profile-row">
-
-          <span class="profile-label">
-            Rank
-          </span>
-
-          <span
-            class="profile-value"
-            id="profileRank"
-          >
-            Novice
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- =====================================
-         ADMIN PANEL
-    ====================================== -->
-
-    <section
-      id="page-admin"
-      class="page"
-    >
-
-      <div class="page-header">
-
-        <h1>
-          👑 Admin Panel
-        </h1>
-
-        <p>
-          Manage the Realm of Relics.
-        </p>
-
-      </div>
-
-
-
+      <!-- ================================================= -->
       <!-- GIVE COINS -->
+      <!-- ================================================= -->
 
-      <div class="admin-card">
+      <section class="card">
 
-        <h2>
-          🪙 Give Coins
-        </h2>
+        <h2>🪙 Give Coins</h2>
 
-        <p class="admin-description">
-          Give coins to a player using their username.
+        <p>
+          Add coins to a player's account.
         </p>
 
+        <label for="coinUsername">
+          Username
+        </label>
 
-        <div class="admin-form">
+        <input
+          id="coinUsername"
+          type="text"
+          placeholder="Player username"
+        >
 
-          <input
-            id="coinUsername"
-            type="text"
-            placeholder="Player username"
-          >
+        <label for="coinAmount">
+          Amount
+        </label>
 
+        <input
+          id="coinAmount"
+          type="number"
+          min="1"
+          placeholder="1000"
+        >
 
-          <input
-            id="coinAmount"
-            type="number"
-            min="1"
-            placeholder="Amount of coins"
-          >
-
-
+        <div class="button-row">
           <button
-            onclick="adminGiveCoins()"
+            class="primary"
+            onclick="giveCoins()"
           >
-            🪙 Give Coins
+            Give Coins
           </button>
-
         </div>
 
+        <div id="coinStatus"></div>
 
-        <div
-          id="coinMessage"
-          class="admin-message"
-        ></div>
-
-      </div>
+      </section>
 
 
-
+      <!-- ================================================= -->
       <!-- GIVE WEAPON -->
+      <!-- ================================================= -->
 
-      <div class="admin-card">
+      <section class="card">
 
-        <h2>
-          ⚔️ Give Weapon
-        </h2>
+        <h2>⚔️ Give Weapon</h2>
 
-        <p class="admin-description">
-          Give a weapon directly to a player.
+        <p>
+          Give an existing weapon directly to a player.
         </p>
 
+        <label for="weaponUsername">
+          Username
+        </label>
 
-        <div class="admin-form">
+        <input
+          id="weaponUsername"
+          type="text"
+          placeholder="Player username"
+        >
 
-          <input
-            id="weaponUsername"
-            type="text"
-            placeholder="Player username"
+        <label for="weaponSearch">
+          Weapon
+        </label>
+
+        <input
+          id="weaponSearch"
+          type="text"
+          placeholder="Search weapon..."
+          oninput="searchWeapons()"
+        >
+
+        <select id="weaponSelect">
+          <option value="">
+            Search for a weapon above
+          </option>
+        </select>
+
+        <label for="weaponAmount">
+          Amount
+        </label>
+
+        <input
+          id="weaponAmount"
+          type="number"
+          min="1"
+          max="100"
+          value="1"
+        >
+
+        <div class="button-row">
+          <button
+            class="primary"
+            onclick="giveWeapon()"
           >
+            Give Weapon
+          </button>
+        </div>
+
+        <div id="weaponStatus"></div>
+
+      </section>
 
 
-          <select id="weaponSelect">
+      <!-- ================================================= -->
+      <!-- ADMIN CASE -->
+      <!-- ================================================= -->
 
-            <option value="">
-              Select a weapon
-            </option>
+      <section class="card wide">
 
-          </select>
+        <h2>🎁 Give Admin Case</h2>
 
+        <div class="case-box">
+
+          <div class="case-icon">
+            🎁
+          </div>
+
+          <div class="case-title">
+            Admin Case
+          </div>
+
+          <div class="case-description">
+            A special case that can contain extremely rare
+            weapons, including the exclusive Hacker rarity.
+          </div>
+
+          <br>
+
+          <div class="small" style="text-align:center;">
+            This case cannot be purchased from the normal Cases
+            store. Only an administrator can award it.
+          </div>
+
+        </div>
+
+        <label for="caseUsername">
+          Player Username
+        </label>
+
+        <input
+          id="caseUsername"
+          type="text"
+          placeholder="Player username"
+        >
+
+        <label for="caseAmount">
+          Number of Admin Cases
+        </label>
+
+        <input
+          id="caseAmount"
+          type="number"
+          min="1"
+          max="1000"
+          value="1"
+        >
+
+        <div class="button-row">
 
           <button
-            onclick="adminGiveWeapon()"
+            class="primary"
+            id="giveCaseButton"
+            onclick="giveAdminCases()"
           >
-            ⚔️ Give Weapon
+            🎁 Give Admin Case
           </button>
 
         </div>
 
+        <div id="caseStatus"></div>
 
-        <div
-          id="weaponMessage"
-          class="admin-message"
-        ></div>
-
-      </div>
+      </section>
 
 
+      <!-- ================================================= -->
+      <!-- ADMIN CASE ODDS -->
+      <!-- ================================================= -->
 
-      <!-- ADMIN WEAPON LIST -->
+      <section class="card wide">
 
-      <div class="admin-card">
+        <h2>🎲 Admin Case Odds</h2>
 
-        <h2>
-          📜 Available Weapons
-        </h2>
+        <p>
+          These are the server-side odds used when an Admin Case
+          is opened.
+        </p>
 
-
-        <div id="adminWeaponList">
-
-          Loading weapons...
-
+        <div id="adminOdds">
+          Loading odds...
         </div>
 
-      </div>
+      </section>
 
-    </section>
-
+    </div>
 
   </main>
 
 </div>
 
 
-
-<div id="toast"></div>
-
-
-
 <script>
+  /*
+   * ==========================================================
+   * SUPABASE CONFIGURATION
+   * ==========================================================
+   *
+   * Put the SAME Supabase URL and anon key that your current
+   * Realm of Relics website already uses here.
+   *
+   * Do NOT put a service_role key in this file.
+   */
+
+  const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+
+  const SUPABASE_ANON_KEY =
+    "YOUR_SUPABASE_ANON_KEY";
 
 
-/* =====================================================
-   SUPABASE
-===================================================== */
+  const {
+    createClient
+  } = supabase;
 
-const SUPABASE_URL =
-  "https://mdtdtsrrvmlvxkblsdvo.supabase.co";
-
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kdGR0c3Jydm1sdnhrYmxzZHZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczOTczODEsImV4cCI6MjEwMjk3MzM4MX0.BcdN35iFzMaRSMtG_MhF9Ri87QaerPUlebOTtahJ2Fs";
-
-
-const client =
-  supabase.createClient(
+  const db = createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_ANON_KEY
   );
-
-
-/* =====================================================
-   STATE
-===================================================== */
-
-let loginMode = false;
-
-let currentUser = null;
-
-let currentProfile = null;
-
-
-/* =====================================================
-   AUTH MODE
-===================================================== */
-
-function toggleAuthMode() {
-
-  loginMode = !loginMode;
-
-
-  const authButton =
-    document.getElementById("authButton");
-
-  const switchButton =
-    document.getElementById("switchAuthButton");
-
-
-  if (loginMode) {
-
-    authButton.textContent =
-      "Log In";
-
-    switchButton.textContent =
-      "Need an account? Create one";
-
-  } else {
-
-    authButton.textContent =
-      "Create Account";
-
-    switchButton.textContent =
-      "Already have an account? Log in";
-  }
-
-
-  document.getElementById(
-    "authMessage"
-  ).textContent = "";
-
-}
-
-
-/* =====================================================
-   AUTHENTICATION
-===================================================== */
-
-async function handleAuth() {
-
-  const username =
-    document
-      .getElementById("username")
-      .value
-      .trim();
-
-
-  const password =
-    document
-      .getElementById("password")
-      .value;
-
-
-  const message =
-    document.getElementById(
-      "authMessage"
-    );
-
-
-  if (!username || !password) {
-
-    message.textContent =
-      "Enter a username and password.";
-
-    return;
-  }
-
-
-  if (username.length < 3) {
-
-    message.textContent =
-      "Username must be at least 3 characters.";
-
-    return;
-  }
-
-
-  if (username.length > 20) {
-
-    message.textContent =
-      "Username must be 20 characters or less.";
-
-    return;
-  }
-
-
-  const usernamePattern =
-    /^[a-zA-Z0-9_]+$/;
-
-
-  if (!usernamePattern.test(username)) {
-
-    message.textContent =
-      "Username can only contain letters, numbers and underscores.";
-
-    return;
-  }
-
-
-  if (password.length < 6) {
-
-    message.textContent =
-      "Password must be at least 6 characters.";
-
-    return;
-  }
-
-
-  message.textContent =
-    "Please wait...";
-
-
-  const normalizedUsername =
-    username.toLowerCase();
-
-
-  const internalEmail =
-    normalizedUsername +
-    "@realmofrelics.local";
-
-
-  /* ==========================================
-     CREATE ACCOUNT
-  ========================================== */
-
-  if (!loginMode) {
-
-    const { data, error } =
-      await client.auth.signUp({
-
-        email: internalEmail,
-
-        password: password
-
-      });
-
-
-    if (error) {
-
-      message.textContent =
-        error.message;
-
-      return;
-    }
-
-
-    if (!data.user) {
-
-      message.textContent =
-        "Account creation failed.";
-
-      return;
-    }
-
-
-    /*
-      Username uniqueness is enforced by the
-      database UNIQUE constraint.
-    */
-
-    const { error: profileError } =
-      await client
-        .from("profiles")
-        .insert({
-
-          id: data.user.id,
-
-          username: normalizedUsername,
-
-          role: "player",
-
-          coins: 100
-
-        });
-
-
-    if (profileError) {
-
-      /*
-        23505 = duplicate username
-      */
-
-      if (
-        profileError.code === "23505"
-      ) {
-
-        message.textContent =
-          "That username is already taken.";
-
-      } else {
-
-        message.textContent =
-          profileError.message;
-      }
-
-
-      await client.auth.signOut();
-
-      return;
-    }
-
-
-    message.textContent =
-      "Account created!";
-
-
-    await showGame(
-      data.user.id
-    );
-
-
-    return;
-  }
-
-
-  /* ==========================================
-     LOGIN
-  ========================================== */
-
-  const { data, error } =
-    await client.auth.signInWithPassword({
-
-      email: internalEmail,
-
-      password: password
-
-    });
-
-
-  if (error) {
-
-    console.error("LOGIN ERROR:", error);
-
-    message.textContent =
-      error.message || "Login failed.";
-
-    return;
-  }
-
-
-  if (!data.user) {
-
-    message.textContent =
-      "Login failed.";
-
-    return;
-  }
-
-
-  await showGame(
-    data.user.id
-  );
-
-}
-
-
-/* =====================================================
-   SHOW APPLICATION
-===================================================== */
-
-async function showGame(userId) {
-
-  const { data: profile, error } =
-    await client
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-
-
-  if (error || !profile) {
-
-    console.error(
-      "Profile error:",
-      error
-    );
-
-    await client.auth.signOut();
-
-    return;
-  }
-
-
-  currentUser =
-    userId;
-
-  currentProfile =
-    profile;
-
-
-  document.getElementById(
-    "authScreen"
-  ).style.display = "none";
-
-
-  document.getElementById(
-    "app"
-  ).style.display = "block";
-
-
-  updatePlayerUI();
-
-
-  if (
-    profile.role === "admin"
-  ) {
-
-    document.getElementById(
-      "adminNavSection"
-    ).style.display = "block";
-
-    document.getElementById(
-      "adminBadge"
-    ).style.display = "inline-block";
-
-  } else {
-
-    document.getElementById(
-      "adminNavSection"
-    ).style.display = "none";
-
-    document.getElementById(
-      "adminBadge"
-    ).style.display = "none";
-  }
-
-
-  await loadDashboard();
-
-}
-
-
-/* =====================================================
-   UPDATE PLAYER UI
-===================================================== */
-
-function updatePlayerUI() {
-
-  if (!currentProfile)
-    return;
-
-
-  const username =
-    currentProfile.username;
-
-
-  const coins =
-    Number(
-      currentProfile.coins || 0
-    );
-
-
-  document.getElementById(
-    "topUsername"
-  ).textContent =
-    username;
-
-
-  document.getElementById(
-    "topCoins"
-  ).textContent =
-    coins.toLocaleString();
-
-
-  document.getElementById(
-    "statCoins"
-  ).textContent =
-    coins.toLocaleString();
-
-
-  document.getElementById(
-    "mineCoins"
-  ).textContent =
-    coins.toLocaleString();
-
-
-  document.getElementById(
-    "dashboardWelcome"
-  ).textContent =
-    "Welcome back, " +
-    username +
-    ". Your adventure continues.";
-
-
-  document.getElementById(
-    "profileUsername"
-  ).textContent =
-    username;
-
-
-  document.getElementById(
-    "profileRole"
-  ).textContent =
-    currentProfile.role === "admin"
-      ? "Administrator"
-      : "Player";
-
-
-  document.getElementById(
-    "profileCoins"
-  ).textContent =
-    coins.toLocaleString();
-
-
-  document.getElementById(
-    "profileRank"
-  ).textContent =
-    getRank(coins);
-
-}
-
-
-/* =====================================================
-   RANK
-===================================================== */
-
-function getRank(coins) {
-
-  if (coins >= 1000000)
-    return "Legend";
-
-  if (coins >= 100000)
-    return "Master";
-
-  if (coins >= 10000)
-    return "Elite";
-
-  if (coins >= 1000)
-    return "Adventurer";
-
-  return "Novice";
-
-}
-
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-
-async function showPage(page) {
-
-  document
-    .querySelectorAll(".page")
-    .forEach(section => {
-
-      section.classList.remove(
-        "active"
-      );
-
-    });
-
-
-  const selectedPage =
-    document.getElementById(
-      "page-" + page
-    );
-
-
-  if (!selectedPage)
-    return;
-
-
-  selectedPage.classList.add(
-    "active"
-  );
-
-
-  document
-    .querySelectorAll(".nav-button")
-    .forEach(button => {
-
-      button.classList.remove(
-        "active"
-      );
-
-
-      if (
-        button.dataset.page === page
-      ) {
-
-        button.classList.add(
-          "active"
-        );
-
-      }
-
-    });
-
-
-  if (page === "dashboard") {
-
-    await loadDashboard();
-
-  }
-
-
-  if (page === "index") {
-
-    await loadIndex();
-
-  }
-
-  if (page === "cases") {
-
-    await loadCases();
-
-  }
-
-
-  if (page === "inventory") {
-
-    await loadInventory();
-
-  }
-
-
-  if (page === "admin") {
-
-    if (
-      currentProfile?.role !== "admin"
-    ) {
-
-      showToast(
-        "You are not an administrator."
-      );
-
-      showPage("dashboard");
-
-      return;
-    }
-
-
-    await loadAdminPanel();
-
-  }
-
-}
-
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-async function loadDashboard() {
-
-  if (!currentUser)
-    return;
-
-
-  const { count, error } =
-    await client
-      .from("inventory")
-      .select(
-        "id",
-        {
-          count: "exact",
-          head: true
-        }
-      )
-      .eq(
-        "user_id",
-        currentUser
-      );
-
-
-  if (!error) {
-
-    document.getElementById(
-      "statInventory"
-    ).textContent =
-      count || 0;
-
-  }
-
-
-  const { count: weaponCount } =
-    await client
-      .from("weapons")
-      .select(
-        "id",
-        {
-          count: "exact",
-          head: true
-        }
-      );
-
-
-  document.getElementById(
-    "statWeapons"
-  ).textContent =
-    weaponCount || 0;
-
-
-  document.getElementById(
-    "statRank"
-  ).textContent =
-    getRank(
-      Number(currentProfile.coins || 0)
-    );
-
-}
-
-
-/* =====================================================
-   MINE COIN
-===================================================== */
-
-async function mineCoin() {
-
-  if (!currentUser)
-    return;
 
 
   /*
-    IMPORTANT:
+   * ==========================================================
+   * STATE
+   * ==========================================================
+   */
 
-    This uses a Supabase RPC so the coin change
-    happens in the database.
+  let currentUser = null;
+  let currentProfile = null;
+  let weaponSearchTimer = null;
 
-    If you have the mine_coin() function from
-    the earlier setup, this will use it.
-  */
 
-  const { data, error } =
-    await client.rpc(
-      "mine_coin"
-    );
+  /*
+   * ==========================================================
+   * STARTUP
+   * ==========================================================
+   */
 
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeAdmin
+  );
 
-  if (error) {
 
-    console.error(
-      "Mining error:",
-      error
-    );
+  async function initializeAdmin() {
 
+    try {
 
-    /*
-      If the RPC isn't installed yet,
-      show a useful message instead of
-      silently failing.
-    */
+      const {
+        data: {
+          session
+        }
+      } = await db.auth.getSession();
 
-    showToast(
-      "Coin mining database function is missing."
-    );
 
-    return;
-  }
+      if (!session) {
 
+        window.location.href = "index.html";
+        return;
 
-  if (data !== null) {
+      }
 
-    currentProfile.coins =
-      Number(data);
 
-  } else {
+      currentUser = session.user;
 
-    /*
-      Some RPC versions return no value.
-      Refresh the profile instead.
-    */
 
-    await refreshProfile();
+      const {
+        data: profile,
+        error
+      } = await db
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
 
-  }
 
+      if (error) {
+        throw error;
+      }
 
-  updatePlayerUI();
 
+      currentProfile = profile;
 
-  await loadDashboard();
 
-}
+      /*
+       * Double-check admin status.
+       */
 
+      if (
+        !profile ||
+        String(profile.role).toLowerCase() !== "admin"
+      ) {
 
-/* =====================================================
-   REFRESH PROFILE
-===================================================== */
-
-async function refreshProfile() {
-
-  if (!currentUser)
-    return;
-
-
-  const { data, error } =
-    await client
-      .from("profiles")
-      .select("*")
-      .eq("id", currentUser)
-      .single();
-
-
-  if (!error && data) {
-
-    currentProfile =
-      data;
-
-    updatePlayerUI();
-
-  }
-
-}
-
-
-/* =====================================================
-   LOAD ARMORY
-===================================================== */
-
-async function loadIndex() {
-
-  const grid =
-    document.getElementById("indexGrid");
-
-  grid.innerHTML =
-    '<div class="empty-state">Loading your Index...</div>';
-
-  if (!currentUser) return;
-
-  const { data, error } =
-    await client
-      .from("unlocked_weapons")
-      .select(`
-        weapon_id,
-        unlocked_at,
-        weapons (
-          id,
-          name,
-          damage,
-          defense,
-          speed,
-          accuracy,
-          luck,
-          description,
-          image_url,
-          rarity_id,
-          rarities (
-            name,
-            sort_order
-          )
-        )
-      `)
-      .eq("user_id", currentUser)
-      .order("unlocked_at", { ascending: false });
-
-  if (error) {
-    console.error("Index error:", error);
-    grid.innerHTML =
-      '<div class="empty-state">Could not load your Index.<br>' +
-      escapeHTML(error.message || "Unknown error") +
-      '</div>';
-    return;
-  }
-
-  const weapons = (data || [])
-    .map(row => row.weapons)
-    .filter(Boolean);
-
-  renderWeaponCards(grid, weapons);
-}
-
-
-/* =====================================================
-   CASES
-===================================================== */
-
-async function loadCases() {
-
-  const grid = document.getElementById("casesGrid");
-
-  if (!grid) return;
-
-  grid.innerHTML =
-    '<div class="empty-state">Loading cases...</div>';
-
-  const { data: cases, error } =
-    await client
-      .from("cases")
-      .select(`
-        id,
-        name,
-        description,
-        price,
-        case_rarities (
-          weight,
-          rarities (
-            name,
-            sort_order
-          )
-        )
-      `)
-      .order("price", { ascending: true });
-
-  if (error) {
-    console.error("Cases error:", error);
-    grid.innerHTML =
-      '<div class="empty-state">Could not load cases.<br>' +
-      escapeHTML(error.message || "Unknown error") +
-      '</div>';
-    return;
-  }
-
-  grid.innerHTML = "";
-
-  if (!cases || cases.length === 0) {
-    grid.innerHTML =
-      '<div class="empty-state">No cases are available yet.</div>';
-    return;
-  }
-
-  cases.forEach(caseItem => {
-    const card = document.createElement("div");
-    card.className = "weapon-card";
-
-    const totalWeight = (caseItem.case_rarities || [])
-      .reduce((sum, item) => sum + Number(item.weight || 0), 0);
-
-    const odds = (caseItem.case_rarities || [])
-      .filter(item => Number(item.weight || 0) > 0)
-      .sort((a, b) =>
-        Number(a.rarities?.sort_order || 0) -
-        Number(b.rarities?.sort_order || 0)
-      )
-      .map(item => {
-        const percent = totalWeight > 0
-          ? (Number(item.weight) / totalWeight) * 100
-          : 0;
-        return `<div>${escapeHTML(item.rarities?.name || "Unknown")}: ${percent.toFixed(2)}%</div>`;
-      })
-      .join("");
-
-    card.innerHTML = `
-      <h3>${escapeHTML(caseItem.name)}</h3>
-      <div class="weapon-rarity">🪙 ${Number(caseItem.price || 0).toLocaleString()} Coins</div>
-      <div class="weapon-description">
-        ${escapeHTML(caseItem.description || "A mysterious case filled with relics.")}
-      </div>
-      <div style="color:#927f61; font-size:13px; margin-bottom:15px;">
-        ${odds || "No rarity odds configured."}
-      </div>
-      <button class="primary-button" onclick="openCase('${caseItem.id}')">
-        📦 Buy & Open
-      </button>
-    `;
-
-    grid.appendChild(card);
-  });
-}
-
-
-async function openCase(caseId) {
-
-  if (!currentUser) return;
-
-  const result = document.getElementById("caseResult");
-  result.style.display = "block";
-  result.innerHTML = "<h2>Opening case...</h2><p>Please wait...</p>";
-
-  const { data, error } =
-    await client.rpc("open_case", {
-      p_case_id: caseId
-    });
-
-  if (error) {
-    console.error("Open case error:", error);
-    result.innerHTML =
-      `<h2>❌ Could not open case</h2><p>${escapeHTML(error.message || "Unknown error")}</p>`;
-    return;
-  }
-
-  const reward = data || {};
-
-  result.innerHTML = `
-    <h2>⚔️ You Unlocked a New Relic!</h2>
-    <div style="font-size:28px; color:#e7b742; margin:15px 0;">
-      ${escapeHTML(reward.weapon_name || "Unknown Weapon")}
-    </div>
-    <div class="weapon-rarity">
-      ${escapeHTML(reward.rarity || "Unknown Rarity")}
-    </div>
-    <p class="weapon-description">
-      ${escapeHTML(reward.description || "A newly discovered relic.")}
-    </p>
-    <p>🪙 Spent ${Number(reward.price || 0).toLocaleString()} coins.</p>
-  `;
-
-  await refreshProfile();
-  updatePlayerUI();
-  await loadDashboard();
-
-  showToast("Weapon added to your Inventory and Index!");
-}
-
-
-/* =====================================================
-   RENDER WEAPON CARDS
-===================================================== */
-
-function renderWeaponCards(
-  container,
-  weapons
-) {
-
-  container.innerHTML = "";
-
-
-  if (
-    !weapons ||
-    weapons.length === 0
-  ) {
-
-    container.innerHTML =
-      '<div class="empty-state">No weapons exist yet.</div>';
-
-    return;
-  }
-
-
-  weapons.forEach(
-    weapon => {
-
-      const card =
-        document.createElement(
-          "div"
+        alert(
+          "You do not have permission to access the Admin Panel."
         );
 
+        window.location.href = "index.html";
+        return;
 
-      card.className =
-        "weapon-card";
-
-
-      const rarity =
-        weapon.rarities?.name ||
-        "Unknown";
+      }
 
 
-      const description =
-        weapon.description ||
-        "The history of this relic has been lost to time.";
+      document.getElementById(
+        "usernameDisplay"
+      ).textContent =
+        profile.username || "Admin";
 
 
-      card.innerHTML = `
+      await loadAdminOdds();
 
-        <h3>
-          ${escapeHTML(weapon.name)}
-        </h3>
+    } catch (error) {
 
-        <div class="weapon-rarity">
-          ${escapeHTML(rarity)}
-        </div>
+      console.error(error);
 
-        <div class="weapon-description">
-          "${escapeHTML(description)}"
-        </div>
+      alert(
+        "Unable to load the Admin Panel: " +
+        error.message
+      );
 
-        <div class="weapon-stats">
+      window.location.href = "index.html";
 
-          <div>
-            ⚔️ Damage:
-            ${Number(weapon.damage || 0)}
-          </div>
+    }
 
-          <div>
-            🛡️ Defense:
-            ${Number(weapon.defense || 0)}
-          </div>
-
-          <div>
-            ⚡ Speed:
-            ${Number(weapon.speed || 0)}
-          </div>
-
-          <div>
-            🎯 Accuracy:
-            ${Number(weapon.accuracy || 0)}
-          </div>
-
-          <div>
-            🍀 Luck:
-            ${Number(weapon.luck || 0)}
-          </div>
-
-        </div>
-      `;
+  }
 
 
-      container.appendChild(
-        card
+  /*
+   * ==========================================================
+   * STATUS MESSAGE
+   * ==========================================================
+   */
+
+  function showStatus(
+    elementId,
+    message,
+    type
+  ) {
+
+    const element =
+      document.getElementById(elementId);
+
+    element.className =
+      "status " + type;
+
+    element.textContent =
+      message;
+
+  }
+
+
+  function clearStatus(elementId) {
+
+    const element =
+      document.getElementById(elementId);
+
+    element.className = "status";
+    element.textContent = "";
+
+  }
+
+
+  /*
+   * ==========================================================
+   * FIND PLAYER
+   * ==========================================================
+   */
+
+  async function findPlayer() {
+
+    const username =
+      document
+        .getElementById("username")
+        .value
+        .trim();
+
+
+    if (!username) {
+
+      showStatus(
+        "searchStatus",
+        "Enter a username.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    clearStatus("searchStatus");
+
+
+    try {
+
+      const {
+        data: profile,
+        error
+      } = await db
+
+        .from("profiles")
+
+        .select(
+          "id, username, coins, role"
+        )
+
+        .ilike(
+          "username",
+          username
+        )
+
+        .maybeSingle();
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (!profile) {
+
+        showStatus(
+          "searchStatus",
+          "Player not found.",
+          "error"
+        );
+
+        document
+          .getElementById("playerResult")
+          .classList.remove("visible");
+
+        return;
+
+      }
+
+
+      const {
+        data: cases
+      } = await db
+
+        .from("admin_case_inventory")
+
+        .select("quantity")
+
+        .eq("user_id", profile.id)
+
+        .maybeSingle();
+
+
+      document.getElementById(
+        "foundUsername"
+      ).textContent =
+        profile.username;
+
+
+      document.getElementById(
+        "foundCoins"
+      ).textContent =
+        Number(profile.coins || 0).toLocaleString();
+
+
+      document.getElementById(
+        "foundCases"
+      ).textContent =
+        Number(
+          cases?.quantity || 0
+        ).toLocaleString();
+
+
+      document
+        .getElementById("playerResult")
+        .classList.add("visible");
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        "searchStatus",
+        "Search failed: " +
+          error.message,
+        "error"
       );
 
     }
-  );
 
-}
-
-
-/* =====================================================
-   LOAD INVENTORY
-===================================================== */
-
-async function loadInventory() {
-
-  const grid =
-    document.getElementById(
-      "inventoryGrid"
-    );
+  }
 
 
-  grid.innerHTML =
-    '<div class="empty-state">Loading inventory...</div>';
+  /*
+   * ==========================================================
+   * GIVE ADMIN CASES
+   *
+   * Uses the secure Postgres RPC.
+   * ==========================================================
+   */
+
+  async function giveAdminCases() {
+
+    const username =
+      document
+        .getElementById("caseUsername")
+        .value
+        .trim();
 
 
-  if (!currentUser)
-    return;
+    const amount =
+      Number(
+        document
+          .getElementById("caseAmount")
+          .value
+      );
 
 
-  const { data, error } =
-    await client
-      .from("inventory")
-      .select(`
-        id,
-        created_at,
-        weapon_id,
-        weapons (
-          id,
-          name,
-          damage,
-          defense,
-          speed,
-          accuracy,
-          luck,
-          description,
-          image_url,
-          rarity_id,
-          rarities (
-            name,
-            sort_order
-          )
-        )
-      `)
+    if (!username) {
+
+      showStatus(
+        "caseStatus",
+        "Enter a player's username.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !Number.isInteger(amount) ||
+      amount < 1 ||
+      amount > 1000
+    ) {
+
+      showStatus(
+        "caseStatus",
+        "Enter an amount from 1 to 1000.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const button =
+      document.getElementById(
+        "giveCaseButton"
+      );
+
+
+    button.disabled = true;
+    button.textContent = "Giving Cases...";
+
+
+    try {
+
+      const {
+        data,
+        error
+      } = await db.rpc(
+        "admin_give_cases",
+        {
+          p_username: username,
+          p_amount: amount
+        }
+      );
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      showStatus(
+        "caseStatus",
+        "🎁 Successfully gave " +
+          amount +
+          " Admin Case" +
+          (amount === 1 ? "" : "s") +
+          " to " +
+          username +
+          ". They will see the Admin Case popup when they enter the website.",
+        "success"
+      );
+
+
+      await findPlayerByUsername(
+        username
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        "caseStatus",
+        "Could not give Admin Case: " +
+          error.message,
+        "error"
+      );
+
+    } finally {
+
+      button.disabled = false;
+      button.textContent =
+        "🎁 Give Admin Case";
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================================
+   * FIND PLAYER HELPER
+   * ==========================================================
+   */
+
+  async function findPlayerByUsername(
+    username
+  ) {
+
+    const {
+      data: profile
+    } = await db
+
+      .from("profiles")
+
+      .select(
+        "id, username, coins"
+      )
+
+      .ilike(
+        "username",
+        username
+      )
+
+      .maybeSingle();
+
+
+    if (!profile) {
+      return;
+    }
+
+
+    const {
+      data: cases
+    } = await db
+
+      .from("admin_case_inventory")
+
+      .select("quantity")
+
       .eq(
         "user_id",
-        currentUser
+        profile.id
       )
-      .order(
-        "created_at",
+
+      .maybeSingle();
+
+
+    document.getElementById(
+      "foundUsername"
+    ).textContent =
+      profile.username;
+
+
+    document.getElementById(
+      "foundCoins"
+    ).textContent =
+      Number(
+        profile.coins || 0
+      ).toLocaleString();
+
+
+    document.getElementById(
+      "foundCases"
+    ).textContent =
+      Number(
+        cases?.quantity || 0
+      ).toLocaleString();
+
+
+    document
+      .getElementById("playerResult")
+      .classList.add("visible");
+
+  }
+
+
+  /*
+   * ==========================================================
+   * GIVE COINS
+   *
+   * This expects the existing admin coin RPC from the earlier
+   * Realm of Relics setup.
+   * ==========================================================
+   */
+
+  async function giveCoins() {
+
+    const username =
+      document
+        .getElementById("coinUsername")
+        .value
+        .trim();
+
+
+    const amount =
+      Number(
+        document
+          .getElementById("coinAmount")
+          .value
+      );
+
+
+    if (!username) {
+
+      showStatus(
+        "coinStatus",
+        "Enter a username.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !Number.isInteger(amount) ||
+      amount <= 0
+    ) {
+
+      showStatus(
+        "coinStatus",
+        "Enter a valid coin amount.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      /*
+       * Uses the existing admin function if your database
+       * already has it.
+       */
+
+      const {
+        data,
+        error
+      } = await db.rpc(
+        "admin_give_coins",
         {
-          ascending: false
+          p_username: username,
+          p_amount: amount
         }
       );
 
 
-  if (error) {
-
-    console.error(error);
-
-    grid.innerHTML =
-      '<div class="empty-state">Could not load inventory.</div>';
-
-    return;
-  }
+      if (error) {
+        throw error;
+      }
 
 
-  const weapons =
-    (data || [])
-      .map(item => item.weapons)
-      .filter(Boolean);
-
-
-  renderWeaponCards(
-    grid,
-    weapons
-  );
-
-
-  document.getElementById(
-    "statInventory"
-  ).textContent =
-    data?.length || 0;
-
-}
-
-
-/* =====================================================
-   ADMIN PANEL
-===================================================== */
-
-async function loadAdminPanel() {
-
-  if (
-    currentProfile?.role !== "admin"
-  ) {
-
-    showToast(
-      "Admin access denied."
-    );
-
-    return;
-  }
-
-
-  await loadAdminWeapons();
-
-}
-
-
-/* =====================================================
-   LOAD ADMIN WEAPONS
-===================================================== */
-
-async function loadAdminWeapons() {
-
-  const select =
-    document.getElementById(
-      "weaponSelect"
-    );
-
-
-  const list =
-    document.getElementById(
-      "adminWeaponList"
-    );
-
-
-  if (!select || !list)
-    return;
-
-
-  const { data: weapons, error } =
-    await client
-      .from("weapons")
-      .select(`
-        id,
-        name,
-        damage,
-        defense,
-        speed,
-        accuracy,
-        luck,
-        description,
-        rarity_id,
-        rarities (
-          name,
-          sort_order
-        )
-      `)
-      .order(
-        "name"
+      showStatus(
+        "coinStatus",
+        "🪙 Gave " +
+          amount.toLocaleString() +
+          " coins to " +
+          username +
+          ".",
+        "success"
       );
 
 
-  if (error) {
+    } catch (error) {
 
-    console.error(
-      "Admin weapons error:",
-      error
-    );
+      console.error(error);
 
-
-    list.innerHTML =
-      "<p>Could not load weapons.</p>";
-
-    return;
-  }
-
-
-  select.innerHTML =
-    '<option value="">Select a weapon</option>';
-
-
-  list.innerHTML =
-    "";
-
-
-  if (
-    !weapons ||
-    weapons.length === 0
-  ) {
-
-    list.innerHTML =
-      "<p>No weapons exist yet.</p>";
-
-    return;
-  }
-
-
-  weapons.forEach(
-    weapon => {
-
-      const option =
-        document.createElement(
-          "option"
-        );
-
-
-      option.value =
-        weapon.id;
-
-
-      option.textContent =
-        weapon.name +
-        " — " +
-        (
-          weapon.rarities?.name ||
-          "Unknown"
-        );
-
-
-      select.appendChild(
-        option
-      );
-
-
-      const item =
-        document.createElement(
-          "div"
-        );
-
-
-      item.className =
-        "weapon-admin-item";
-
-
-      item.innerHTML = `
-
-        <strong>
-          ${escapeHTML(weapon.name)}
-        </strong>
-
-        <div class="weapon-admin-rarity">
-
-          Rarity:
-          ${escapeHTML(
-            weapon.rarities?.name ||
-            "Unknown"
-          )}
-
-        </div>
-
-        <div>
-
-          ⚔️ Damage:
-          ${Number(weapon.damage || 0)}
-
-          &nbsp;&nbsp;
-
-          🛡️ Defense:
-          ${Number(weapon.defense || 0)}
-
-          &nbsp;&nbsp;
-
-          ⚡ Speed:
-          ${Number(weapon.speed || 0)}
-
-          &nbsp;&nbsp;
-
-          🎯 Accuracy:
-          ${Number(weapon.accuracy || 0)}
-
-          &nbsp;&nbsp;
-
-          🍀 Luck:
-          ${Number(weapon.luck || 0)}
-
-        </div>
-
-        ${
-          weapon.description
-            ? `
-              <div class="weapon-admin-rarity">
-                ${escapeHTML(
-                  weapon.description
-                )}
-              </div>
-            `
-            : ""
-        }
-
-      `;
-
-
-      list.appendChild(
-        item
+      showStatus(
+        "coinStatus",
+        "Could not give coins: " +
+          error.message +
+          ". If your existing coin RPC has a different name, we'll connect this button to it.",
+        "error"
       );
 
     }
-  );
 
-}
-
-
-/* =====================================================
-   ADMIN GIVE COINS
-===================================================== */
-
-async function adminGiveCoins() {
-
-  if (
-    currentProfile?.role !== "admin"
-  ) {
-
-    showToast(
-      "Admin access denied."
-    );
-
-    return;
   }
 
 
-  const username =
-    document
-      .getElementById(
-        "coinUsername"
-      )
-      .value
-      .trim();
+  /*
+   * ==========================================================
+   * WEAPON SEARCH
+   * ==========================================================
+   */
+
+  function searchWeapons() {
+
+    clearTimeout(
+      weaponSearchTimer
+    );
 
 
-  const amount =
-    Number(
+    weaponSearchTimer =
+      setTimeout(
+        loadWeapons,
+        250
+      );
+
+  }
+
+
+  async function loadWeapons() {
+
+    const search =
       document
-        .getElementById(
-          "coinAmount"
-        )
+        .getElementById("weaponSearch")
         .value
-    );
+        .trim();
 
 
-  const message =
-    document.getElementById(
-      "coinMessage"
-    );
-
-
-  if (!username) {
-
-    message.textContent =
-      "Enter a player's username.";
-
-    return;
-  }
-
-
-  if (
-    !Number.isInteger(amount) ||
-    amount <= 0
-  ) {
-
-    message.textContent =
-      "Enter a valid coin amount.";
-
-    return;
-  }
-
-
-  message.textContent =
-    "Giving coins...";
-
-
-  const { data, error } =
-    await client.rpc(
-      "admin_give_coins",
-      {
-        p_username:
-          username,
-
-        p_amount:
-          amount
-      }
-    );
-
-
-  if (error) {
-
-    console.error(error);
-
-    message.textContent =
-      error.message;
-
-    return;
-  }
-
-
-  message.textContent =
-    "✅ Gave " +
-    amount.toLocaleString() +
-    " coins to " +
-    data.username +
-    ".";
-
-
-  document.getElementById(
-    "coinUsername"
-  ).value = "";
-
-
-  document.getElementById(
-    "coinAmount"
-  ).value = "";
-
-
-  showToast(
-    "Coins successfully given."
-  );
-
-}
-
-
-/* =====================================================
-   ADMIN GIVE WEAPON
-===================================================== */
-
-async function adminGiveWeapon() {
-
-  if (
-    currentProfile?.role !== "admin"
-  ) {
-
-    showToast(
-      "Admin access denied."
-    );
-
-    return;
-  }
-
-
-  const username =
-    document
-      .getElementById(
-        "weaponUsername"
-      )
-      .value
-      .trim();
-
-
-  const weaponId =
-    document
-      .getElementById(
+    const select =
+      document.getElementById(
         "weaponSelect"
-      )
-      .value;
+      );
 
 
-  const message =
-    document.getElementById(
-      "weaponMessage"
-    );
+    select.innerHTML =
+      "<option value=''>Loading...</option>";
 
 
-  if (!username) {
+    try {
 
-    message.textContent =
-      "Enter a player's username.";
+      let query =
+        db
 
-    return;
-  }
+          .from("weapons")
+
+          .select(
+            "id, name, rarity_id, rarities(name)"
+          )
+
+          .order(
+            "name",
+            {
+              ascending: true
+            }
+          )
+
+          .limit(50);
 
 
-  if (!weaponId) {
+      if (search) {
 
-    message.textContent =
-      "Select a weapon.";
+        query =
+          query.ilike(
+            "name",
+            "%" + search + "%"
+          );
 
-    return;
-  }
-
-
-  message.textContent =
-    "Giving weapon...";
-
-
-  const { data, error } =
-    await client.rpc(
-      "admin_give_weapon",
-      {
-        p_username:
-          username,
-
-        p_weapon_id:
-          weaponId
       }
-    );
 
 
-  if (error) {
-
-    console.error(error);
-
-    message.textContent =
-      error.message;
-
-    return;
-  }
+      const {
+        data,
+        error
+      } = await query;
 
 
-  message.textContent =
-    "✅ Gave " +
-    data.weapon +
-    " to " +
-    data.username +
-    ".";
+      if (error) {
+        throw error;
+      }
 
 
-  document.getElementById(
-    "weaponUsername"
-  ).value = "";
+      select.innerHTML =
+        "<option value=''>Select weapon...</option>";
 
 
-  showToast(
-    "Weapon successfully given."
-  );
+      for (
+        const weapon of data || []
+      ) {
 
-}
-
-
-/* =====================================================
-   LOG OUT
-===================================================== */
-
-async function logout() {
-
-  const { error } =
-    await client.auth.signOut();
+        const option =
+          document.createElement(
+            "option"
+          );
 
 
-  if (error) {
-
-    console.error(
-      "Logout error:",
-      error
-    );
-
-    return;
-  }
+        option.value =
+          weapon.id;
 
 
-  currentUser =
-    null;
-
-  currentProfile =
-    null;
-
-
-  document.getElementById(
-    "app"
-  ).style.display = "none";
+        const rarity =
+          weapon.rarities?.name
+          ? " — " +
+            weapon.rarities.name
+          : "";
 
 
-  document.getElementById(
-    "authScreen"
-  ).style.display = "flex";
+        option.textContent =
+          weapon.name +
+          rarity;
 
 
-  document.getElementById(
-    "username"
-  ).value = "";
+        select.appendChild(
+          option
+        );
+
+      }
 
 
-  document.getElementById(
-    "password"
-  ).value = "";
+    } catch (error) {
 
+      console.error(error);
 
-  document.getElementById(
-    "authMessage"
-  ).textContent = "";
+      select.innerHTML =
+        "<option value=''>Unable to load weapons</option>";
 
-}
-
-
-/* =====================================================
-   CHECK SESSION
-===================================================== */
-
-async function checkSession() {
-
-  const {
-    data,
-    error
-  } =
-    await client.auth.getSession();
-
-
-  if (error) {
-
-    console.error(
-      "Session error:",
-      error
-    );
-
-    return;
-  }
-
-
-  if (
-    data.session &&
-    data.session.user
-  ) {
-
-    await showGame(
-      data.session.user.id
-    );
+    }
 
   }
 
-}
+
+  /*
+   * ==========================================================
+   * GIVE WEAPON
+   *
+   * Uses the existing admin weapon RPC.
+   * ==========================================================
+   */
+
+  async function giveWeapon() {
+
+    const username =
+      document
+        .getElementById("weaponUsername")
+        .value
+        .trim();
 
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHTML(value) {
-
-  return String(value)
-
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-
-    .replace(
-      /</g,
-      "&lt;"
-    )
-
-    .replace(
-      />/g,
-      "&gt;"
-    )
-
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
+    const weaponId =
+      document
+        .getElementById("weaponSelect")
+        .value;
 
 
-/* =====================================================
-   TOAST
-===================================================== */
-
-function showToast(text) {
-
-  const toast =
-    document.getElementById(
-      "toast"
-    );
+    const amount =
+      Number(
+        document
+          .getElementById("weaponAmount")
+          .value
+      );
 
 
-  toast.textContent =
-    text;
+    if (!username) {
+
+      showStatus(
+        "weaponStatus",
+        "Enter a username.",
+        "error"
+      );
+
+      return;
+
+    }
 
 
-  toast.style.display =
-    "block";
+    if (!weaponId) {
+
+      showStatus(
+        "weaponStatus",
+        "Select a weapon.",
+        "error"
+      );
+
+      return;
+
+    }
 
 
-  setTimeout(
-    () => {
+    if (
+      !Number.isInteger(amount) ||
+      amount < 1 ||
+      amount > 100
+    ) {
 
-      toast.style.display =
-        "none";
+      showStatus(
+        "weaponStatus",
+        "Enter an amount from 1 to 100.",
+        "error"
+      );
 
-    },
-    3000
-  );
+      return;
 
-}
+    }
 
 
-/* =====================================================
-   START
-===================================================== */
+    try {
 
-checkSession();
+      const {
+        data,
+        error
+      } = await db.rpc(
+        "admin_give_weapon",
+        {
+          p_username: username,
+          p_weapon_id: weaponId,
+          p_amount: amount
+        }
+      );
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      showStatus(
+        "weaponStatus",
+        "⚔️ Weapon successfully given to " +
+          username +
+          ".",
+        "success"
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        "weaponStatus",
+        "Could not give weapon: " +
+          error.message +
+          ". If your existing weapon RPC has a different name, we'll connect this button to it.",
+        "error"
+      );
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================================
+   * LOAD ADMIN CASE ODDS
+   * ==========================================================
+   */
+
+  async function loadAdminOdds() {
+
+    const container =
+      document.getElementById(
+        "adminOdds"
+      );
+
+
+    try {
+
+      const {
+        data,
+        error
+      } = await db
+
+        .from(
+          "admin_case_rarity_odds"
+        )
+
+        .select(
+          "weight, rarities(name, sort_order)"
+        );
+
+
+      if (error) {
+        throw error;
+      }
+
+
+      if (!data || !data.length) {
+
+        container.textContent =
+          "No Admin Case odds found.";
+
+        return;
+
+      }
+
+
+      data.sort(
+        (a, b) =>
+          (a.rarities?.sort_order || 0) -
+          (b.rarities?.sort_order || 0)
+      );
+
+
+      container.innerHTML = "";
+
+
+      for (
+        const item of data
+      ) {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+
+        row.style.display =
+          "flex";
+
+        row.style.justifyContent =
+          "space-between";
+
+        row.style.padding =
+          "8px 0";
+
+        row.style.borderBottom =
+          "1px solid #3c2b18";
+
+
+        const rarity =
+          document.createElement(
+            "span"
+          );
+
+        rarity.textContent =
+          item.rarities?.name ||
+          "Unknown";
+
+
+        const odds =
+          document.createElement(
+            "strong"
+          );
+
+        odds.textContent =
+          Number(
+            item.weight
+          ).toFixed(2) +
+          "%";
+
+
+        row.appendChild(
+          rarity
+        );
+
+        row.appendChild(
+          odds
+        );
+
+        container.appendChild(
+          row
+        );
+
+      }
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      container.textContent =
+        "Unable to load Admin Case odds.";
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================================
+   * LOGOUT
+   * ==========================================================
+   */
+
+  async function logout() {
+
+    await db.auth.signOut();
+
+    window.location.href =
+      "index.html";
+
+  }
 
 </script>
 
-
 </body>
-
 </html>
+```
