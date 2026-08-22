@@ -1130,10 +1130,19 @@
 
     <button
       class="nav-button"
-      data-page="armory"
-      onclick="showPage('armory')"
+      data-page="cases"
+      onclick="showPage('cases')"
     >
-      ⚔️ Armory
+      📦 Cases
+    </button>
+
+
+    <button
+      class="nav-button"
+      data-page="index"
+      onclick="showPage('index')"
+    >
+      📖 Index
     </button>
 
 
@@ -1359,7 +1368,7 @@
         </h2>
 
         <p>
-          Explore the Armory, collect relics,
+          Explore your Index, collect relics,
           upgrade your collection and become
           legendary.
         </p>
@@ -1371,29 +1380,52 @@
 
 
     <!-- =====================================
-         ARMORY
+         CASES
     ====================================== -->
 
     <section
-      id="page-armory"
+      id="page-cases"
+      class="page"
+    >
+
+      <div class="page-header">
+        <h1>📦 Case Shop</h1>
+        <p>Buy a case, open it, and discover a new relic.</p>
+      </div>
+
+      <div id="casesGrid" class="weapon-grid">
+        <div class="empty-state">Loading cases...</div>
+      </div>
+
+      <div id="caseResult" class="panel" style="display:none; text-align:center;"></div>
+
+    </section>
+
+
+    <!-- =====================================
+         INDEX
+    ====================================== -->
+
+    <section
+      id="page-index"
       class="page"
     >
 
       <div class="page-header">
 
         <h1>
-          ⚔️ Armory
+          📖 Index
         </h1>
 
         <p>
-          Discover the weapons of the realm.
+          Weapons you have unlocked before.
         </p>
 
       </div>
 
 
       <div
-        id="armoryGrid"
+        id="indexGrid"
         class="weapon-grid"
       >
 
@@ -2222,9 +2254,15 @@ async function showPage(page) {
   }
 
 
-  if (page === "armory") {
+  if (page === "index") {
 
-    await loadArmory();
+    await loadIndex();
+
+  }
+
+  if (page === "cases") {
+
+    await loadCases();
 
   }
 
@@ -2430,58 +2468,188 @@ async function refreshProfile() {
    LOAD ARMORY
 ===================================================== */
 
-async function loadArmory() {
+async function loadIndex() {
 
   const grid =
-    document.getElementById(
-      "armoryGrid"
-    );
-
+    document.getElementById("indexGrid");
 
   grid.innerHTML =
-    '<div class="empty-state">Loading weapons...</div>';
+    '<div class="empty-state">Loading your Index...</div>';
 
+  if (!currentUser) return;
 
-  const { data: weapons, error } =
+  const { data, error } =
     await client
-      .from("weapons")
+      .from("unlocked_weapons")
       .select(`
-        id,
-        name,
-        damage,
-        defense,
-        speed,
-        accuracy,
-        luck,
-        description,
-        image_url,
-        rarity_id,
-        rarities (
+        weapon_id,
+        unlocked_at,
+        weapons (
+          id,
           name,
-          sort_order
+          damage,
+          defense,
+          speed,
+          accuracy,
+          luck,
+          description,
+          image_url,
+          rarity_id,
+          rarities (
+            name,
+            sort_order
+          )
         )
       `)
-      .order(
-        "name"
-      );
-
+      .eq("user_id", currentUser)
+      .order("unlocked_at", { ascending: false });
 
   if (error) {
-
-    console.error(error);
-
+    console.error("Index error:", error);
     grid.innerHTML =
-      '<div class="empty-state">Could not load weapons.</div>';
-
+      '<div class="empty-state">Could not load your Index.<br>' +
+      escapeHTML(error.message || "Unknown error") +
+      '</div>';
     return;
   }
 
+  const weapons = (data || [])
+    .map(row => row.weapons)
+    .filter(Boolean);
 
-  renderWeaponCards(
-    grid,
-    weapons
-  );
+  renderWeaponCards(grid, weapons);
+}
 
+
+/* =====================================================
+   CASES
+===================================================== */
+
+async function loadCases() {
+
+  const grid = document.getElementById("casesGrid");
+
+  if (!grid) return;
+
+  grid.innerHTML =
+    '<div class="empty-state">Loading cases...</div>';
+
+  const { data: cases, error } =
+    await client
+      .from("cases")
+      .select(`
+        id,
+        name,
+        description,
+        price,
+        case_rarities (
+          weight,
+          rarities (
+            name,
+            sort_order
+          )
+        )
+      `)
+      .order("price", { ascending: true });
+
+  if (error) {
+    console.error("Cases error:", error);
+    grid.innerHTML =
+      '<div class="empty-state">Could not load cases.<br>' +
+      escapeHTML(error.message || "Unknown error") +
+      '</div>';
+    return;
+  }
+
+  grid.innerHTML = "";
+
+  if (!cases || cases.length === 0) {
+    grid.innerHTML =
+      '<div class="empty-state">No cases are available yet.</div>';
+    return;
+  }
+
+  cases.forEach(caseItem => {
+    const card = document.createElement("div");
+    card.className = "weapon-card";
+
+    const totalWeight = (caseItem.case_rarities || [])
+      .reduce((sum, item) => sum + Number(item.weight || 0), 0);
+
+    const odds = (caseItem.case_rarities || [])
+      .filter(item => Number(item.weight || 0) > 0)
+      .sort((a, b) =>
+        Number(a.rarities?.sort_order || 0) -
+        Number(b.rarities?.sort_order || 0)
+      )
+      .map(item => {
+        const percent = totalWeight > 0
+          ? (Number(item.weight) / totalWeight) * 100
+          : 0;
+        return `<div>${escapeHTML(item.rarities?.name || "Unknown")}: ${percent.toFixed(2)}%</div>`;
+      })
+      .join("");
+
+    card.innerHTML = `
+      <h3>${escapeHTML(caseItem.name)}</h3>
+      <div class="weapon-rarity">🪙 ${Number(caseItem.price || 0).toLocaleString()} Coins</div>
+      <div class="weapon-description">
+        ${escapeHTML(caseItem.description || "A mysterious case filled with relics.")}
+      </div>
+      <div style="color:#927f61; font-size:13px; margin-bottom:15px;">
+        ${odds || "No rarity odds configured."}
+      </div>
+      <button class="primary-button" onclick="openCase('${caseItem.id}')">
+        📦 Buy & Open
+      </button>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+
+async function openCase(caseId) {
+
+  if (!currentUser) return;
+
+  const result = document.getElementById("caseResult");
+  result.style.display = "block";
+  result.innerHTML = "<h2>Opening case...</h2><p>Please wait...</p>";
+
+  const { data, error } =
+    await client.rpc("open_case", {
+      p_case_id: caseId
+    });
+
+  if (error) {
+    console.error("Open case error:", error);
+    result.innerHTML =
+      `<h2>❌ Could not open case</h2><p>${escapeHTML(error.message || "Unknown error")}</p>`;
+    return;
+  }
+
+  const reward = data || {};
+
+  result.innerHTML = `
+    <h2>⚔️ You Unlocked a New Relic!</h2>
+    <div style="font-size:28px; color:#e7b742; margin:15px 0;">
+      ${escapeHTML(reward.weapon_name || "Unknown Weapon")}
+    </div>
+    <div class="weapon-rarity">
+      ${escapeHTML(reward.rarity || "Unknown Rarity")}
+    </div>
+    <p class="weapon-description">
+      ${escapeHTML(reward.description || "A newly discovered relic.")}
+    </p>
+    <p>🪙 Spent ${Number(reward.price || 0).toLocaleString()} coins.</p>
+  `;
+
+  await refreshProfile();
+  updatePlayerUI();
+  await loadDashboard();
+
+  showToast("Weapon added to your Inventory and Index!");
 }
 
 
