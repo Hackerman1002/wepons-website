@@ -23,7 +23,7 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
 .card{padding:18px}.card h3{color:#e7b742;margin:0 0 8px}.rarity{display:inline-block;padding:5px 9px;border-radius:5px;background:#3a2918;color:#d9b457;font-size:12px;margin-bottom:10px}.muted{color:#927f61}.desc{color:#c7b79c;line-height:1.45;font-style:italic;margin-bottom:12px}.stats2{display:grid;grid-template-columns:1fr 1fr;gap:6px;color:#d9c39b;font-size:14px}.exist{margin-top:12px;color:#d7ae52}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}.toolbar input,.toolbar select{max-width:280px;margin:0}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.formgrid .full{grid-column:1/-1}.row{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #46331f}.row:last-child{border-bottom:0}
 #toast{position:fixed;right:22px;bottom:22px;background:#2c2116;border:1px solid #9a702c;color:#f5e6c8;padding:14px 18px;border-radius:8px;box-shadow:0 10px 30px #0008;display:none;z-index:100}
-.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:90;padding:20px}.modal.open{display:flex}.modal-box{width:600px;max-width:100%;max-height:90vh;overflow:auto;padding:25px;background:#241a12;border:1px solid #9a702c;border-radius:12px}.modal-box h2{color:#e7b742}
+.modal{position:fixed;inset:0;background:#0009;display:none;align-items:center;justify-content:center;z-index:90;padding:20px}.modal.open{display:flex}.modal-box{width:600px;max-width:100%;max-height:90vh;overflow:auto;padding:25px;background:#241a12;border:1px solid #9a702c;border-radius:12px}.modal-box h2{color:#e7b742}.case-card{position:relative;overflow:hidden}.case-card.admin{border-color:#b94a3d}.case-price{font-size:20px;color:#f1c442}.case-target{color:#d7ae52}.case-balance{margin-bottom:18px}.result-weapon{text-align:center;padding:18px;border:1px solid #9a702c;border-radius:10px;background:#17100b}.result-weapon .big-rarity{font-size:18px;color:#e7b742}.result-weapon .big-name{font-size:30px;color:#f1c442;margin:10px 0}.admin-case-box{border-color:#843b32}.admin-case-count{font-size:28px;color:#f1c442}
 @media(max-width:900px){.sidebar{width:180px}.topbar{left:180px}.main{margin-left:180px}.stats{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.sidebar{position:static;width:100%;padding-bottom:70px}.logout{position:absolute}.topbar{position:static;height:auto;padding:15px;justify-content:center}.main{margin-left:0;padding:25px 15px}.stats{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.formgrid .full{grid-column:auto}}
 </style>
@@ -92,8 +92,27 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
 </section>
 
 <section id="page-cases" class="page">
-  <div class="header"><h1>🎁 Cases</h1><p>Open cases to discover weapons.</p></div>
-  <div id="casesGrid" class="grid"><div class="card">Loading cases...</div></div>
+  <div class="header">
+    <h1>🎁 Cases</h1>
+    <p>Open cases to discover weapons. Your Admin Cases are separate and can only be granted by an administrator.</p>
+  </div>
+
+  <div class="panel case-balance">
+    <div class="row">
+      <div>
+        <b>🎟️ Admin Cases</b>
+        <div class="muted">Special cases granted by an administrator.</div>
+      </div>
+      <div class="admin-case-count" id="adminCaseCount">0</div>
+    </div>
+    <div class="actions">
+      <button id="openAdminCaseBtn" class="btn" onclick="openAdminCase()" disabled>Open Admin Case</button>
+    </div>
+  </div>
+
+  <div id="casesGrid" class="grid">
+    <div class="card">Loading cases...</div>
+  </div>
 </section>
 
 <section id="page-index" class="page">
@@ -152,24 +171,60 @@ input,select{width:100%;padding:12px;border-radius:7px;border:1px solid #6d522d;
 </section>
 
 <section id="page-admin" class="page">
-  <div class="header"><h1>👑 Admin Panel</h1><p>Manage players and weapons.</p></div>
+  <div class="header"><h1>👑 Admin Panel</h1><p>Manage players, weapons, coins, and special Admin Cases.</p></div>
+
   <div class="panel">
     <h2>🪙 Give Coins</h2>
-    <div class="formgrid"><input id="coinUsername" placeholder="Player username"><input id="coinAmount" type="number" min="1" placeholder="Amount"></div>
-    <div class="actions"><button class="btn" onclick="adminGiveCoins()">Give Coins</button></div><div id="coinMessage" class="msg"></div>
+    <div class="formgrid">
+      <input id="coinUsername" placeholder="Player username">
+      <input id="coinAmount" type="number" min="1" placeholder="Amount">
+    </div>
+    <div class="actions"><button class="btn" onclick="adminGiveCoins()">Give Coins</button></div>
+    <div id="coinMessage" class="msg"></div>
   </div>
+
   <div class="panel">
     <h2>⚔️ Give Weapon</h2>
-    <div class="formgrid"><input id="weaponUsername" placeholder="Player username"><select id="weaponSelect"><option value="">Select weapon</option></select></div>
-    <div class="actions"><button class="btn" onclick="adminGiveWeapon()">Give Weapon</button></div><div id="weaponMessage" class="msg"></div>
+    <div class="formgrid">
+      <input id="weaponUsername" placeholder="Player username">
+      <select id="weaponSelect"><option value="">Select weapon</option></select>
+    </div>
+    <div class="actions"><button class="btn" onclick="adminGiveWeapon()">Give Weapon</button></div>
+    <div id="weaponMessage" class="msg"></div>
   </div>
-  <div class="panel"><h2>📜 Weapons</h2><div id="adminWeaponList">Loading...</div></div>
+
+  <div class="panel admin-case-box">
+    <h2>🎟️ Give Admin Case</h2>
+    <p>Admin Cases are not sold. Give them directly to a player. When the player logs in, the site will notify them if they have one.</p>
+    <div class="formgrid">
+      <input id="caseUsername" placeholder="Player username">
+      <input id="caseAmount" type="number" min="1" value="1" placeholder="Number of cases">
+    </div>
+    <div class="actions">
+      <button class="btn" onclick="adminGiveCases()">Give Admin Case</button>
+    </div>
+    <div id="caseMessage" class="msg"></div>
+  </div>
+
+  <div class="panel">
+    <h2>📜 Weapons</h2>
+    <div id="adminWeaponList">Loading...</div>
+  </div>
 </section>
 
 </main>
 </div>
 
 <div id="tradeModal" class="modal"><div class="modal-box"><h2>Trade</h2><div id="tradeModalContent"></div><div class="actions"><button class="btn secondary" onclick="closeModal('tradeModal')">Close</button></div></div></div>
+<div id="caseResultModal" class="modal">
+  <div class="modal-box">
+    <h2 id="caseResultTitle">🎉 Case Opened!</h2>
+    <div id="caseResultContent"></div>
+    <div class="actions">
+      <button class="btn" onclick="closeModal('caseResultModal')">Awesome</button>
+    </div>
+  </div>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -178,7 +233,7 @@ const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let loginMode=false,currentUser=null,currentProfile=null,clicker={level:1,coins_per_click:1,upgrade_cost:100};
-let inventoryCache=[];
+let inventoryCache=[]; let adminCaseCount=0; let openingCase=false;
 
 function $(id){return document.getElementById(id)}
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
@@ -223,6 +278,24 @@ async function showGame(uid){
   $("adminNav").classList.toggle("hidden",data.role!=="admin");
   $("adminBadge").classList.toggle("hidden",data.role!=="admin");
   await refreshAll();
+
+  if(currentUser){
+    const {data:ac}=await client
+      .from("admin_cases")
+      .select("quantity")
+      .eq("user_id",currentUser)
+      .maybeSingle();
+
+    const qty=Number(ac?.quantity||0);
+
+    if(qty>0){
+      setTimeout(()=>{
+        if(confirm(`🎟️ You have ${qty} Admin Case${qty===1?"":"s"}!\n\nOpen the Cases page now?`)){
+          showPage("cases");
+        }
+      },350);
+    }
+  }
 }
 
 async function refreshAll(){
@@ -233,6 +306,7 @@ async function refreshAll(){
   await loadTrades();
   await loadMarketplace();
   await loadCasePage();
+  await loadAdminCaseBalance();
   populateWeaponSelectors();
   updateUI();
 }
@@ -286,7 +360,7 @@ async function showPage(page){
   if(page==="inventory")await loadInventory();
   if(page==="trading"){await loadInventory();await loadTrades()}
   if(page==="marketplace"){await loadInventory();await loadMarketplace()}
-  if(page==="cases")await loadCasePage();
+  if(page==="cases"){await loadCasePage();await loadAdminCaseBalance()}
   if(page==="admin")await loadAdmin();
   if(page==="dashboard"){await refreshProfile();updateUI()}
 }
@@ -401,14 +475,179 @@ async function offerOnListing(id){
 }
 
 async function loadCasePage(){
-  const box=$("casesGrid");if(!box)return;
-  const {data,error}=await client.from("cases").select("*").order("price",{ascending:true});
-  if(error){box.innerHTML='<div class="card"><h3>Cases</h3><p>The case tables are not available to this frontend yet. The clicker, trading and marketplace systems are ready.</p></div>';return}
-  if(!data?.length){box.innerHTML='<div class="card">No cases have been configured yet.</div>';return}
-  box.innerHTML=data.map(c=>`<div class="card"><h3>🎁 ${esc(c.name||"Case")}</h3><p>${esc(c.description||"Open this case to discover weapons.")}</p><p>Price: 🪙 ${money(c.price||0)}</p><div class="actions"><button class="btn" onclick="openCase('${c.id}')">Open Case</button></div></div>`).join("");
+  const box=$("casesGrid");
+  if(!box)return;
+
+  box.innerHTML='<div class="card">Loading cases...</div>';
+
+  const {data,error}=await client
+    .from("cases")
+    .select("id,name,description,price,is_admin_case,target_rarity_id,rarities:target_rarity_id(name,sort_order)")
+    .eq("is_admin_case",false)
+    .order("price",{ascending:true});
+
+  if(error){
+    box.innerHTML='<div class="card"><h3>Could not load cases</h3><p>'+esc(error.message)+'</p></div>';
+    return;
+  }
+
+  if(!data?.length){
+    box.innerHTML='<div class="card"><h3>No cases found</h3><p>Run Migration 4 successfully, then refresh the page.</p></div>';
+    return;
+  }
+
+  box.innerHTML=data.map(c=>{
+    const target=c.rarities?.name||"Unknown";
+    const price=Number(c.price||0);
+
+    return `
+      <div class="card case-card">
+        <h3>🎁 ${esc(c.name||"Case")}</h3>
+        <span class="rarity">Target: ${esc(target)}</span>
+        <p>${esc(c.description||"Open this case to discover weapons.")}</p>
+        <p class="case-target">🎯 50% target-rarity chance</p>
+        <p class="case-price">🪙 ${money(price)}</p>
+        <div class="actions">
+          <button class="btn" onclick="openCase('${c.id}')">Open Case</button>
+        </div>
+      </div>`;
+  }).join("");
 }
+
+async function loadAdminCaseBalance(){
+  if(!currentUser)return;
+
+  const {data,error}=await client
+    .from("admin_cases")
+    .select("quantity")
+    .eq("user_id",currentUser)
+    .maybeSingle();
+
+  if(error){
+    adminCaseCount=0;
+    if($("adminCaseCount"))$("adminCaseCount").textContent="0";
+    if($("openAdminCaseBtn")){
+      $("openAdminCaseBtn").disabled=true;
+      $("openAdminCaseBtn").textContent="Open Admin Case";
+    }
+    return;
+  }
+
+  adminCaseCount=Number(data?.quantity||0);
+
+  if($("adminCaseCount"))
+    $("adminCaseCount").textContent=money(adminCaseCount);
+
+  if($("openAdminCaseBtn")){
+    $("openAdminCaseBtn").disabled=adminCaseCount<=0||openingCase;
+    $("openAdminCaseBtn").textContent=adminCaseCount>0
+      ? `Open Admin Case (${money(adminCaseCount)})`
+      : "No Admin Cases";
+  }
+}
+
+function showCaseResult(result,isAdmin=false){
+  const r=result?.rarity_name||"Unknown";
+  const name=result?.weapon_name||"Unknown Weapon";
+
+  $("caseResultTitle").textContent=isAdmin
+    ? "👑 Admin Case Opened!"
+    : "🎉 Case Opened!";
+
+  $("caseResultContent").innerHTML=`
+    <div class="result-weapon">
+      <div class="big-rarity">${esc(r)}</div>
+      <div class="big-name">${esc(name)}</div>
+      <div class="stats2">
+        <span>⚔️ ${Number(result.damage||0)}</span>
+        <span>🛡️ ${Number(result.defense||0)}</span>
+        <span>⚡ ${Number(result.speed||0)}</span>
+        <span>🎯 ${Number(result.accuracy||0)}</span>
+        <span>🍀 ${Number(result.luck||0)}</span>
+      </div>
+      <div class="exist">🌎 ${money(result.existence_count||0)} exist</div>
+      <p class="muted">The weapon has been added to your Inventory and unlocked in your Index.</p>
+    </div>`;
+
+  $("caseResultModal").classList.add("open");
+}
+
 async function openCase(id){
-  toast("Case opening RPC is not part of the installed database RPC layer yet.");
+  if(openingCase)return;
+
+  openingCase=true;
+  const buttons=[...document.querySelectorAll('#casesGrid button')];
+  buttons.forEach(b=>b.disabled=true);
+  toast("Opening case...");
+
+  const {data,error}=await client.rpc("open_case",{p_case_id:id});
+
+  openingCase=false;
+  buttons.forEach(b=>b.disabled=false);
+
+  if(error){
+    toast(error.message);
+    await refreshProfile();
+    return;
+  }
+
+  const result=Array.isArray(data)?data[0]:data;
+
+  if(!result){
+    toast("The case opened, but no weapon result was returned.");
+    return;
+  }
+
+  showCaseResult(result,false);
+
+  await refreshProfile();
+  await loadInventory();
+  await loadIndex();
+  await loadCasePage();
+  updateUI();
+}
+
+async function openAdminCase(){
+  if(openingCase)return;
+
+  if(adminCaseCount<=0){
+    toast("You do not have an Admin Case.");
+    return;
+  }
+
+  if(!confirm("Open an Admin Case? It will be consumed and award a weapon from the highest rarity."))return;
+
+  openingCase=true;
+  if($("openAdminCaseBtn")){
+    $("openAdminCaseBtn").disabled=true;
+    $("openAdminCaseBtn").textContent="Opening...";
+  }
+
+  const {data,error}=await client.rpc("open_admin_case");
+
+  openingCase=false;
+
+  if(error){
+    toast(error.message);
+    await loadAdminCaseBalance();
+    return;
+  }
+
+  const result=Array.isArray(data)?data[0]:data;
+
+  if(!result){
+    toast("The Admin Case opened, but no weapon result was returned.");
+    await loadAdminCaseBalance();
+    return;
+  }
+
+  showCaseResult(result,true);
+
+  await loadAdminCaseBalance();
+  await refreshProfile();
+  await loadInventory();
+  await loadIndex();
+  updateUI();
 }
 
 async function loadAdmin(){
@@ -426,6 +665,39 @@ async function adminGiveCoins(){
   if(error)return msg("coinMessage",error.message);
   msg("coinMessage",`Gave ${money(amount)} coins to ${data.username}.`);$("coinUsername").value="";$("coinAmount").value="";
 }
+async function adminGiveCases(){
+  if(currentProfile?.role!=="admin")return toast("Admin access denied.");
+
+  const username=$("caseUsername").value.trim();
+  const quantity=Number($("caseAmount").value||0);
+
+  if(!username||!Number.isInteger(quantity)||quantity<=0){
+    return msg("caseMessage","Enter a username and a positive whole-number quantity.");
+  }
+
+  msg("caseMessage","Giving Admin Case...");
+
+  const {data,error}=await client.rpc("admin_give_cases",{
+    p_username:username,
+    p_quantity:quantity
+  });
+
+  if(error){
+    msg("caseMessage",error.message);
+    return;
+  }
+
+  const row=Array.isArray(data)?data[0]:data;
+
+  msg(
+    "caseMessage",
+    `Gave ${money(row?.quantity_given||quantity)} Admin Case${quantity===1?"":"s"} to ${row?.username||username}. Total: ${money(row?.total_quantity||0)}.`
+  );
+
+  $("caseUsername").value="";
+  $("caseAmount").value="1";
+}
+
 async function adminGiveWeapon(){
   if(currentProfile?.role!=="admin")return toast("Admin access denied.");
   const username=$("weaponUsername").value.trim(),weaponId=$("weaponSelect").value;
