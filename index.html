@@ -1957,8 +1957,10 @@ async function handleAuth() {
 
   if (error) {
 
+    console.error("LOGIN ERROR:", error);
+
     message.textContent =
-      "Invalid username or password.";
+      error.message || "Login failed.";
 
     return;
   }
