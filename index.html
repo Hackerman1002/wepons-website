@@ -18,34 +18,36 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: Georgia, serif;
-  background:
-    radial-gradient(circle at top, #332314 0%, #17120d 55%);
+  background: #17120d;
   color: #f5e6c8;
 }
 
-/* =====================================================
+/* =========================
    AUTH
-===================================================== */
+========================= */
 
-#auth {
-  width: 400px;
+#authScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-box {
+  width: 420px;
   max-width: 92%;
   background: #241a12;
   border: 2px solid #8f6b32;
   border-radius: 14px;
-  padding: 30px;
+  padding: 35px;
   box-shadow: 0 15px 50px rgba(0,0,0,.6);
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
-#auth h1 {
+.auth-box h1 {
   text-align: center;
   color: #e5b94f;
   margin-top: 0;
+  font-size: 34px;
 }
 
 .subtitle {
@@ -54,57 +56,56 @@ body {
   margin-bottom: 25px;
 }
 
-input {
+input,
+select,
+textarea {
   width: 100%;
   padding: 13px;
-  margin: 8px 0;
-
+  margin: 7px 0;
   border: 1px solid #6d522d;
   border-radius: 7px;
-
   background: #120e0a;
-  color: white;
-
+  color: #f5e6c8;
+  font-family: Georgia, serif;
   font-size: 15px;
 }
 
+textarea {
+  resize: vertical;
+}
+
 button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 7px;
+  background: #a87928;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
   font-family: Georgia, serif;
   cursor: pointer;
 }
 
-.main-button {
-  width: 100%;
-  padding: 13px;
-  margin-top: 10px;
-
-  border: none;
-  border-radius: 7px;
-
-  background: #a87928;
-  color: white;
-
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.main-button:hover {
+button:hover {
   background: #c49337;
 }
 
-.switch-button {
-  width: 100%;
-
+button.secondary {
   background: transparent;
-  border: none;
-
   color: #d6ad55;
-
-  margin-top: 10px;
-  padding: 10px;
 }
 
-#message {
+button.danger {
+  background: #7d2929;
+}
+
+button.danger:hover {
+  background: #a33a3a;
+}
+
+#authMessage {
   text-align: center;
   min-height: 22px;
   margin-top: 15px;
@@ -112,150 +113,118 @@ button {
 }
 
 
-/* =====================================================
-   GAME
-===================================================== */
+/* =========================
+   APP
+========================= */
 
-#game {
+#app {
   display: none;
   min-height: 100vh;
 }
 
-
-/* =====================================================
-   SIDEBAR
-===================================================== */
-
-.sidebar {
-  position: fixed;
-
-  left: 0;
-  top: 0;
-  bottom: 0;
-
-  width: 220px;
-
-  background: #1d150f;
-  border-right: 2px solid #6d522d;
-
-  padding: 25px 15px;
-
-  z-index: 10;
+.topbar {
+  height: 74px;
+  border-bottom: 1px solid #5d431f;
+  background: #20160f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
 }
 
 .logo {
   color: #e5b94f;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: bold;
+}
 
-  text-align: center;
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-  margin-bottom: 35px;
+.coin-display {
+  border: 1px solid #8f6b32;
+  border-radius: 30px;
+  padding: 10px 18px;
+  color: #f5e6c8;
+}
+
+.username-display {
+  color: #d9c39b;
+}
+
+.admin-badge {
+  background: #7d2929;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.logout-small {
+  width: auto;
+  margin: 0;
+  padding: 10px 18px;
+  background: #7d2929;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.layout {
+  display: flex;
+  min-height: calc(100vh - 74px);
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #1c130d;
+  border-right: 1px solid #5d431f;
+  padding: 25px 15px;
+}
+
+.sidebar-title {
+  color: #806b4c;
+  font-size: 13px;
+  margin: 10px 12px;
+  letter-spacing: 1px;
 }
 
 .nav-button {
   width: 100%;
-
-  padding: 13px;
-  margin-bottom: 8px;
-
   background: transparent;
-
-  border: 1px solid transparent;
-  border-radius: 8px;
-
-  color: #c9b99d;
-
+  color: #d9c39b;
   text-align: left;
-
-  font-size: 15px;
+  margin: 4px 0;
+  padding: 13px;
+  border: 1px solid transparent;
 }
 
 .nav-button:hover,
 .nav-button.active {
-  background: #332416;
-  border-color: #6d522d;
+  background: #352313;
+  border-color: #8f6b32;
   color: #e5b94f;
 }
 
-.logout-nav {
-  position: absolute;
-  bottom: 20px;
-  left: 15px;
-  width: calc(100% - 30px);
-
-  border-color: #56382a;
+.sidebar-bottom {
+  margin-top: 40px;
 }
 
 
-/* =====================================================
+/* =========================
    MAIN
-===================================================== */
+========================= */
 
 .main {
-  margin-left: 220px;
-  min-height: 100vh;
-}
-
-
-/* =====================================================
-   TOP BAR
-===================================================== */
-
-.topbar {
-  height: 75px;
-
-  background: #241a12;
-  border-bottom: 2px solid #6d522d;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-
-  padding: 0 30px;
-
-  gap: 20px;
-}
-
-.username {
-  color: #d8c7a7;
-}
-
-.admin-badge {
-  background: #702525;
-  color: #ffdca4;
-
-  padding: 5px 9px;
-
-  border-radius: 5px;
-
-  font-size: 11px;
-}
-
-.coin-display {
-  background: #120e0a;
-
-  border: 1px solid #8f6b32;
-  border-radius: 20px;
-
-  padding: 9px 17px;
-
-  color: #e5b94f;
-
-  font-weight: bold;
-}
-
-
-/* =====================================================
-   CONTENT
-===================================================== */
-
-.content {
-  max-width: 1100px;
-
-  margin: auto;
-
-  padding: 35px 25px;
+  flex: 1;
+  padding: 35px;
+  max-width: 1500px;
 }
 
 .page {
@@ -266,496 +235,387 @@ button {
   display: block;
 }
 
-.page-title {
+.page-header h1 {
+  margin: 0;
   color: #e5b94f;
-  font-size: 32px;
-  margin-top: 0;
+  font-size: 34px;
 }
 
-.page-subtitle {
-  color: #a99a82;
+.page-header p {
+  color: #b9a98d;
+  margin-top: 8px;
 }
 
 
-/* =====================================================
+/* =========================
    DASHBOARD
-===================================================== */
+========================= */
 
 .stats {
   display: grid;
-
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  gap: 18px;
-
-  margin-top: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 28px;
 }
 
 .stat-card {
   background: #241a12;
-
-  border: 1px solid #6d522d;
-  border-radius: 12px;
-
-  padding: 25px;
+  border: 1px solid #795725;
+  border-radius: 10px;
+  padding: 22px;
 }
 
-.stat-card h3 {
-  color: #a99a82;
+.stat-label {
+  color: #8f8068;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  color: #e5b94f;
+  font-size: 30px;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.panel {
+  background: #241a12;
+  border: 1px solid #795725;
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 25px;
+}
+
+.panel h2 {
+  color: #e5b94f;
   margin-top: 0;
 }
 
-.stat-number {
-  color: #e5b94f;
-  font-size: 30px;
-  font-weight: bold;
-}
 
-
-/* =====================================================
+/* =========================
    COIN MINING
-===================================================== */
+========================= */
 
-.mine-card {
-  margin-top: 25px;
-
-  background: #241a12;
-
-  border: 2px solid #8f6b32;
-  border-radius: 15px;
-
-  padding: 35px;
-
+.mine-panel {
   text-align: center;
-
-  box-shadow:
-    0 12px 35px rgba(0,0,0,.35);
 }
 
-.coin-count-large {
-  color: #e5b94f;
-
-  font-size: 27px;
-  font-weight: bold;
-
-  margin-bottom: 25px;
+.coin-count {
+  font-size: 26px;
+  margin: 15px 0;
 }
 
-.coin-button {
-  width: 145px;
-  height: 145px;
-
-  border-radius: 50%;
-
-  border: 5px solid #8f6b32;
-
-  background:
-    radial-gradient(
-      circle at 35% 30%,
-      #ffe9a6,
-      #e5b94f 45%,
-      #8d6422 100%
-    );
-
-  color: #5c400c;
-
-  font-size: 65px;
-
-  box-shadow:
-    0 8px 0 #5d421a,
-    0 15px 30px rgba(0,0,0,.55);
-
-  transition: .08s;
-}
-
-.coin-button:hover {
-  transform: scale(1.05);
-}
-
-.coin-button:active {
-  transform: translateY(7px);
-
-  box-shadow:
-    0 2px 0 #5d421a,
-    0 7px 15px rgba(0,0,0,.5);
-}
-
-.mine-hint {
-  color: #8e816e;
-  margin-top: 22px;
-}
-
-
-/* =====================================================
-   ARMORY
-===================================================== */
-
-.armory-header {
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 20px;
-
-  margin-bottom: 25px;
-}
-
-.roll-button {
-  background: linear-gradient(
-    135deg,
-    #a87928,
-    #d29b38
-  );
-
-  border: 1px solid #e1b85d;
-
-  color: white;
-
-  border-radius: 9px;
-
-  padding: 14px 22px;
-
-  font-weight: bold;
-  font-size: 16px;
-
-  box-shadow:
-    0 5px 15px rgba(0,0,0,.3);
-}
-
-.roll-button:hover {
-  transform: translateY(-1px);
-  background: linear-gradient(
-    135deg,
-    #bd8a30,
-    #e1aa46
-  );
-}
-
-.roll-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-
-/* =====================================================
-   WEAPON REVEAL
-===================================================== */
-
-.weapon-reveal {
-  display: none;
-
-  background:
-    radial-gradient(
-      circle at center,
-      #3a2a18,
-      #241a12
-    );
-
-  border: 2px solid #8f6b32;
-
-  border-radius: 16px;
-
-  padding: 35px;
-
-  text-align: center;
-
-  margin-bottom: 30px;
-
-  animation: reveal .35s ease;
-}
-
-.weapon-reveal.show {
-  display: block;
-}
-
-@keyframes reveal {
-
-  from {
-    opacity: 0;
-    transform: scale(.92);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-}
-
-.weapon-reveal-label {
-  color: #a99a82;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-size: 12px;
-}
-
-.weapon-reveal-name {
-  color: #e5b94f;
-  font-size: 34px;
-  margin: 10px 0;
-}
-
-.weapon-reveal-rarity {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.weapon-lore {
-  max-width: 650px;
-  margin: 20px auto;
-
-  color: #c8b99d;
-
-  font-style: italic;
-
-  line-height: 1.6;
-}
-
-
-/* =====================================================
-   STATS
-===================================================== */
-
-.weapon-stats {
-  display: grid;
-
-  grid-template-columns:
-    repeat(5, 1fr);
-
-  gap: 10px;
-
-  max-width: 700px;
-
+.mine-coin {
+  width: 150px;
+  height: 150px;
   margin: 25px auto;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, #ffe89b, #dca83b 55%, #8a5d1b);
+  border: 8px solid #9b7129;
+  box-shadow:
+    0 8px 0 #654315,
+    0 15px 30px rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 55px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform .08s;
 }
 
-.weapon-stat {
-  background: #120e0a;
-
-  border: 1px solid #4f3b25;
-
-  border-radius: 8px;
-
-  padding: 12px;
+.mine-coin:hover {
+  transform: scale(1.04);
 }
 
-.weapon-stat-label {
-  display: block;
-
-  color: #897b67;
-
-  font-size: 11px;
-
-  text-transform: uppercase;
-}
-
-.weapon-stat-value {
-  display: block;
-
-  color: #f1d18a;
-
-  font-size: 20px;
-
-  margin-top: 4px;
+.mine-coin:active {
+  transform: scale(.94) translateY(5px);
 }
 
 
-/* =====================================================
-   INVENTORY
-===================================================== */
+/* =========================
+   CARDS
+========================= */
 
-.inventory-grid {
+.card-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(auto-fill, minmax(230px, 1fr));
-
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
+}
 
-  margin-top: 25px;
+.feature-card {
+  background: #241a12;
+  border: 1px solid #795725;
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.feature-card h2 {
+  color: #e5b94f;
+  margin-top: 0;
+}
+
+
+/* =========================
+   WEAPONS
+========================= */
+
+.weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
 }
 
 .weapon-card {
   background: #241a12;
-
-  border: 1px solid #6d522d;
-
+  border: 1px solid #795725;
   border-radius: 12px;
-
-  padding: 20px;
-
-  transition: .15s;
+  padding: 18px;
+  overflow: hidden;
 }
 
-.weapon-card:hover {
-  transform: translateY(-3px);
-
-  border-color: #a87928;
+.weapon-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #120e0a;
+  margin-bottom: 12px;
 }
 
 .weapon-card h3 {
   color: #e5b94f;
-  margin-top: 0;
+  margin: 8px 0;
 }
 
-.inventory-rarity {
-  font-size: 13px;
+.rarity-name {
+  color: #d6ad55;
   font-weight: bold;
 }
 
-.weapon-card-lore {
-  color: #9f917b;
-
-  font-size: 13px;
-
+.weapon-description {
+  color: #b9a98d;
+  font-style: italic;
   line-height: 1.5;
-
-  margin-top: 12px;
 }
 
-.mini-stats {
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 5px;
-
-  margin-top: 15px;
-
-  color: #c4b495;
-
-  font-size: 12px;
-}
-
-
-/* =====================================================
-   EMPTY STATE
-===================================================== */
-
-.empty {
-  background: #241a12;
-
-  border: 1px dashed #6d522d;
-
-  border-radius: 12px;
-
-  padding: 40px;
-
-  text-align: center;
-
-  color: #8e816e;
-}
-
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-.profile-card {
-  max-width: 600px;
-
-  background: #241a12;
-
-  border: 1px solid #6d522d;
-
-  border-radius: 12px;
-
-  padding: 25px;
-}
-
-.profile-row {
+.weapon-stats {
   display: flex;
-
-  justify-content: space-between;
-
-  border-bottom: 1px solid #3e2e20;
-
-  padding: 14px 0;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 15px;
 }
 
-.profile-row:last-child {
-  border-bottom: none;
-}
-
-.profile-label {
-  color: #8e816e;
-}
-
-.profile-value {
-  color: #e5d1a5;
+.weapon-stat {
+  background: #17120d;
+  border: 1px solid #604721;
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-size: 13px;
 }
 
 
-/* =====================================================
+/* =========================
    ADMIN
-===================================================== */
+========================= */
 
 .admin-card {
   background: #241a12;
-
   border: 1px solid #8f6b32;
-
   border-radius: 12px;
-
   padding: 25px;
+  margin-top: 25px;
 }
 
 .admin-card h2 {
   color: #e5b94f;
+  margin-top: 0;
+}
+
+.admin-card p {
+  color: #b9a98d;
+}
+
+.rarity-create {
+  display: flex;
+  gap: 10px;
+}
+
+.rarity-create input {
+  flex: 1;
+}
+
+.rarity-create button {
+  width: auto;
+}
+
+.rarity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.rarity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #17120d;
+  border: 1px solid #6d522d;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.rarity-number {
+  width: 30px;
+  color: #8f6b32;
+}
+
+.rarity-name {
+  flex: 1;
+}
+
+.rarity-row button {
+  width: auto;
+  margin: 0;
+  padding: 8px 12px;
+}
+
+.weapon-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: #d6ad55;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  margin: 0;
+}
+
+.create-weapon-button {
+  grid-column: 1 / -1;
+}
+
+.admin-message {
+  min-height: 22px;
+  text-align: center;
+  margin-top: 15px;
+  color: #d9c39b;
+}
+
+.admin-weapon {
+  background: #17120d;
+  border: 1px solid #6d522d;
+  border-radius: 10px;
+  padding: 18px;
+  margin-top: 12px;
+}
+
+.admin-weapon h3 {
+  color: #e5b94f;
+  margin-top: 0;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-actions button {
+  width: auto;
 }
 
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* =========================
+   PROFILE
+========================= */
 
-@media(max-width: 750px) {
+.profile-row {
+  padding: 15px 0;
+  border-bottom: 1px solid #4d3820;
+}
 
-  .sidebar {
-    position: static;
+.profile-label {
+  color: #8f8068;
+}
 
-    width: 100%;
-    height: auto;
+.profile-value {
+  color: #e5b94f;
+  font-size: 20px;
+}
 
-    border-right: none;
-    border-bottom: 2px solid #6d522d;
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width: 900px) {
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .logout-nav {
-    position: static;
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
 
+}
+
+@media(max-width: 700px) {
+
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
     width: 100%;
-
-    margin-top: 10px;
+    border-right: none;
+    border-bottom: 1px solid #5d431f;
   }
 
   .main {
-    margin-left: 0;
+    padding: 20px;
   }
 
   .topbar {
-    justify-content: center;
+    padding: 0 12px;
+  }
+
+  .username-display {
+    display: none;
   }
 
   .stats {
     grid-template-columns: 1fr;
   }
 
-  .armory-header {
+  .weapon-form {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full {
+    grid-column: auto;
+  }
+
+  .rarity-create {
     flex-direction: column;
-    align-items: stretch;
-  }
-
-  .roll-button {
-    width: 100%;
-  }
-
-  .weapon-stats {
-    grid-template-columns:
-      repeat(2, 1fr);
   }
 
 }
@@ -768,147 +628,166 @@ button {
 
 
 <!-- =====================================================
-     LOGIN
+     LOGIN / SIGNUP
 ===================================================== -->
 
-<div id="auth">
+<div id="authScreen">
 
-  <h1>⚔️ Realm of Relics</h1>
+  <div class="auth-box">
 
-  <div class="subtitle">
-    Collect. Battle. Trade. Become legendary.
+    <h1>⚔️ Realm of Relics</h1>
+
+    <div class="subtitle">
+      Collect. Battle. Trade. Become legendary.
+    </div>
+
+    <input
+      id="username"
+      type="text"
+      placeholder="Username"
+      maxlength="20"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+    >
+
+    <button
+      id="authButton"
+      onclick="handleAuth()"
+    >
+      Create Account
+    </button>
+
+    <button
+      class="secondary"
+      id="switchButton"
+      onclick="toggleAuthMode()"
+    >
+      Already have an account? Log in
+    </button>
+
+    <div id="authMessage"></div>
+
   </div>
-
-  <input
-    id="username"
-    type="text"
-    placeholder="Username"
-    autocomplete="username"
-  >
-
-  <input
-    id="password"
-    type="password"
-    placeholder="Password"
-    autocomplete="current-password"
-  >
-
-  <button
-    class="main-button"
-    id="mainButton"
-    onclick="handleAuth()"
-  >
-    Create Account
-  </button>
-
-  <button
-    class="switch-button"
-    id="switchButton"
-    onclick="toggleMode()"
-  >
-    Already have an account? Log in
-  </button>
-
-  <div id="message"></div>
 
 </div>
 
 
 <!-- =====================================================
-     GAME
+     APP
 ===================================================== -->
 
-<div id="game">
+<div id="app">
 
 
-  <!-- SIDEBAR -->
+  <!-- TOP BAR -->
 
-  <aside class="sidebar">
+  <header class="topbar">
 
     <div class="logo">
-      ⚔️ Realm of Relics
+      🏰 Realm of Relics
     </div>
 
-    <button
-      class="nav-button active"
-      onclick="showPage('dashboard', this)"
-    >
-      🏰 Dashboard
-    </button>
+    <div class="user-area">
 
-    <button
-      class="nav-button"
-      onclick="showPage('armory', this)"
-    >
-      ⚔️ Armory
-    </button>
+      <div
+        id="topUsername"
+        class="username-display"
+      >
+        player
+      </div>
 
-    <button
-      class="nav-button"
-      onclick="showPage('inventory', this)"
-    >
-      🎒 Inventory
-    </button>
-
-    <button
-      class="nav-button"
-      onclick="showPage('profile', this)"
-    >
-      👤 Profile
-    </button>
-
-    <button
-      class="nav-button"
-      id="adminNav"
-      style="display:none;"
-      onclick="showPage('admin', this)"
-    >
-      👑 Admin Panel
-    </button>
-
-    <button
-      class="nav-button logout-nav"
-      onclick="logout()"
-    >
-      🚪 Log Out
-    </button>
-
-  </aside>
-
-
-  <!-- MAIN -->
-
-  <div class="main">
-
-
-    <!-- TOP BAR -->
-
-    <header class="topbar">
-
-      <span
-        class="username"
-        id="usernameDisplay"
-      ></span>
-
-      <span
-        class="admin-badge"
+      <div
         id="adminBadge"
+        class="admin-badge"
         style="display:none;"
       >
         ADMIN
-      </span>
-
-      <div class="coin-display">
-        🪙
-        <span id="topCoins">0</span>
       </div>
 
-    </header>
+      <div class="coin-display">
+        🪙 <span id="topCoins">0</span>
+      </div>
+
+      <button
+        class="logout-small"
+        onclick="logout()"
+      >
+        Log Out
+      </button>
+
+    </div>
+
+  </header>
 
 
-    <!-- CONTENT -->
+  <div class="layout">
 
-    <main class="content">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-title">
+        REALM
+      </div>
+
+      <button
+        class="nav-button active"
+        onclick="showPage('dashboard', this)"
+      >
+        🏰 Dashboard
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showPage('armory', this)"
+      >
+        ⚔️ Armory
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showPage('inventory', this)"
+      >
+        🎒 Inventory
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="showPage('profile', this)"
+      >
+        👤 Profile
+      </button>
+
+
+      <div
+        id="adminNavigation"
+        style="display:none;"
+      >
+
+        <div class="sidebar-title">
+          ADMINISTRATION
+        </div>
+
+        <button
+          class="nav-button"
+          onclick="showPage('admin', this)"
+        >
+          👑 Admin Panel
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
 
 
       <!-- =================================================
@@ -920,27 +799,30 @@ button {
         class="page active"
       >
 
-        <h1
-          class="page-title"
-          id="welcomeTitle"
-        >
-          Welcome
-        </h1>
+        <div class="page-header">
 
-        <p class="page-subtitle">
-          Your adventure begins here.
-        </p>
+          <h1>
+            Welcome to the Realm
+          </h1>
+
+          <p id="dashboardWelcome">
+            Your adventure continues.
+          </p>
+
+        </div>
 
 
         <div class="stats">
 
           <div class="stat-card">
 
-            <h3>🪙 Coins</h3>
+            <div class="stat-label">
+              Coins
+            </div>
 
             <div
-              class="stat-number"
               id="dashboardCoins"
+              class="stat-value"
             >
               0
             </div>
@@ -950,11 +832,13 @@ button {
 
           <div class="stat-card">
 
-            <h3>⚔️ Weapons</h3>
+            <div class="stat-label">
+              Weapons
+            </div>
 
             <div
-              class="stat-number"
-              id="weaponCount"
+              id="dashboardWeapons"
+              class="stat-value"
             >
               0
             </div>
@@ -964,10 +848,31 @@ button {
 
           <div class="stat-card">
 
-            <h3>💎 Next Goal</h3>
+            <div class="stat-label">
+              Inventory
+            </div>
 
-            <div class="stat-number">
-              Upgrade
+            <div
+              id="dashboardInventory"
+              class="stat-value"
+            >
+              0
+            </div>
+
+          </div>
+
+
+          <div class="stat-card">
+
+            <div class="stat-label">
+              Rank
+            </div>
+
+            <div
+              id="dashboardRank"
+              class="stat-value"
+            >
+              Novice
             </div>
 
           </div>
@@ -977,29 +882,77 @@ button {
 
         <!-- COIN MINING -->
 
-        <div class="mine-card">
+        <div class="panel mine-panel">
 
           <h2>
-            Mine Coins
+            🪙 Mine Coins
           </h2>
 
-          <div
-            class="coin-count-large"
-            id="largeCoinCount"
-          >
-            🪙 0 Coins
+          <div class="coin-count">
+
+            🪙
+            <span id="mineCoins">
+              0
+            </span>
+            Coins
+
           </div>
 
-          <button
-            class="coin-button"
-            id="coinButton"
-            onclick="clickCoin()"
+          <div
+            class="mine-coin"
+            onclick="mineCoin()"
+            title="Click to mine +1 coin"
           >
             🪙
-          </button>
+          </div>
 
-          <div class="mine-hint">
+          <p>
             Click the coin to earn +1 coin
+          </p>
+
+          <div id="mineMessage"></div>
+
+        </div>
+
+
+        <div class="card-grid">
+
+          <div class="feature-card">
+
+            <h2>
+              ⚔️ Weapons
+            </h2>
+
+            <p>
+              Discover powerful relics and legendary weapons.
+            </p>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <h2>
+              💎 Upgrades
+            </h2>
+
+            <p>
+              Upgrade your relic through increasingly rare tiers.
+            </p>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <h2>
+              🎒 Inventory
+            </h2>
+
+            <p>
+              View and collect the weapons you discover.
+            </p>
+
           </div>
 
         </div>
@@ -1016,131 +969,24 @@ button {
         class="page"
       >
 
-        <div class="armory-header">
+        <div class="page-header">
 
-          <div>
+          <h1>
+            ⚔️ Armory
+          </h1>
 
-            <h1 class="page-title">
-              ⚔️ Armory
-            </h1>
-
-            <p class="page-subtitle">
-              Spend 10 coins to discover a random weapon.
-            </p>
-
-          </div>
-
-          <button
-            class="roll-button"
-            id="rollButton"
-            onclick="rollWeapon()"
-          >
-            🎲 Roll Weapon — 10 🪙
-          </button>
+          <p>
+            Browse the weapons of the Realm.
+          </p>
 
         </div>
-
-
-        <!-- WEAPON REVEAL -->
 
         <div
-          class="weapon-reveal"
-          id="weaponReveal"
+          id="armoryWeapons"
+          class="weapon-grid"
         >
-
-          <div class="weapon-reveal-label">
-            Weapon Discovered
-          </div>
-
-          <div
-            class="weapon-reveal-name"
-            id="revealName"
-          >
-            Weapon
-          </div>
-
-          <div
-            class="weapon-reveal-rarity"
-            id="revealRarity"
-          >
-            Common
-          </div>
-
-          <div
-            class="weapon-lore"
-            id="revealLore"
-          >
-          </div>
-
-
-          <div class="weapon-stats">
-
-            <div class="weapon-stat">
-              <span class="weapon-stat-label">
-                Damage
-              </span>
-              <span
-                class="weapon-stat-value"
-                id="revealDamage"
-              >
-                0
-              </span>
-            </div>
-
-            <div class="weapon-stat">
-              <span class="weapon-stat-label">
-                Defense
-              </span>
-              <span
-                class="weapon-stat-value"
-                id="revealDefense"
-              >
-                0
-              </span>
-            </div>
-
-            <div class="weapon-stat">
-              <span class="weapon-stat-label">
-                Speed
-              </span>
-              <span
-                class="weapon-stat-value"
-                id="revealSpeed"
-              >
-                0
-              </span>
-            </div>
-
-            <div class="weapon-stat">
-              <span class="weapon-stat-label">
-                Accuracy
-              </span>
-              <span
-                class="weapon-stat-value"
-                id="revealAccuracy"
-              >
-                0
-              </span>
-            </div>
-
-            <div class="weapon-stat">
-              <span class="weapon-stat-label">
-                Luck
-              </span>
-              <span
-                class="weapon-stat-value"
-                id="revealLuck"
-              >
-                0
-              </span>
-            </div>
-
-          </div>
-
+          Loading weapons...
         </div>
-
-
-        <div id="armoryMessage"></div>
 
       </section>
 
@@ -1154,18 +1000,28 @@ button {
         class="page"
       >
 
-        <h1 class="page-title">
-          🎒 Inventory
-        </h1>
+        <div class="page-header">
 
-        <p class="page-subtitle">
-          Your collected weapons.
-        </p>
+          <h1>
+            🎒 Inventory
+          </h1>
 
-        <div
-          class="inventory-grid"
-          id="inventoryGrid"
-        >
+          <p>
+            Your collected relics.
+          </p>
+
+        </div>
+
+        <div class="panel">
+
+          <h2>
+            Your Weapons
+          </h2>
+
+          <div id="inventoryList">
+            Your inventory is empty.
+          </div>
+
         </div>
 
       </section>
@@ -1180,68 +1036,64 @@ button {
         class="page"
       >
 
-        <h1 class="page-title">
-          👤 Profile
-        </h1>
+        <div class="page-header">
 
-        <div class="profile-card">
+          <h1>
+            👤 Profile
+          </h1>
+
+          <p>
+            Your Realm identity.
+          </p>
+
+        </div>
+
+        <div class="panel">
 
           <div class="profile-row">
 
-            <span class="profile-label">
+            <div class="profile-label">
               Username
-            </span>
+            </div>
 
-            <span
-              class="profile-value"
+            <div
               id="profileUsername"
+              class="profile-value"
             >
-            </span>
+              -
+            </div>
 
           </div>
 
 
           <div class="profile-row">
 
-            <span class="profile-label">
+            <div class="profile-label">
               Role
-            </span>
+            </div>
 
-            <span
-              class="profile-value"
+            <div
               id="profileRole"
+              class="profile-value"
             >
-            </span>
+              Player
+            </div>
 
           </div>
 
 
           <div class="profile-row">
 
-            <span class="profile-label">
+            <div class="profile-label">
               Coins
-            </span>
+            </div>
 
-            <span
-              class="profile-value"
+            <div
               id="profileCoins"
-            >
-            </span>
-
-          </div>
-
-
-          <div class="profile-row">
-
-            <span class="profile-label">
-              Weapons
-            </span>
-
-            <span
               class="profile-value"
-              id="profileWeapons"
             >
-            </span>
+              0
+            </div>
 
           </div>
 
@@ -1251,7 +1103,7 @@ button {
 
 
       <!-- =================================================
-           ADMIN
+           ADMIN PANEL
       ================================================= -->
 
       <section
@@ -1259,35 +1111,251 @@ button {
         class="page"
       >
 
-        <h1 class="page-title">
-          👑 Admin Panel
-        </h1>
+        <div class="page-header">
 
-        <p class="page-subtitle">
-          Manage the Realm of Relics.
-        </p>
+          <h1>
+            👑 Admin Panel
+          </h1>
+
+          <p>
+            Manage the Realm of Relics.
+          </p>
+
+        </div>
+
+
+        <!-- RARITIES -->
 
         <div class="admin-card">
 
           <h2>
-            ⚒️ Weapon & Rarity Management
+            💎 Rarity Management
           </h2>
 
           <p>
-            Your Admin Panel is connected to Supabase.
-            Weapon creation, rarity management, and
-            rarity ordering can be added here.
+            Create, rename, and reorder rarity tiers.
           </p>
 
-          <p>
-            Current weapons:
-            <strong id="adminWeaponCount">0</strong>
-          </p>
+
+          <div class="rarity-create">
+
+            <input
+              id="newRarityName"
+              type="text"
+              placeholder="New rarity name"
+              maxlength="50"
+            >
+
+            <button
+              onclick="createRarity()"
+            >
+              + Add Rarity
+            </button>
+
+          </div>
+
+
+          <div
+            id="rarityList"
+            class="rarity-list"
+          >
+            Loading rarities...
+          </div>
+
+        </div>
+
+
+        <!-- WEAPON CREATOR -->
+
+        <div class="admin-card">
+
+          <h2>
+            ⚔️ Weapon Creator
+          </h2>
 
           <p>
-            Current rarities:
-            <strong id="adminRarityCount">0</strong>
+            Create a new weapon for the Realm.
           </p>
+
+
+          <div class="weapon-form">
+
+
+            <div class="form-group">
+
+              <label>
+                Weapon Name
+              </label>
+
+              <input
+                id="weaponName"
+                type="text"
+                placeholder="Dragon Slayer"
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Rarity
+              </label>
+
+              <select id="weaponRarity">
+
+                <option value="">
+                  Select rarity
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Damage
+              </label>
+
+              <input
+                id="weaponDamage"
+                type="number"
+                value="0"
+                min="0"
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Defense
+              </label>
+
+              <input
+                id="weaponDefense"
+                type="number"
+                value="0"
+                min="0"
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Speed
+              </label>
+
+              <input
+                id="weaponSpeed"
+                type="number"
+                value="0"
+                min="0"
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Accuracy
+              </label>
+
+              <input
+                id="weaponAccuracy"
+                type="number"
+                value="0"
+                min="0"
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label>
+                Luck
+              </label>
+
+              <input
+                id="weaponLuck"
+                type="number"
+                value="0"
+                min="0"
+              >
+
+            </div>
+
+
+            <div class="form-group full">
+
+              <label>
+                Lore / Description
+              </label>
+
+              <textarea
+                id="weaponDescription"
+                rows="5"
+                placeholder="Tell the story of this legendary weapon..."
+              ></textarea>
+
+            </div>
+
+
+            <div class="form-group full">
+
+              <label>
+                Image URL
+              </label>
+
+              <input
+                id="weaponImage"
+                type="url"
+                placeholder="https://example.com/weapon.png"
+              >
+
+            </div>
+
+
+            <button
+              class="create-weapon-button"
+              onclick="createWeapon()"
+            >
+              ⚔️ Create Weapon
+            </button>
+
+          </div>
+
+
+          <div
+            id="weaponMessage"
+            class="admin-message"
+          ></div>
+
+        </div>
+
+
+        <!-- EXISTING WEAPONS -->
+
+        <div class="admin-card">
+
+          <h2>
+            🗡️ Existing Weapons
+          </h2>
+
+          <p>
+            Manage weapons already in the Realm.
+          </p>
+
+          <div id="adminWeaponList">
+            Loading weapons...
+          </div>
 
         </div>
 
@@ -1321,7 +1389,7 @@ const client =
 
 
 /* =====================================================
-   STATE
+   GLOBAL VARIABLES
 ===================================================== */
 
 let loginMode = false;
@@ -1330,31 +1398,29 @@ let currentUser = null;
 
 let currentProfile = null;
 
-let coinLocked = false;
-
-let rollLocked = false;
-
 
 /* =====================================================
-   LOGIN MODE
+   AUTH MODE
 ===================================================== */
 
-function toggleMode() {
+function toggleAuthMode() {
 
   loginMode = !loginMode;
 
-  const mainButton =
-    document.getElementById("mainButton");
+  const authButton =
+    document.getElementById("authButton");
 
   const switchButton =
     document.getElementById("switchButton");
 
-  document.getElementById("message")
-    .textContent = "";
+  const message =
+    document.getElementById("authMessage");
+
+  message.textContent = "";
 
   if (loginMode) {
 
-    mainButton.textContent =
+    authButton.textContent =
       "Log In";
 
     switchButton.textContent =
@@ -1362,17 +1428,19 @@ function toggleMode() {
 
   } else {
 
-    mainButton.textContent =
+    authButton.textContent =
       "Create Account";
 
     switchButton.textContent =
       "Already have an account? Log in";
+
   }
+
 }
 
 
 /* =====================================================
-   AUTH
+   AUTHENTICATION
 ===================================================== */
 
 async function handleAuth() {
@@ -1389,7 +1457,7 @@ async function handleAuth() {
       .value;
 
   const message =
-    document.getElementById("message");
+    document.getElementById("authMessage");
 
 
   if (!username || !password) {
@@ -1398,6 +1466,7 @@ async function handleAuth() {
       "Enter a username and password.";
 
     return;
+
   }
 
 
@@ -1407,6 +1476,30 @@ async function handleAuth() {
       "Username must be at least 3 characters.";
 
     return;
+
+  }
+
+
+  if (username.length > 20) {
+
+    message.textContent =
+      "Username must be 20 characters or less.";
+
+    return;
+
+  }
+
+
+  const usernamePattern =
+    /^[a-zA-Z0-9_]+$/;
+
+  if (!usernamePattern.test(username)) {
+
+    message.textContent =
+      "Username can only contain letters, numbers, and underscores.";
+
+    return;
+
   }
 
 
@@ -1416,23 +1509,55 @@ async function handleAuth() {
       "Password must be at least 6 characters.";
 
     return;
+
   }
+
+
+  const normalizedUsername =
+    username.toLowerCase();
+
+
+  const internalEmail =
+    normalizedUsername +
+    "@realmofrelics.local";
 
 
   message.textContent =
     "Please wait...";
 
 
-  const internalEmail =
-    username.toLowerCase() +
-    "@realmofrelics.local";
-
-
-  /* ===================================================
-     SIGN UP
-  =================================================== */
+  /* ===============================================
+     CREATE ACCOUNT
+  =============================================== */
 
   if (!loginMode) {
+
+    /*
+      Check username first.
+
+      Your profiles.username column is UNIQUE,
+      so Supabase is still the final protection.
+    */
+
+    const {
+      data: existingProfile
+    } =
+      await client
+        .from("profiles")
+        .select("id")
+        .eq("username", normalizedUsername)
+        .maybeSingle();
+
+
+    if (existingProfile) {
+
+      message.textContent =
+        "That username is already taken.";
+
+      return;
+
+    }
+
 
     const {
       data,
@@ -1443,6 +1568,7 @@ async function handleAuth() {
         email: internalEmail,
 
         password: password
+
       });
 
 
@@ -1452,6 +1578,7 @@ async function handleAuth() {
         error.message;
 
       return;
+
     }
 
 
@@ -1461,14 +1588,17 @@ async function handleAuth() {
         "Account creation failed.";
 
       return;
+
     }
 
 
     /*
       IMPORTANT:
-      New accounts are always players.
-      Admin status should never be determined
-      by browser JavaScript.
+
+      New accounts are players.
+
+      Admin status should be assigned in
+      Supabase, not from the browser.
     */
 
     const {
@@ -1480,20 +1610,39 @@ async function handleAuth() {
 
           id: data.user.id,
 
-          username: username,
+          username: normalizedUsername,
 
           role: "player",
 
           coins: 100
+
         });
 
 
     if (profileError) {
 
-      message.textContent =
-        profileError.message;
+      if (
+        profileError.code === "23505"
+      ) {
+
+        message.textContent =
+          "That username is already taken.";
+
+      } else {
+
+        message.textContent =
+          profileError.message;
+
+      }
+
+      /*
+        If profile creation failed, sign out.
+      */
+
+      await client.auth.signOut();
 
       return;
+
     }
 
 
@@ -1501,18 +1650,16 @@ async function handleAuth() {
       "Account created!";
 
 
-    await showGame(
-      data.user.id
-    );
-
+    await loadCurrentUser();
 
     return;
+
   }
 
 
-  /* ===================================================
+  /* ===============================================
      LOGIN
-  =================================================== */
+  =============================================== */
 
   const {
     data,
@@ -1523,6 +1670,7 @@ async function handleAuth() {
       email: internalEmail,
 
       password: password
+
     });
 
 
@@ -1532,23 +1680,50 @@ async function handleAuth() {
       "Invalid username or password.";
 
     return;
+
   }
 
 
-  await showGame(
-    data.user.id
-  );
+  if (!data.user) {
+
+    message.textContent =
+      "Login failed.";
+
+    return;
+
+  }
+
+
+  await loadCurrentUser();
+
 }
 
 
 /* =====================================================
-   SHOW GAME
+   LOAD CURRENT USER
 ===================================================== */
 
-async function showGame(userId) {
+async function loadCurrentUser() {
+
+  const {
+    data: sessionData,
+    error: sessionError
+  } =
+    await client.auth.getSession();
+
+
+  if (
+    sessionError ||
+    !sessionData.session
+  ) {
+
+    return;
+
+  }
+
 
   currentUser =
-    userId;
+    sessionData.session.user;
 
 
   const {
@@ -1558,7 +1733,7 @@ async function showGame(userId) {
     await client
       .from("profiles")
       .select("*")
-      .eq("id", userId)
+      .eq("id", currentUser.id)
       .single();
 
 
@@ -1570,6 +1745,7 @@ async function showGame(userId) {
     );
 
     return;
+
   }
 
 
@@ -1577,181 +1753,364 @@ async function showGame(userId) {
     profile;
 
 
-  document.getElementById("auth")
+  showApp();
+
+}
+
+
+/* =====================================================
+   SHOW APP
+===================================================== */
+
+async function showApp() {
+
+  document
+    .getElementById("authScreen")
     .style.display = "none";
 
-  document.getElementById("game")
+  document
+    .getElementById("app")
     .style.display = "block";
 
 
-  document.getElementById(
-    "usernameDisplay"
-  ).textContent =
-    profile.username;
+  document
+    .getElementById("topUsername")
+    .textContent =
+      currentProfile.username;
 
 
-  document.getElementById(
-    "welcomeTitle"
-  ).textContent =
-    "Welcome, " +
-    profile.username +
-    "!";
+  updateCoins();
 
 
-  updateCoins(
-    profile.coins
-  );
+  document
+    .getElementById("dashboardWelcome")
+    .textContent =
+      "Welcome back, " +
+      currentProfile.username +
+      ". Your adventure continues.";
 
 
-  document.getElementById(
-    "profileUsername"
-  ).textContent =
-    profile.username;
+  /*
+    ADMIN UI
+  */
 
+  if (
+    currentProfile.role === "admin"
+  ) {
 
-  document.getElementById(
-    "profileRole"
-  ).textContent =
-    profile.role === "admin"
-      ? "👑 Administrator"
-      : "Player";
+    document
+      .getElementById("adminNavigation")
+      .style.display = "block";
 
-
-  /* ===================================================
-     ADMIN UI
-  =================================================== */
-
-  if (profile.role === "admin") {
-
-    document.getElementById(
-      "adminNav"
-    ).style.display = "block";
-
-    document.getElementById(
-      "adminBadge"
-    ).style.display = "inline-block";
+    document
+      .getElementById("adminBadge")
+      .style.display = "block";
 
   } else {
 
-    document.getElementById(
-      "adminNav"
-    ).style.display = "none";
+    document
+      .getElementById("adminNavigation")
+      .style.display = "none";
 
-    document.getElementById(
-      "adminBadge"
-    ).style.display = "none";
+    document
+      .getElementById("adminBadge")
+      .style.display = "none";
+
   }
 
 
-  await loadInventory();
+  await refreshDashboard();
 
-  await loadAdminStats();
 }
 
 
 /* =====================================================
-   UPDATE COINS
+   NAVIGATION
 ===================================================== */
 
-function updateCoins(coins) {
+async function showPage(pageId, button) {
 
-  const amount =
-    Number(coins) || 0;
+  /*
+    Security check for Admin Panel.
+  */
 
+  if (
+    pageId === "admin" &&
+    (!currentProfile ||
+     currentProfile.role !== "admin")
+  ) {
 
-  document.getElementById(
-    "topCoins"
-  ).textContent =
-    amount.toLocaleString();
-
-
-  document.getElementById(
-    "dashboardCoins"
-  ).textContent =
-    amount.toLocaleString();
-
-
-  document.getElementById(
-    "largeCoinCount"
-  ).textContent =
-    "🪙 " +
-    amount.toLocaleString() +
-    " Coins";
-
-
-  document.getElementById(
-    "profileCoins"
-  ).textContent =
-    amount.toLocaleString();
-
-
-  if (currentProfile) {
-
-    currentProfile.coins =
-      amount;
-  }
-}
-
-
-/* =====================================================
-   CLICK COIN
-===================================================== */
-
-async function clickCoin() {
-
-  if (coinLocked) {
-    return;
-  }
-
-
-  coinLocked = true;
-
-
-  const button =
-    document.getElementById(
-      "coinButton"
+    alert(
+      "You do not have administrator permission."
     );
 
+    return;
 
-  button.disabled = true;
-
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await client.rpc(
-        "click_coin"
-      );
-
-
-    if (error) {
-
-      console.error(
-        "Coin error:",
-        error
-      );
-
-      alert(
-        "Could not add coin:\n" +
-        error.message
-      );
-
-      return;
-    }
-
-
-    updateCoins(data);
-
-
-  } finally {
-
-    button.disabled = false;
-
-    coinLocked = false;
   }
+
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page => {
+
+      page.classList.remove("active");
+
+    });
+
+
+  const page =
+    document.getElementById(pageId);
+
+
+  if (page) {
+
+    page.classList.add("active");
+
+  }
+
+
+  document
+    .querySelectorAll(".nav-button")
+    .forEach(btn => {
+
+      btn.classList.remove("active");
+
+    });
+
+
+  if (button) {
+
+    button.classList.add("active");
+
+  }
+
+
+  if (pageId === "dashboard") {
+
+    await refreshDashboard();
+
+  }
+
+
+  if (pageId === "armory") {
+
+    await loadArmory();
+
+  }
+
+
+  if (pageId === "inventory") {
+
+    await loadInventory();
+
+  }
+
+
+  if (pageId === "profile") {
+
+    updateProfile();
+
+  }
+
+
+  if (pageId === "admin") {
+
+    await loadAdminPanel();
+
+  }
+
+}
+
+
+/* =====================================================
+   COINS
+===================================================== */
+
+function updateCoins() {
+
+  if (!currentProfile) return;
+
+
+  const coins =
+    Number(currentProfile.coins) || 0;
+
+
+  document
+    .getElementById("topCoins")
+    .textContent =
+      coins.toLocaleString();
+
+
+  document
+    .getElementById("dashboardCoins")
+    .textContent =
+      coins.toLocaleString();
+
+
+  document
+    .getElementById("mineCoins")
+    .textContent =
+      coins.toLocaleString();
+
+
+  document
+    .getElementById("profileCoins")
+    .textContent =
+      coins.toLocaleString();
+
+}
+
+
+/* =====================================================
+   MINE COIN
+===================================================== */
+
+async function mineCoin() {
+
+  if (!currentUser || !currentProfile) {
+
+    return;
+
+  }
+
+
+  const newCoins =
+    Number(currentProfile.coins) + 1;
+
+
+  /*
+    Update the player's own coins.
+
+    Your RLS policy must allow users to update
+    their own profile.
+  */
+
+  const {
+    data,
+    error
+  } =
+    await client
+      .from("profiles")
+      .update({
+
+        coins: newCoins
+
+      })
+      .eq("id", currentUser.id)
+      .select()
+      .single();
+
+
+  if (error) {
+
+    console.error(
+      "Coin error:",
+      error
+    );
+
+    document
+      .getElementById("mineMessage")
+      .textContent =
+      "Could not collect coin.";
+
+    return;
+
+  }
+
+
+  currentProfile =
+    data;
+
+
+  updateCoins();
+
+
+  document
+    .getElementById("mineMessage")
+    .textContent =
+    "+1 coin!";
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+async function refreshDashboard() {
+
+  updateCoins();
+
+
+  const {
+    count: weaponCount
+  } =
+    await client
+      .from("weapons")
+      .select("id", {
+        count: "exact",
+        head: true
+      });
+
+
+  document
+    .getElementById("dashboardWeapons")
+    .textContent =
+    weaponCount || 0;
+
+
+  const {
+    count: inventoryCount
+  } =
+    await client
+      .from("inventory")
+      .select("id", {
+        count: "exact",
+        head: true
+      })
+      .eq(
+        "user_id",
+        currentUser.id
+      );
+
+
+  document
+    .getElementById("dashboardInventory")
+    .textContent =
+    inventoryCount || 0;
+
+
+  /*
+    Simple rank based on coins.
+  */
+
+  const coins =
+    Number(currentProfile.coins) || 0;
+
+  let rank = "Novice";
+
+  if (coins >= 1000) {
+    rank = "Knight";
+  }
+
+  if (coins >= 5000) {
+    rank = "Lord";
+  }
+
+  if (coins >= 10000) {
+    rank = "Legend";
+  }
+
+  if (coins >= 50000) {
+    rank = "Mythic";
+  }
+
+
+  document
+    .getElementById("dashboardRank")
+    .textContent =
+    rank;
+
 }
 
 
@@ -1759,209 +2118,147 @@ async function clickCoin() {
    ARMORY
 ===================================================== */
 
-async function rollWeapon() {
+async function loadArmory() {
 
-  if (rollLocked) {
+  const container =
+    document.getElementById(
+      "armoryWeapons"
+    );
+
+
+  container.innerHTML =
+    "Loading weapons...";
+
+
+  const {
+    data,
+    error
+  } =
+    await client
+      .from("weapons")
+      .select(`
+        *,
+        rarities (
+          id,
+          name,
+          sort_order
+        )
+      `)
+      .order("created_at", {
+        ascending: false
+      });
+
+
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      `<p>Could not load weapons.</p>`;
+
     return;
+
   }
 
 
-  if (
-    !currentProfile ||
-    Number(currentProfile.coins) < 10
-  ) {
+  if (!data || data.length === 0) {
 
-    alert(
-      "You need at least 10 coins to roll for a weapon."
-    );
+    container.innerHTML =
+      `<div class="panel">
+        No weapons exist yet.
+      </div>`;
 
     return;
+
   }
 
 
-  rollLocked = true;
+  container.innerHTML = "";
 
 
-  const button =
-    document.getElementById(
-      "rollButton"
-    );
+  data.forEach(weapon => {
 
+    const card =
+      document.createElement("div");
 
-  const message =
-    document.getElementById(
-      "armoryMessage"
-    );
+    card.className =
+      "weapon-card";
 
 
-  button.disabled = true;
+    const rarity =
+      weapon.rarities
+        ? weapon.rarities.name
+        : "Unknown";
 
-  button.textContent =
-    "🎲 Rolling...";
 
+    const image =
+      weapon.image_url;
 
-  message.textContent =
-    "";
 
+    card.innerHTML = `
 
-  try {
+      ${
+        image
+          ? `
+            <img
+              class="weapon-image"
+              src="${escapeHTML(image)}"
+              alt="${escapeHTML(weapon.name)}"
+              onerror="this.style.display='none'"
+            >
+          `
+          : ""
+      }
 
-    const {
-      data,
-      error
-    } =
-      await client.rpc(
-        "roll_weapon"
-      );
+      <h3>
+        ⚔️ ${escapeHTML(weapon.name)}
+      </h3>
 
+      <div class="rarity-name">
+        💎 ${escapeHTML(rarity)}
+      </div>
 
-    if (error) {
+      ${
+        weapon.description
+          ? `
+            <p class="weapon-description">
+              ${escapeHTML(weapon.description)}
+            </p>
+          `
+          : ""
+      }
 
-      console.error(
-        "Weapon roll error:",
-        error
-      );
+      <div class="weapon-stats">
 
-      message.textContent =
-        error.message;
+        <span class="weapon-stat">
+          ⚔️ ${weapon.damage}
+        </span>
 
-      return;
-    }
+        <span class="weapon-stat">
+          🛡️ ${weapon.defense}
+        </span>
 
+        <span class="weapon-stat">
+          ⚡ ${weapon.speed}
+        </span>
 
-    if (!data) {
+        <span class="weapon-stat">
+          🎯 ${weapon.accuracy}
+        </span>
 
-      message.textContent =
-        "The weapon roll returned no result.";
+        <span class="weapon-stat">
+          🍀 ${weapon.luck}
+        </span>
 
-      return;
-    }
+      </div>
 
+    `;
 
-    /* ===============================================
-       UPDATE COINS
-    =============================================== */
 
-    updateCoins(
-      data.coins
-    );
+    container.appendChild(card);
 
+  });
 
-    /* ===============================================
-       SHOW WEAPON
-    =============================================== */
-
-    showWeaponReveal(
-      data
-    );
-
-
-    /* ===============================================
-       REFRESH INVENTORY
-    =============================================== */
-
-    await loadInventory();
-
-
-  } catch (error) {
-
-    console.error(
-      error
-    );
-
-    message.textContent =
-      "Something went wrong while rolling.";
-
-
-  } finally {
-
-    button.disabled = false;
-
-    button.textContent =
-      "🎲 Roll Weapon — 10 🪙";
-
-    rollLocked = false;
-  }
-}
-
-
-/* =====================================================
-   WEAPON REVEAL
-===================================================== */
-
-function showWeaponReveal(weapon) {
-
-  const reveal =
-    document.getElementById(
-      "weaponReveal"
-    );
-
-
-  document.getElementById(
-    "revealName"
-  ).textContent =
-    weapon.weapon_name;
-
-
-  document.getElementById(
-    "revealRarity"
-  ).textContent =
-    weapon.rarity_name;
-
-
-  document.getElementById(
-    "revealLore"
-  ).textContent =
-    weapon.description ||
-    "A mysterious relic whose history has been lost."
-
-
-  document.getElementById(
-    "revealDamage"
-  ).textContent =
-    weapon.damage;
-
-
-  document.getElementById(
-    "revealDefense"
-  ).textContent =
-    weapon.defense;
-
-
-  document.getElementById(
-    "revealSpeed"
-  ).textContent =
-    weapon.speed;
-
-
-  document.getElementById(
-    "revealAccuracy"
-  ).textContent =
-    weapon.accuracy;
-
-
-  document.getElementById(
-    "revealLuck"
-  ).textContent =
-    weapon.luck;
-
-
-  reveal.classList.remove(
-    "show"
-  );
-
-
-  /*
-    Force browser to restart
-    the reveal animation.
-  */
-
-  void reveal.offsetWidth;
-
-
-  reveal.classList.add(
-    "show"
-  );
 }
 
 
@@ -1971,19 +2268,14 @@ function showWeaponReveal(weapon) {
 
 async function loadInventory() {
 
-  if (!currentUser) {
-    return;
-  }
-
-
-  const grid =
+  const container =
     document.getElementById(
-      "inventoryGrid"
+      "inventoryList"
     );
 
 
-  grid.innerHTML =
-    '<div class="empty">Loading inventory...</div>';
+  container.innerHTML =
+    "Loading inventory...";
 
 
   const {
@@ -1996,15 +2288,7 @@ async function loadInventory() {
         id,
         created_at,
         weapons (
-          id,
-          name,
-          damage,
-          defense,
-          speed,
-          accuracy,
-          luck,
-          description,
-          rarity_id,
+          *,
           rarities (
             name,
             sort_order
@@ -2013,284 +2297,1132 @@ async function loadInventory() {
       `)
       .eq(
         "user_id",
-        currentUser
+        currentUser.id
       )
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
+      .order("created_at", {
+        ascending: false
+      });
 
 
   if (error) {
 
-    console.error(
-      "Inventory error:",
-      error
+    console.error(error);
+
+    container.innerHTML =
+      "<p>Could not load inventory.</p>";
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML =
+      "<p>Your inventory is empty.</p>";
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    '<div class="weapon-grid"></div>';
+
+
+  const grid =
+    container.querySelector(
+      ".weapon-grid"
     );
-
-    grid.innerHTML =
-      '<div class="empty">Could not load inventory.</div>';
-
-    return;
-  }
-
-
-  document.getElementById(
-    "weaponCount"
-  ).textContent =
-    data.length;
-
-
-  document.getElementById(
-    "profileWeapons"
-  ).textContent =
-    data.length;
-
-
-  if (!data.length) {
-
-    grid.innerHTML =
-      `
-      <div class="empty">
-        <div style="font-size:40px;">🎒</div>
-        <p>Your inventory is empty.</p>
-        <p>Visit the Armory and roll for your first weapon.</p>
-      </div>
-      `;
-
-    return;
-  }
-
-
-  grid.innerHTML = "";
 
 
   data.forEach(item => {
 
-    if (!item.weapons) {
-      return;
-    }
+    if (!item.weapons) return;
 
 
     const weapon =
       item.weapons;
 
 
-    const rarity =
-      weapon.rarities;
-
-
     const card =
-      document.createElement(
-        "div"
-      );
-
+      document.createElement("div");
 
     card.className =
       "weapon-card";
 
 
+    const rarity =
+      weapon.rarities
+        ? weapon.rarities.name
+        : "Unknown";
+
+
     card.innerHTML = `
 
+      ${
+        weapon.image_url
+          ? `
+            <img
+              class="weapon-image"
+              src="${escapeHTML(weapon.image_url)}"
+              alt="${escapeHTML(weapon.name)}"
+            >
+          `
+          : ""
+      }
+
       <h3>
-        ⚔️ ${escapeHtml(weapon.name)}
+        ⚔️ ${escapeHTML(weapon.name)}
       </h3>
 
-      <div
-        class="inventory-rarity"
-      >
-        💎 ${escapeHtml(
-          rarity?.name || "Unknown"
-        )}
+      <div class="rarity-name">
+        💎 ${escapeHTML(rarity)}
       </div>
 
-      <div class="mini-stats">
-
-        <span>
-          ⚔️ Damage:
-          ${weapon.damage}
-        </span>
-
-        <span>
-          🛡️ Defense:
-          ${weapon.defense}
-        </span>
-
-        <span>
-          💨 Speed:
-          ${weapon.speed}
-        </span>
-
-        <span>
-          🎯 Accuracy:
-          ${weapon.accuracy}
-        </span>
-
-        <span>
-          🍀 Luck:
-          ${weapon.luck}
-        </span>
-
-      </div>
-
-      <div class="weapon-card-lore">
-        ${escapeHtml(
-          weapon.description ||
-          "No lore has been recorded."
-        )}
-      </div>
+      ${
+        weapon.description
+          ? `
+            <p class="weapon-description">
+              ${escapeHTML(weapon.description)}
+            </p>
+          `
+          : ""
+      }
 
     `;
 
 
-    grid.appendChild(
-      card
-    );
+    grid.appendChild(card);
 
   });
+
 }
 
 
 /* =====================================================
-   ADMIN STATS
+   PROFILE
 ===================================================== */
 
-async function loadAdminStats() {
+function updateProfile() {
+
+  if (!currentProfile) return;
+
+
+  document
+    .getElementById("profileUsername")
+    .textContent =
+    currentProfile.username;
+
+
+  document
+    .getElementById("profileRole")
+    .textContent =
+    currentProfile.role === "admin"
+      ? "Administrator"
+      : "Player";
+
+
+  updateCoins();
+
+}
+
+
+/* =====================================================
+   ADMIN PANEL
+===================================================== */
+
+async function loadAdminPanel() {
 
   if (
     !currentProfile ||
     currentProfile.role !== "admin"
   ) {
+
     return;
+
   }
 
 
-  const {
-    count: weaponCount
-  } =
-    await client
-      .from("weapons")
-      .select(
-        "*",
-        {
-          count: "exact",
-          head: true
-        }
-      );
+  await loadRarities();
+
+  await loadAdminWeapons();
+
+}
+
+
+/* =====================================================
+   LOAD RARITIES
+===================================================== */
+
+async function loadRarities() {
+
+  const list =
+    document.getElementById(
+      "rarityList"
+    );
+
+  const select =
+    document.getElementById(
+      "weaponRarity"
+    );
+
+
+  if (!list || !select) return;
 
 
   const {
-    count: rarityCount
+    data,
+    error
   } =
     await client
       .from("rarities")
-      .select(
-        "*",
-        {
-          count: "exact",
-          head: true
-        }
-      );
+      .select("*")
+      .order("sort_order", {
+        ascending: true
+      });
 
 
-  document.getElementById(
-    "adminWeaponCount"
-  ).textContent =
-    weaponCount || 0;
+  if (error) {
 
+    console.error(error);
 
-  document.getElementById(
-    "adminRarityCount"
-  ).textContent =
-    rarityCount || 0;
-}
+    list.innerHTML =
+      `<p>Could not load rarities: ${escapeHTML(error.message)}</p>`;
 
-
-/* =====================================================
-   PAGE NAVIGATION
-===================================================== */
-
-function showPage(
-  pageId,
-  button
-) {
-
-  document
-    .querySelectorAll(".page")
-    .forEach(page => {
-
-      page.classList.remove(
-        "active"
-      );
-
-    });
-
-
-  const page =
-    document.getElementById(
-      pageId
-    );
-
-
-  if (!page) {
     return;
+
   }
 
 
-  page.classList.add(
-    "active"
-  );
+  list.innerHTML = "";
+
+  select.innerHTML =
+    `<option value="">
+      Select rarity
+    </option>`;
+
+
+  if (!data || data.length === 0) {
+
+    list.innerHTML =
+      "<p>No rarities created yet.</p>";
+
+    return;
+
+  }
+
+
+  data.forEach((rarity, index) => {
+
+
+    /* RARITY LIST */
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "rarity-row";
+
+
+    row.innerHTML = `
+
+      <div class="rarity-number">
+        ${index + 1}
+      </div>
+
+      <div class="rarity-name">
+        ${escapeHTML(rarity.name)}
+      </div>
+
+      <button
+        onclick="moveRarityUp('${rarity.id}')"
+        title="Move up"
+      >
+        ▲
+      </button>
+
+      <button
+        onclick="moveRarityDown('${rarity.id}')"
+        title="Move down"
+      >
+        ▼
+      </button>
+
+      <button
+        onclick="renameRarity('${rarity.id}')"
+        title="Rename"
+      >
+        ✏️
+      </button>
+
+      <button
+        class="danger"
+        onclick="deleteRarity('${rarity.id}')"
+        title="Delete"
+      >
+        🗑️
+      </button>
+
+    `;
+
+
+    list.appendChild(row);
+
+
+    /* WEAPON DROPDOWN */
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      rarity.id;
+
+    option.textContent =
+      rarity.name;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+/* =====================================================
+   CREATE RARITY
+===================================================== */
+
+async function createRarity() {
+
+  const input =
+    document.getElementById(
+      "newRarityName"
+    );
+
+
+  const name =
+    input.value.trim();
+
+
+  if (!name) {
+
+    alert(
+      "Enter a rarity name."
+    );
+
+    return;
+
+  }
+
+
+  const {
+    data: highest
+  } =
+    await client
+      .from("rarities")
+      .select("sort_order")
+      .order("sort_order", {
+        ascending: false
+      })
+      .limit(1);
+
+
+  const nextOrder =
+    highest &&
+    highest.length
+      ? highest[0].sort_order + 1
+      : 0;
+
+
+  const {
+    error
+  } =
+    await client
+      .from("rarities")
+      .insert({
+
+        name: name,
+
+        sort_order: nextOrder
+
+      });
+
+
+  if (error) {
+
+    alert(error.message);
+
+    return;
+
+  }
+
+
+  input.value = "";
+
+  await loadRarities();
+
+}
+
+
+/* =====================================================
+   RENAME RARITY
+===================================================== */
+
+async function renameRarity(id) {
+
+  const {
+    data: rarity
+  } =
+    await client
+      .from("rarities")
+      .select("name")
+      .eq("id", id)
+      .single();
+
+
+  if (!rarity) return;
+
+
+  const newName =
+    prompt(
+      "Rename rarity:",
+      rarity.name
+    );
+
+
+  if (
+    newName === null ||
+    !newName.trim()
+  ) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await client
+      .from("rarities")
+      .update({
+
+        name: newName.trim()
+
+      })
+      .eq("id", id);
+
+
+  if (error) {
+
+    alert(error.message);
+
+    return;
+
+  }
+
+
+  await loadRarities();
+
+  await loadAdminWeapons();
+
+}
+
+
+/* =====================================================
+   DELETE RARITY
+===================================================== */
+
+async function deleteRarity(id) {
+
+  const {
+    count
+  } =
+    await client
+      .from("weapons")
+      .select("id", {
+        count: "exact",
+        head: true
+      })
+      .eq(
+        "rarity_id",
+        id
+      );
+
+
+  if (count > 0) {
+
+    alert(
+      "This rarity is being used by " +
+      count +
+      " weapon(s). Remove or change those weapons first."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !confirm(
+      "Delete this rarity?"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await client
+      .from("rarities")
+      .delete()
+      .eq("id", id);
+
+
+  if (error) {
+
+    alert(error.message);
+
+    return;
+
+  }
+
+
+  await loadRarities();
+
+}
+
+
+/* =====================================================
+   MOVE RARITY UP
+===================================================== */
+
+async function moveRarityUp(id) {
+
+  const {
+    data
+  } =
+    await client
+      .from("rarities")
+      .select("*")
+      .order("sort_order", {
+        ascending: true
+      });
+
+
+  const index =
+    data.findIndex(
+      rarity =>
+        rarity.id === id
+    );
+
+
+  if (index <= 0) return;
+
+
+  const current =
+    data[index];
+
+  const previous =
+    data[index - 1];
+
+
+  await client
+    .from("rarities")
+    .update({
+      sort_order:
+        previous.sort_order
+    })
+    .eq(
+      "id",
+      current.id
+    );
+
+
+  await client
+    .from("rarities")
+    .update({
+      sort_order:
+        current.sort_order
+    })
+    .eq(
+      "id",
+      previous.id
+    );
+
+
+  await loadRarities();
+
+}
+
+
+/* =====================================================
+   MOVE RARITY DOWN
+===================================================== */
+
+async function moveRarityDown(id) {
+
+  const {
+    data
+  } =
+    await client
+      .from("rarities")
+      .select("*")
+      .order("sort_order", {
+        ascending: true
+      });
+
+
+  const index =
+    data.findIndex(
+      rarity =>
+        rarity.id === id
+    );
+
+
+  if (
+    index === -1 ||
+    index >= data.length - 1
+  ) {
+
+    return;
+
+  }
+
+
+  const current =
+    data[index];
+
+  const next =
+    data[index + 1];
+
+
+  await client
+    .from("rarities")
+    .update({
+      sort_order:
+        next.sort_order
+    })
+    .eq(
+      "id",
+      current.id
+    );
+
+
+  await client
+    .from("rarities")
+    .update({
+      sort_order:
+        current.sort_order
+    })
+    .eq(
+      "id",
+      next.id
+    );
+
+
+  await loadRarities();
+
+}
+
+
+/* =====================================================
+   CREATE WEAPON
+===================================================== */
+
+async function createWeapon() {
+
+  const message =
+    document.getElementById(
+      "weaponMessage"
+    );
+
+
+  const name =
+    document
+      .getElementById("weaponName")
+      .value
+      .trim();
+
+
+  const rarityId =
+    document
+      .getElementById("weaponRarity")
+      .value;
+
+
+  const damage =
+    Number(
+      document
+        .getElementById("weaponDamage")
+        .value
+    ) || 0;
+
+
+  const defense =
+    Number(
+      document
+        .getElementById("weaponDefense")
+        .value
+    ) || 0;
+
+
+  const speed =
+    Number(
+      document
+        .getElementById("weaponSpeed")
+        .value
+    ) || 0;
+
+
+  const accuracy =
+    Number(
+      document
+        .getElementById("weaponAccuracy")
+        .value
+    ) || 0;
+
+
+  const luck =
+    Number(
+      document
+        .getElementById("weaponLuck")
+        .value
+    ) || 0;
+
+
+  const description =
+    document
+      .getElementById("weaponDescription")
+      .value
+      .trim();
+
+
+  const imageUrl =
+    document
+      .getElementById("weaponImage")
+      .value
+      .trim();
+
+
+  if (!name) {
+
+    message.textContent =
+      "Enter a weapon name.";
+
+    return;
+
+  }
+
+
+  if (!rarityId) {
+
+    message.textContent =
+      "Choose a rarity.";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "Creating weapon...";
+
+
+  const {
+    error
+  } =
+    await client
+      .from("weapons")
+      .insert({
+
+        name: name,
+
+        rarity_id: rarityId,
+
+        damage: damage,
+
+        defense: defense,
+
+        speed: speed,
+
+        accuracy: accuracy,
+
+        luck: luck,
+
+        description:
+          description || null,
+
+        image_url:
+          imageUrl || null
+
+      });
+
+
+  if (error) {
+
+    console.error(error);
+
+    message.textContent =
+      error.message;
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "⚔️ Weapon created successfully!";
 
 
   document
-    .querySelectorAll(".nav-button")
-    .forEach(btn => {
-
-      btn.classList.remove(
-        "active"
-      );
-
-    });
+    .getElementById("weaponName")
+    .value = "";
 
 
-  if (button) {
-
-    button.classList.add(
-      "active"
-    );
-  }
+  document
+    .getElementById("weaponDamage")
+    .value = 0;
 
 
-  if (pageId === "inventory") {
+  document
+    .getElementById("weaponDefense")
+    .value = 0;
 
-    loadInventory();
-  }
+
+  document
+    .getElementById("weaponSpeed")
+    .value = 0;
+
+
+  document
+    .getElementById("weaponAccuracy")
+    .value = 0;
+
+
+  document
+    .getElementById("weaponLuck")
+    .value = 0;
+
+
+  document
+    .getElementById("weaponDescription")
+    .value = "";
+
+
+  document
+    .getElementById("weaponImage")
+    .value = "";
+
+
+  await loadAdminWeapons();
+
+  await loadArmory();
 
 }
 
 
 /* =====================================================
-   ESCAPE HTML
+   LOAD ADMIN WEAPONS
 ===================================================== */
 
-function escapeHtml(value) {
+async function loadAdminWeapons() {
 
-  const div =
-    document.createElement(
-      "div"
+  const container =
+    document.getElementById(
+      "adminWeaponList"
     );
 
-  div.textContent =
-    String(value ?? "");
 
-  return div.innerHTML;
+  if (!container) return;
+
+
+  container.innerHTML =
+    "Loading weapons...";
+
+
+  const {
+    data,
+    error
+  } =
+    await client
+      .from("weapons")
+      .select(`
+        *,
+        rarities (
+          id,
+          name,
+          sort_order
+        )
+      `)
+      .order("created_at", {
+        ascending: false
+      });
+
+
+  if (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      `<p>Could not load weapons: ${escapeHTML(error.message)}</p>`;
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    container.innerHTML =
+      "<p>No weapons have been created yet.</p>";
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+
+  data.forEach(weapon => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "admin-weapon";
+
+
+    const rarity =
+      weapon.rarities
+        ? weapon.rarities.name
+        : "Unknown";
+
+
+    card.innerHTML = `
+
+      <h3>
+        ⚔️ ${escapeHTML(weapon.name)}
+      </h3>
+
+      <p>
+        💎 ${escapeHTML(rarity)}
+      </p>
+
+      <div class="weapon-stats">
+
+        <span class="weapon-stat">
+          ⚔️ Damage: ${weapon.damage}
+        </span>
+
+        <span class="weapon-stat">
+          🛡️ Defense: ${weapon.defense}
+        </span>
+
+        <span class="weapon-stat">
+          ⚡ Speed: ${weapon.speed}
+        </span>
+
+        <span class="weapon-stat">
+          🎯 Accuracy: ${weapon.accuracy}
+        </span>
+
+        <span class="weapon-stat">
+          🍀 Luck: ${weapon.luck}
+        </span>
+
+      </div>
+
+      ${
+        weapon.description
+          ? `
+            <p class="weapon-description">
+              📜 ${escapeHTML(weapon.description)}
+            </p>
+          `
+          : ""
+      }
+
+      <div class="admin-actions">
+
+        <button
+          onclick="editWeapon('${weapon.id}')"
+        >
+          ✏️ Edit
+        </button>
+
+        <button
+          class="danger"
+          onclick="deleteWeapon('${weapon.id}')"
+        >
+          🗑️ Delete
+        </button>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(card);
+
+  });
+
 }
 
 
 /* =====================================================
-   LOG OUT
+   EDIT WEAPON
+===================================================== */
+
+async function editWeapon(id) {
+
+  const {
+    data: weapon,
+    error
+  } =
+    await client
+      .from("weapons")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+
+  if (error || !weapon) {
+
+    alert(
+      "Could not load weapon."
+    );
+
+    return;
+
+  }
+
+
+  const name =
+    prompt(
+      "Weapon name:",
+      weapon.name
+    );
+
+
+  if (name === null) return;
+
+
+  const description =
+    prompt(
+      "Weapon lore:",
+      weapon.description || ""
+    );
+
+
+  if (description === null) return;
+
+
+  const {
+    error: updateError
+  } =
+    await client
+      .from("weapons")
+      .update({
+
+        name:
+          name.trim(),
+
+        description:
+          description.trim() || null
+
+      })
+      .eq(
+        "id",
+        id
+      );
+
+
+  if (updateError) {
+
+    alert(
+      updateError.message
+    );
+
+    return;
+
+  }
+
+
+  await loadAdminWeapons();
+
+  await loadArmory();
+
+}
+
+
+/* =====================================================
+   DELETE WEAPON
+===================================================== */
+
+async function deleteWeapon(id) {
+
+  const {
+    data: weapon
+  } =
+    await client
+      .from("weapons")
+      .select("name")
+      .eq("id", id)
+      .single();
+
+
+  if (!weapon) return;
+
+
+  if (
+    !confirm(
+      `Delete "${weapon.name}"?\n\nThis cannot be undone.`
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+    await client
+      .from("weapons")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
+
+
+  if (error) {
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadAdminWeapons();
+
+  await loadArmory();
+
+}
+
+
+/* =====================================================
+   LOGOUT
 ===================================================== */
 
 async function logout() {
@@ -2303,31 +3435,44 @@ async function logout() {
   currentProfile = null;
 
 
-  document.getElementById(
-    "game"
-  ).style.display =
-    "none";
+  document
+    .getElementById("app")
+    .style.display = "none";
 
 
-  document.getElementById(
-    "auth"
-  ).style.display =
-    "block";
+  document
+    .getElementById("authScreen")
+    .style.display = "flex";
 
 
-  document.getElementById(
-    "username"
-  ).value = "";
+  document
+    .getElementById("username")
+    .value = "";
+
+  document
+    .getElementById("password")
+    .value = "";
+
+  document
+    .getElementById("authMessage")
+    .textContent = "";
+
+}
 
 
-  document.getElementById(
-    "password"
-  ).value = "";
+/* =====================================================
+   SECURITY / HTML ESCAPING
+===================================================== */
 
+function escapeHTML(value) {
 
-  document.getElementById(
-    "message"
-  ).textContent = "";
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
 }
 
 
@@ -2338,19 +3483,35 @@ async function logout() {
 async function checkSession() {
 
   const {
-    data
+    data,
+    error
   } =
     await client.auth.getSession();
 
 
-  if (!data.session) {
+  if (error) {
+
+    console.error(
+      "Session error:",
+      error
+    );
+
     return;
+
   }
 
 
-  await showGame(
-    data.session.user.id
-  );
+  if (
+    !data.session
+  ) {
+
+    return;
+
+  }
+
+
+  await loadCurrentUser();
+
 }
 
 
